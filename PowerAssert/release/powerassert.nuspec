@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>PowerAssert</id>
+    <version>1.0.2</version>
+    <authors>Robert Fonseca-Ensor</authors>
+    <description>When you make a unit test assertion with PowerAssert, your assertion messages become much more useful.</description>
+    <language>en-US</language>
+    <licenseUrl>http://powerassert.codeplex.com/license</licenseUrl>
+    <projectUrl>http://powerassert.codeplex.com/</projectUrl>
+  </metadata>
+</package>
