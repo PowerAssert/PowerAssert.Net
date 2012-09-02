@@ -54,8 +54,8 @@ namespace PowerAssertTests
 
             string[] expected = {
                                     "31 == 5 * 6",
-                                    "   │    ∙",
-                                    "   │    30",
+                                    "   |    '",
+                                    "   |    30",
                                     "   false"
                                 };
 
