@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Annotations.cs" />
     <Compile Include="Infrastructure\ExpressionParser.cs" />
+    <Compile Include="Infrastructure\Nodes\InvocationNode.cs" />
     <Compile Include="Infrastructure\NodeFormatter.cs" />
     <Compile Include="Infrastructure\Nodes\ArrayIndexNode.cs" />
     <Compile Include="Infrastructure\Nodes\BinaryNode.cs" />

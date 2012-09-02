@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Infrastructure
@@ -54,6 +53,10 @@ namespace PowerAssert.Infrastructure
             if (e is TypeBinaryExpression)
             {
                 return TypeBinary((TypeBinaryExpression)e);
+            }
+            if (e is InvocationExpression)
+            {
+                return Invocation((InvocationExpression)e);
             }
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
 
@@ -160,7 +163,7 @@ namespace PowerAssert.Infrastructure
         static Node MethodCall(MethodCallExpression e)
         {
             var parameters = e.Arguments.Select(Parse);
-            if(e.Method.GetCustomAttributes(typeof(ExtensionAttribute), true).Any())
+            if (e.Method.GetCustomAttributes(typeof(ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
                 {
@@ -180,7 +183,7 @@ namespace PowerAssert.Infrastructure
                     Parameters = parameters.ToList(),
                 };
             }
-            
+
         }
 
         static Node Constant(ConstantExpression e)
@@ -229,6 +232,15 @@ namespace PowerAssert.Infrastructure
                 Value = GetValue(e),
                 Left = Parse(e.Left),
                 Right = Parse(e.Right),
+            };
+        }
+
+        private static Node Invocation(InvocationExpression e)
+        {
+            return new InvocationNode
+            {
+                Arguments = e.Arguments.Select(Parse),
+                Expression = Parse(e.Expression)
             };
         }
 
@@ -318,7 +330,7 @@ namespace PowerAssert.Infrastructure
                 //in case the enumerable is really long, let's cut off the end arbitrarily?
                 const int Limit = 100;
                 values = values.Take(Limit);
-                if(values.Count() == Limit)
+                if (values.Count() == Limit)
                 {
                     values = values.Concat(new[] { "... (MORE THAN " + Limit + " ITEMS FOUND)" });
                 }

@@ -16,8 +16,6 @@ namespace PowerAssertTests
     [TestFixture]
     public class EndToEndTest
     {
-
-
         [Test]
         public void PrintResults()
         {
@@ -25,6 +23,36 @@ namespace PowerAssertTests
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1);
             Expression<Func<bool>> expression = () => x + 5 == d.Month * y;
+            Node constantNode = ExpressionParser.Parse(expression.Body);
+            string[] strings = NodeFormatter.Format(constantNode);
+            string s = string.Join(Environment.NewLine, strings);
+            Console.Out.WriteLine(s);
+        }
+
+        [Test]
+        public void PrintResults_for_a_MethodInvokeExpression()
+        {
+            Func<int, double, double> f = (A, X) =>
+                A * Math.Log(X);
+
+            int a = 11;
+            double x = 1.234;
+            Expression<Func<bool>> expression = () => f(a, x) == 5.678;
+            Node constantNode = ExpressionParser.Parse(expression.Body);
+            string[] strings = NodeFormatter.Format(constantNode);
+            string s = string.Join(Environment.NewLine, strings);
+            Console.Out.WriteLine(s);
+        }
+
+        [Test]
+        public void PrintResults_for_a_MethodInvokeExpression_on_an_Expression()
+        {
+            Expression<Func<int, double, double>> f = (A, X) =>
+                A * Math.Log(X);
+
+            int a = 11;
+            double x = 1.234;
+            Expression<Func<bool>> expression = () => f.Compile()(a, x) == 5.678;
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
@@ -67,8 +95,8 @@ namespace PowerAssertTests
             List<int> l = new List<int> { 1, 2, 3 };
             bool b = false;
             PAssert.IsTrue(() => l[2].ToString() == (b ? "three" : "four"));
-        } 
-        
+        }
+
         [Test]
         [Ignore("This test will fail for demo purposes")]
         public void RunStringCompare()
@@ -103,7 +131,7 @@ namespace PowerAssertTests
         [Ignore("This test will fail for demo purposes")]
         public void SequenceEqualButNotOperatorEquals()
         {
-            object list = new List<int>{1,2,3};
+            object list = new List<int> { 1, 2, 3 };
             object array = new[] { 1, 2, 3 };
             PAssert.IsTrue(() => list == array);
         }
@@ -113,7 +141,7 @@ namespace PowerAssertTests
         public void PrintingLinqStatements()
         {
             var list = Enumerable.Range(0, 150);
-            PAssert.IsTrue(() => list.Where(x=>x%2==0).Sum() == 0);
+            PAssert.IsTrue(() => list.Where(x => x % 2 == 0).Sum() == 0);
         }
 
         [Test]
@@ -121,7 +149,7 @@ namespace PowerAssertTests
         public void PrintingLinqExpressionStatements()
         {
             var list = Enumerable.Range(0, 150);
-            PAssert.IsTrue(() => (from l in list where l%2==0 select l).Sum() == 0);
+            PAssert.IsTrue(() => (from l in list where l % 2 == 0 select l).Sum() == 0);
         }
 
         [Test]
@@ -136,24 +164,24 @@ namespace PowerAssertTests
         [Ignore("This test will fail for demo purposes")]
         public void PrintingEnumerablesWithNulls()
         {
-            var list = new List<int?>{1,2,null,4,5};
+            var list = new List<int?> { 1, 2, null, 4, 5 };
             PAssert.IsTrue(() => list.Sum() == null);
         }
-        
+
         [Test]
         [Ignore("This test will fail for demo purposes")]
         public void PrintingUnaryNot()
         {
             var b = true;
             PAssert.IsTrue(() => !b);
-        } 
-        
+        }
+
         [Test]
         [Ignore("This test will fail for demo purposes")]
         public void PrintingUnaryNegate()
         {
             var b = 5;
-            PAssert.IsTrue(() => -b==0);
+            PAssert.IsTrue(() => -b == 0);
         }
 
         [Test]
