@@ -17,7 +17,10 @@ namespace PowerAssert.Infrastructure.Nodes
         internal override void Walk(NodeWalker walker, int depth)
         {
             base.Walk(walker, depth);
-            walker("(");
+            if (MemberName != "get_Item")
+            {
+                walker("(");
+            }
             foreach (var parameter in Parameters.Take(1))
             {
                 parameter.Walk(walker, depth + 1);
@@ -27,7 +30,7 @@ namespace PowerAssert.Infrastructure.Nodes
                 walker(", ");
                 parameter.Walk(walker, depth + 1);
             }
-            walker(")");
+            walker(MemberName == "get_Item" ? "]" : ")");
         }
     }
 }
