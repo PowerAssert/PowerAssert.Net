@@ -155,8 +155,11 @@ namespace PowerAssert.Infrastructure
             return new ConditionalNode
             {
                 Condition = Parse(e.Test),
-                FalseValue = Parse(e.IfFalse),
-                TrueValue = Parse(e.IfTrue)
+                TestValue = bool.Parse(GetValue(e.Test)),
+                FalseNode = Parse(e.IfFalse),
+                FalseValue = GetValue(e.IfFalse),
+                TrueNode = Parse(e.IfTrue),
+                TrueValue = GetValue(e.IfTrue)
             };
         }
 

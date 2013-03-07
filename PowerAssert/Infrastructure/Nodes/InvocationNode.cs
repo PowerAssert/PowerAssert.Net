@@ -18,12 +18,12 @@ namespace PowerAssert.Infrastructure.Nodes
             walker("(");
             foreach (var arg in Arguments.Take(1))
             {
-                arg.Walk(walker, depth);
+                arg.Walk(walker, depth + 1);
             }
             foreach (var arg in Arguments.Skip(1))
             {
                 walker(", ");
-                arg.Walk(walker, depth);
+                arg.Walk(walker, depth + 1);
             }
             walker(")");
         }
