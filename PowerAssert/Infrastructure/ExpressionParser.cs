@@ -12,6 +12,9 @@ namespace PowerAssert.Infrastructure
 {
     internal class ExpressionParser
     {
+        public static string KeyValuePairFormatString = "{{{0}:{1}}}";
+
+
         public static Node Parse(Expression e)
         {
             if (e.NodeType == ExpressionType.ArrayIndex)
@@ -138,6 +141,7 @@ namespace PowerAssert.Infrastructure
                 { typeof(object), "object" },
                 { typeof(string), "string" },
             };
+
 
 
         static string NameOfType(Type t)
@@ -326,6 +330,13 @@ namespace PowerAssert.Infrastructure
             {
                 return "'" + value + "'";
             }
+            var type = value.GetType();
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            {
+                var k = type.GetProperty("Key").GetValue(value, null);
+                var v = type.GetProperty("Value").GetValue(value, null);
+                return string.Format(KeyValuePairFormatString, FormatObject(k), FormatObject(v));
+            }
             if (value is IEnumerable)
             {
                 IEnumerable enumerable = (IEnumerable)value;
@@ -337,7 +348,7 @@ namespace PowerAssert.Infrastructure
                 {
                     values = values.Concat(new[] { "... (MORE THAN " + Limit + " ITEMS FOUND)" });
                 }
-                return "{" + string.Join(", ", values.ToArray()) + "}";
+                return "[" + string.Join(", ", values.ToArray()) + "]";
             }
             return value.ToString();
         }

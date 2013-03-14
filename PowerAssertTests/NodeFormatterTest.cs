@@ -84,6 +84,7 @@ namespace PowerAssertTests
             string[] expected = {
                                     "f(a, x) == 314.4",
                                     "' '  '  |",
+                                    "| '  '  |",
                                     "| |  |  False",
                                     "| |  2.423",
                                     "| 3",
