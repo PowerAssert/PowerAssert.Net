@@ -116,8 +116,10 @@ namespace PowerAssertTests
             var expected = new ConditionalNode
                                         {
                                             Condition = new ConstantNode { Text = "b", Value = "False" },
-                                            TrueValue = new ConstantNode { Text = "1" },
-                                            FalseValue = new ConstantNode { Text = "2" },
+                                            TrueNode = new ConstantNode { Text = "1" },
+                                            TrueValue = "1",
+                                            FalseNode = new ConstantNode { Text = "2" },
+                                            FalseValue = "2",
                                         };
 
             Assert.AreEqual(expected, node);
