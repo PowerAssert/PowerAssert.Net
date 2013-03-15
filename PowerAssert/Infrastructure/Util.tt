@@ -27,9 +27,31 @@ foreach( var v in Enum.GetValues(typeof(ExpressionType)))
     }
     catch(Exception e)
     {
-/*#>
-				// <#=v#>: <#=Regex.Replace(e.Message, "\\s", " ")#>
-<#*/ 
+#>
+			// <#=v#>: <#=Regex.Replace(e.Message, "\\s", " ")#>
+<# 
+    }
+} 
+#>
+        };
+
+		internal static Dictionary<ExpressionType, string> UnaryOperators = new Dictionary<ExpressionType, string>
+        {
+<# 
+foreach( var v in Enum.GetValues(typeof(ExpressionType))) 
+{
+    try
+    {
+        string s = GetUnaryFormat((ExpressionType)v);
+#>
+            {ExpressionType.<#=v#>, "<#=s#>"},
+<# 
+    }
+    catch(Exception e)
+    {
+#>
+			// <#=v#>: <#=Regex.Replace(e.Message, "\\s", " ")#>
+<#
     }
 } 
 #>
@@ -51,6 +73,10 @@ string GetBinaryFormat(ExpressionType v){
 
 string GetBinaryFormat(ExpressionType v, Type t){
 	return ""+Expression.MakeBinary(v, Expression.Variable(t, "x"), Expression.Variable(t, "x")).ToString().Trim("x()0 ".ToCharArray());
+}
+
+string GetUnaryFormat(ExpressionType v){
+	return ""+Expression.MakeUnary(v, Expression.Variable(typeof(double), "x"), typeof(double)).ToString().Trim("x()0 ".ToCharArray());
 }
 
 #>
