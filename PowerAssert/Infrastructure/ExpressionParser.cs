@@ -187,7 +187,29 @@ namespace PowerAssert.Infrastructure
 
         static Node ParseExpression(NewExpression e)
         {
-            return new NewObjectNode {Type = NameOfType(e.Type), Parameters = e.Arguments.Select(Parse).ToList()};
+            return new NewObjectNode
+                {
+                    Type = NameOfType(e.Type), 
+                    Parameters = e.Arguments.Select(Parse).ToList(),
+                    Value = GetValue(e)
+                };
+        }
+        static Node ParseExpression(MemberInitExpression e)
+        {
+            return new MemberInitNode
+                {
+                    Constructor = (NewObjectNode)ParseExpression(e.NewExpression), 
+                    Bindings = e.Bindings.Select(ParseExpression).ToList()
+                };
+        }
+
+        static Node ParseExpression(MemberBinding e)
+        {
+            if (e is MemberAssignment)
+            {
+                return new MemberAssignmentNode { MemberName = e.Member.Name, Value = Parse(((MemberAssignment)e).Expression) };
+            }
+            return new ConstantNode() {Text = e.Member.Name};
         }
 
         private static Node ParseExpression(InvocationExpression e)
