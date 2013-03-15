@@ -117,7 +117,9 @@ namespace PowerAssertTests
                                         {
                                             Condition = new ConstantNode { Text = "b", Value = "False" },
                                             TrueNode = new ConstantNode { Text = "1" },
+                                            TrueValue = "1",
                                             FalseNode = new ConstantNode { Text = "2" },
+                                            FalseValue = "2",
                                         };
 
             Assert.AreEqual(expected, node);
@@ -228,7 +230,7 @@ namespace PowerAssertTests
             var expected = new ConstantNode()
                                {
                                    Text = "v",
-                                   Value = "{1, 2, null, 4}"
+                                   Value = "[1, 2, null, 4]"
 
                                };
 
