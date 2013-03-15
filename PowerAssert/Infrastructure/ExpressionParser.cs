@@ -12,66 +12,22 @@ namespace PowerAssert.Infrastructure
 {
     internal class ExpressionParser
     {
-        public static string KeyValuePairFormatString = "{{{0}:{1}}}";
-
-
         public static Node Parse(Expression e)
         {
-            if (e.NodeType == ExpressionType.ArrayIndex)
-            {
-                return ArrayIndex((BinaryExpression)e);
-            }
-            if (e is BinaryExpression)
-            {
-                return Binary((BinaryExpression)e, Util.BinaryOperators[e.NodeType]);
-            }
-            if (e is MemberExpression)
-            {
-                return Member((MemberExpression)e);
-            }
-            if (e is ConstantExpression)
-            {
-                return Constant((ConstantExpression)e);
-            }
-            if (e is MethodCallExpression)
-            {
-                return MethodCall((MethodCallExpression)e);
-            }
-            if (e is ConditionalExpression)
-            {
-                return Conditional((ConditionalExpression)e);
-            }
-            if (e is NewArrayExpression)
-            {
-                return NewArray((NewArrayExpression)e);
-            }
-            if (e is UnaryExpression)
-            {
-                return Unary((UnaryExpression)e);
-            }
             if (e.NodeType == ExpressionType.Lambda)
             {
                 return Lambda(e);
             }
-            if (e is TypeBinaryExpression)
-            {
-                return TypeBinary((TypeBinaryExpression)e);
-            }
-            if (e is InvocationExpression)
-            {
-                return Invocation((InvocationExpression)e);
-            }
-            throw new ArgumentOutOfRangeException("e", string.Format("Can't handle expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
-
+            return ParseExpression((dynamic)e);
         }
 
-        static Node TypeBinary(TypeBinaryExpression e)
+        static Node ParseExpression(TypeBinaryExpression e)
         {
             switch (e.NodeType)
             {
                 case ExpressionType.TypeIs:
-                    return new BinaryNode()
-                               {
+                    return new BinaryNode
+                        {
                                    Left = Parse(e.Expression),
                                    Operator = "is",
                                    Right = new ConstantNode() { Text = NameOfType(e.TypeOperand) },
@@ -89,17 +45,17 @@ namespace PowerAssert.Infrastructure
             return new ConstantNode() { Text = e.ToString() };
         }
 
-        static Node Unary(UnaryExpression e)
+        static Node ParseExpression(UnaryExpression e)
         {
             switch (e.NodeType)
             {
                 case ExpressionType.Convert:
-                    return new UnaryNode() { Prefix = "(" + NameOfType(e.Type) + ")(", Operand = Parse(e.Operand), Suffix = ")", PrefixValue = GetValue(e) };
+                    return new UnaryNode { Prefix = "(" + NameOfType(e.Type) + ")(", Operand = Parse(e.Operand), Suffix = ")", PrefixValue = GetValue(e) };
                 case ExpressionType.Not:
-                    return new UnaryNode() { Prefix = "!", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
+                    return new UnaryNode { Prefix = "!", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
                 case ExpressionType.Negate:
                 case ExpressionType.NegateChecked:
-                    return new UnaryNode() { Prefix = "-", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
+                    return new UnaryNode { Prefix = "-", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
 
 
             }
@@ -107,7 +63,7 @@ namespace PowerAssert.Infrastructure
 
         }
 
-        static Node NewArray(NewArrayExpression e)
+        static Node ParseExpression(NewArrayExpression e)
         {
             switch (e.NodeType)
             {
@@ -125,28 +81,9 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        private static readonly Dictionary<Type, string> Aliases = new Dictionary<Type, string>()
-            {
-                { typeof(byte), "byte" },
-                { typeof(sbyte), "sbyte" },
-                { typeof(short), "short" },
-                { typeof(ushort), "ushort" },
-                { typeof(int), "int" },
-                { typeof(uint), "uint" },
-                { typeof(long), "long" },
-                { typeof(ulong), "ulong" },
-                { typeof(float), "float" },
-                { typeof(double), "double" },
-                { typeof(decimal), "decimal" },
-                { typeof(object), "object" },
-                { typeof(string), "string" },
-            };
-
-
-
         static string NameOfType(Type t)
         {
-            return Aliases.ContainsKey(t) ? Aliases[t] : t.Name;
+            return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
         }
 
         static Node ArrayIndex(BinaryExpression e)
@@ -154,7 +91,7 @@ namespace PowerAssert.Infrastructure
             return new ArrayIndexNode() { Array = Parse(e.Left), Index = Parse(e.Right), Value = GetValue(e) };
         }
 
-        static Node Conditional(ConditionalExpression e)
+        static Node ParseExpression(ConditionalExpression e)
         {
             return new ConditionalNode
             {
@@ -167,33 +104,29 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node MethodCall(MethodCallExpression e)
+        static Node ParseExpression(MethodCallExpression e)
         {
             var parameters = e.Arguments.Select(Parse);
             if (e.Method.GetCustomAttributes(typeof(ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
-                {
-                    Container = parameters.First(),
-                    MemberName = e.Method.Name,
-                    MemberValue = GetValue(e),
-                    Parameters = parameters.Skip(1).ToList(),
-                };
+                    {
+                        Container = parameters.First(),
+                        MemberName = e.Method.Name,
+                        MemberValue = GetValue(e),
+                        Parameters = parameters.Skip(1).ToList(),
+                    };
             }
-            else
-            {
-                return new MethodCallNode
+            return new MethodCallNode
                 {
-                    Container = e.Object == null ? new ConstantNode() { Text = e.Method.DeclaringType.Name } : Parse(e.Object),
+                    Container = e.Object == null ? new ConstantNode { Text = e.Method.DeclaringType.Name } : Parse(e.Object),
                     MemberName = e.Method.Name,
                     MemberValue = GetValue(e),
                     Parameters = parameters.ToList(),
                 };
-            }
-
         }
 
-        static Node Constant(ConstantExpression e)
+        static Node ParseExpression(ConstantExpression e)
         {
             string value = GetValue(e);
 
@@ -203,7 +136,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node Member(MemberExpression e)
+        static Node ParseExpression(MemberExpression e)
         {
             if (IsDisplayClass(e.Expression) || e.Expression == null)
             {
@@ -231,18 +164,20 @@ namespace PowerAssert.Infrastructure
             return false;
         }
 
-        static Node Binary(BinaryExpression e, string text)
+        static Node ParseExpression(BinaryExpression e)
         {
-            return new BinaryNode
-            {
-                Operator = text,
-                Value = GetValue(e),
-                Left = Parse(e.Left),
-                Right = Parse(e.Right),
-            };
+            return e.NodeType == ExpressionType.ArrayIndex
+                       ? ArrayIndex(e)
+                       : new BinaryNode
+                           {
+                               Operator = Util.BinaryOperators[e.NodeType],
+                               Value = GetValue(e),
+                               Left = Parse(e.Left),
+                               Right = Parse(e.Right),
+                           };
         }
 
-        private static Node Invocation(InvocationExpression e)
+        private static Node ParseExpression(InvocationExpression e)
         {
             return new InvocationNode
             {
@@ -335,18 +270,19 @@ namespace PowerAssert.Infrastructure
             {
                 var k = type.GetProperty("Key").GetValue(value, null);
                 var v = type.GetProperty("Value").GetValue(value, null);
-                return string.Format(KeyValuePairFormatString, FormatObject(k), FormatObject(v));
+                return string.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
             }
             if (value is IEnumerable)
             {
-                IEnumerable enumerable = (IEnumerable)value;
+                var enumerable = (IEnumerable)value;
                 var values = enumerable.Cast<object>().Select(FormatObject);
+
                 //in case the enumerable is really long, let's cut off the end arbitrarily?
-                const int Limit = 100;
-                values = values.Take(Limit);
-                if (values.Count() == Limit)
+                const int limit = 100;
+                values = values.Take(limit);
+                if (values.Count() == limit)
                 {
-                    values = values.Concat(new[] { "... (MORE THAN " + Limit + " ITEMS FOUND)" });
+                    values = values.Concat(new[] { "... (MORE THAN " + limit + " ITEMS FOUND)" });
                 }
                 return "[" + string.Join(", ", values.ToArray()) + "]";
             }

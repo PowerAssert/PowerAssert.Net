@@ -1,10 +1,28 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 
 namespace PowerAssert.Infrastructure
 {
     internal class Util
     {
+	    internal static readonly Dictionary<Type, string> Aliases = new Dictionary<Type, string>()
+        {
+            { typeof(byte), "byte" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
+            { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "long" },
+            { typeof(ulong), "ulong" },
+            { typeof(float), "float" },
+            { typeof(double), "double" },
+            { typeof(decimal), "decimal" },
+            { typeof(object), "object" },
+            { typeof(string), "string" },
+        };
+
         internal static Dictionary<ExpressionType, string> BinaryOperators = new Dictionary<ExpressionType, string>
         {
             {ExpressionType.AndAlso, "&&"},
@@ -96,7 +114,7 @@ namespace PowerAssert.Infrastructure
 			// IsFalse: Unhandled binary: IsFalse
         };
 
-        internal static Dictionary<ExpressionType, string> UnaryOperators = new Dictionary<ExpressionType, string>
+		internal static Dictionary<ExpressionType, string> UnaryOperators = new Dictionary<ExpressionType, string>
         {
 			// Add: Unhandled unary: Add
 			// AddChecked: Unhandled unary: AddChecked
