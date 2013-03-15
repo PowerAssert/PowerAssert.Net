@@ -1,7 +1,9 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
 <#@ output extension=".Generated.cs" #>
+<#@ assembly name="System.Core, Version=4.0.0.0, Culture=neutral" #>
+<#@ Assembly Name="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral" #>
 <#@ import namespace="System.Linq.Expressions" #>
-<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
@@ -9,7 +11,7 @@ namespace PowerAssert.Infrastructure
 {
     internal class Util
     {
-        internal static Dictionary<ExpressionType, string> Operators = new Dictionary<ExpressionType, string>
+        internal static Dictionary<ExpressionType, string> BinaryOperators = new Dictionary<ExpressionType, string>
         {
             {ExpressionType.AndAlso, "&&"},
             {ExpressionType.OrElse, "||"},
@@ -18,17 +20,37 @@ foreach( var v in Enum.GetValues(typeof(ExpressionType)))
 {
     try
     {
-        string s = Expression.MakeBinary((ExpressionType)v, Expression.Constant(0), Expression.Constant(0)).ToString().Trim('(', ')', '0', ' ');
+        string s = GetBinaryFormat((ExpressionType)v);
 #>
             {ExpressionType.<#=v#>, "<#=s#>"},
 <# 
     }
-    catch
+    catch(Exception e)
     {
-       
+/*#>
+				// <#=v#>: <#=Regex.Replace(e.Message, "\\s", " ")#>
+<#*/ 
     }
 } 
 #>
         };
     }
 }
+
+<#+
+string GetBinaryFormat(ExpressionType v){
+	try
+	{
+		return GetBinaryFormat(v, typeof(int));
+	}
+	catch(InvalidOperationException)
+	{
+		return GetBinaryFormat(v, typeof(double));
+	}
+}
+
+string GetBinaryFormat(ExpressionType v, Type t){
+	return ""+Expression.MakeBinary(v, Expression.Variable(t, "x"), Expression.Variable(t, "x")).ToString().Trim("x()0 ".ToCharArray());
+}
+
+#>

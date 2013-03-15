@@ -23,7 +23,7 @@ namespace PowerAssert.Infrastructure
             }
             if (e is BinaryExpression)
             {
-                return Binary((BinaryExpression)e, Util.Operators[e.NodeType]);
+                return Binary((BinaryExpression)e, Util.BinaryOperators[e.NodeType]);
             }
             if (e is MemberExpression)
             {
