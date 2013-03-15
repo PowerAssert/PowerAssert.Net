@@ -55,6 +55,17 @@ namespace PowerAssertTests
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
+        }        
+        
+        [Test]
+        public void PrintResultsForNewObject()
+        {
+
+            Expression<Func<bool>> expression = () => new List<string>(5).Count == 0;
+            Node constantNode = ExpressionParser.Parse(expression.Body);
+            string[] strings = NodeFormatter.Format(constantNode);
+            string s = string.Join(Environment.NewLine, strings);
+            Console.Out.WriteLine(s);
         }
 
         [Test]

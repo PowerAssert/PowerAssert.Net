@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.CSharp.RuntimeBinder;
 using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Infrastructure
@@ -18,7 +19,14 @@ namespace PowerAssert.Infrastructure
             {
                 return Lambda(e);
             }
-            return ParseExpression((dynamic)e);
+            try
+            {
+                return ParseExpression((dynamic)e);
+            }
+            catch (RuntimeBinderException exception)
+            {
+                throw new Exception(string.Format("Unable to dispach expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
+            }
         }
 
         static Node ParseExpression(TypeBinaryExpression e)
@@ -175,6 +183,11 @@ namespace PowerAssert.Infrastructure
                                Left = Parse(e.Left),
                                Right = Parse(e.Right),
                            };
+        }
+
+        static Node ParseExpression(NewExpression e)
+        {
+            return new NewObjectNode {Type = NameOfType(e.Type), Parameters = e.Arguments.Select(Parse).ToList()};
         }
 
         private static Node ParseExpression(InvocationExpression e)

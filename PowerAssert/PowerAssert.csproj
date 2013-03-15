@@ -67,6 +67,7 @@
     <Compile Include="Infrastructure\Nodes\MemberAccessNode.cs" />
     <Compile Include="Infrastructure\Nodes\MethodCallNode.cs" />
     <Compile Include="Infrastructure\Nodes\NewArrayNode.cs" />
+    <Compile Include="Infrastructure\Nodes\NewObjectNode.cs" />
     <Compile Include="Infrastructure\Nodes\Node.cs" />
     <Compile Include="Infrastructure\Nodes\UnaryNode.cs" />
     <Compile Include="Infrastructure\Util.Generated.cs">
