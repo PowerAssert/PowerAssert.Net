@@ -230,7 +230,7 @@ namespace PowerAssertTests
             var expected = new ConstantNode()
                                {
                                    Text = "v",
-                                   Value = "{1, 2, null, 4}"
+                                   Value = "[1, 2, null, 4]"
 
                                };
 

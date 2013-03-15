@@ -10,9 +10,7 @@ using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssertTests
 {
-    /// <summary>
-    /// Summary description for UnitTest1
-    /// </summary>
+
     [TestFixture]
     public class EndToEndTest
     {
@@ -190,6 +188,32 @@ namespace PowerAssertTests
         {
             var b = new object();
             PAssert.IsTrue(() => b is string);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void PrintingNewExpression()
+        {
+            PAssert.IsTrue(() => new List<string>() == null);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void PrintingDictionary()
+        {
+            var dictionary = new Dictionary<string, string>
+                {
+                    {"foo", "bar"},
+                    {"foo2", "bar2"}
+                };
+            PAssert.IsTrue(() => dictionary == null);
+        }
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void PrintingMethodCall()
+        {
+            var a = 4;
+            PAssert.IsTrue(() => (a*5).Equals((a+5)));
         }
     }
 }
