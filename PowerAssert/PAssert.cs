@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -16,7 +17,7 @@ namespace PowerAssert
             {
                 a();
             }
-            catch(TException exception)
+            catch (TException exception)
             {
                 return exception;
             }
@@ -29,6 +30,8 @@ namespace PowerAssert
             Func<bool> func = expression.Compile();
             if (!func())
             {
+                var method = new StackFrame(1, false).GetMethod();
+                _currentTestClass = method != null ? method.DeclaringType : null;
                 throw CreateException(expression, "IsTrue failed");
             }
         }
@@ -39,6 +42,14 @@ namespace PowerAssert
             string[] lines = NodeFormatter.Format(constantNode);
             string nl = Environment.NewLine;
             return new Exception(message + ", expression was:" + nl + nl + String.Join(nl, lines));
+        }
+
+        [ThreadStatic]
+        private static Type _currentTestClass;
+
+        internal static Type CurrentTestClass
+        {
+            get { return _currentTestClass; }
         }
     }
 }

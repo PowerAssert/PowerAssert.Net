@@ -236,5 +236,15 @@ namespace PowerAssertTests
             var a = 4;
             PAssert.IsTrue(() => (a * 5).Equals((a + 5)));
         }
+
+        string _expected = "bar";
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void PrintingTestClassFields()
+        {
+            PAssert.IsTrue(() => this._expected == "foo");
+        }
+
     }
 }

@@ -167,7 +167,7 @@ namespace PowerAssert.Infrastructure
         {
             if (expression is ConstantExpression)
             {
-                return expression.Type.Name.StartsWith("<");
+                return expression.Type.Name.StartsWith("<") || expression.Type == PAssert.CurrentTestClass;
             }
             return false;
         }
