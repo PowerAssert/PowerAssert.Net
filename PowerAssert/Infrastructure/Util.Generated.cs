@@ -21,6 +21,8 @@ namespace PowerAssert.Infrastructure
             { typeof(decimal), "decimal" },
             { typeof(object), "object" },
             { typeof(string), "string" },
+            { typeof(bool), "bool" },
+            { typeof(void), "void" },
         };
 
         internal static Dictionary<ExpressionType, string> BinaryOperators = new Dictionary<ExpressionType, string>
