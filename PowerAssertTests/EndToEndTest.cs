@@ -138,6 +138,37 @@ namespace PowerAssertTests
 
         [Test]
         [Ignore("This test will fail for demo purposes")]
+        public void EnumerablesThatDiffer()
+        {
+            var s1 = "hello1";
+            var s2 = "hello2";
+
+            PAssert.IsTrue(() => s1.SequenceEqual(s2));
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringsThatDiffer()
+        {
+            var s1 = "hello1";
+            var s2 = "hello2";
+
+            PAssert.IsTrue(() => s1.Equals(s2));
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringsThatDifferAndAreComparedCaseInsensitively()
+        {
+            var s1 = "Hello1";
+            var s2 = "hello2";
+
+            PAssert.IsTrue(() => s1.Equals(s2, StringComparison.OrdinalIgnoreCase));
+        }
+
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
         public void EqualsButNotOperatorEquals()
         {
             var t1 = new Tuple<string>("foo");
@@ -153,6 +184,15 @@ namespace PowerAssertTests
             object list = new List<int> { 1, 2, 3 };
             object array = new[] { 1, 2, 3 };
             PAssert.IsTrue(() => list == array);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void SequenceEqualButNotDotEquals()
+        {
+            object list = new List<int> { 1, 2, 3 };
+            object array = new[] { 1, 2, 3 };
+            PAssert.IsTrue(() => list.Equals(array));
         }
 
         [Test]
