@@ -300,6 +300,16 @@ namespace PowerAssertTests
             PAssert.IsTrue(() => (a * 5).Equals((a + 5)));
         }
 
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void CompareDelegateAndObject()
+        {
+            var x = 1;
+            Func<int> f = () => 1;
+
+            PAssert.IsTrue(() => Equals(f, x));
+        }
+
         string _expected = "bar";
 
         [Test]

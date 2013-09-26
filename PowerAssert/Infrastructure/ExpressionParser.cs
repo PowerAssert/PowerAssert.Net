@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
+using PowerAssert.Hints;
 using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Infrastructure
@@ -242,158 +243,40 @@ namespace PowerAssert.Infrastructure
             return s + GetHints(e, value);
         }
 
-        static string FormatTargetInvocationException(TargetInvocationException exception)
+        internal static string FormatTargetInvocationException(TargetInvocationException exception)
         {
             var i = exception.InnerException;
             return string.Format("{0}: {1}", i.GetType().Name, i.Message);
         }
 
-        private static StringComparer GetComparerFromComparison(StringComparison comparison)
-        {
-            switch (comparison)
-            {
-                case StringComparison.CurrentCulture:
-                    return StringComparer.CurrentCulture;
-                case StringComparison.CurrentCultureIgnoreCase:
-                    return StringComparer.CurrentCultureIgnoreCase;
-                case StringComparison.InvariantCulture:
-                    return StringComparer.InvariantCulture;
-                case StringComparison.InvariantCultureIgnoreCase:
-                    return StringComparer.InvariantCultureIgnoreCase;
-                case StringComparison.Ordinal:
-                    return StringComparer.Ordinal;
-                case StringComparison.OrdinalIgnoreCase:
-                    return StringComparer.OrdinalIgnoreCase;
-                default: throw new InvalidDataException("Unexpected StringComparison value.");
-            }
-        }
+        private static readonly IHint Hinter = new MultiHint(
+            new MethodEqualsInsteadOfOperatorEqualsHint(),
+            new StringOperatorEqualsHint(),
+            new EnumerableOperatorEqualsHint(),
+            new SequenceEqualHint(),
+            new DelegateShouldHaveBeenInvokedEqualsHint(),
+            new StringEqualsHint(),
+            new EnumerableEqualsHint()
+            );
 
         static string GetHints(Expression e, object value)
         {
             if (value is bool && !(bool)value)
             {
-                if (e is MethodCallExpression)
-                {
-                    var methE = (MethodCallExpression)e;
-                    if (methE.Arguments.Count > 0)
-                    {
-                        if (methE.Object == null) // static method
-                        {
-                            if (methE.Arguments.Count >= 2)
-                            {
-                                var obj = DynamicInvoke(methE.Arguments[0]);
-                                var arg = DynamicInvoke(methE.Arguments[1]);
-                                if (methE.Method.Name == "SequenceEqual" && obj is IEnumerable && arg is IEnumerable)
-                                {
-                                    if (methE.Arguments.Count == 2) // TODO: equality comparer
-                                    {
-                                        var objEnum = (IEnumerable)obj;
-                                        var argEnum = (IEnumerable)arg;
-
-                                        var enumObj = objEnum.GetEnumerator();
-                                        var enumArg = argEnum.GetEnumerator();
-                                        {
-                                            int i = 0;
-                                            while (enumObj.MoveNext() && enumArg.MoveNext())
-                                            {
-                                                if (!Equals(enumObj.Current, enumArg.Current))
-                                                {
-                                                    return string.Format(", enumerables differ at index {0}, {1} != {2}", i,
-                                                            FormatObject(enumObj.Current), FormatObject(enumArg.Current));
-                                                }
-                                                ++i;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else // instance method
-                        {
-                            var obj = DynamicInvoke(methE.Object);
-                            var arg = DynamicInvoke(methE.Arguments.First());
-                            if (methE.Method.Name == "Equals")
-                            {
-                                if (obj is string && arg is string)
-                                {
-                                    var comparison = (StringComparison)(methE.Arguments.Select(DynamicInvoke).FirstOrDefault(x => x is StringComparison) ??
-                                             StringComparison.CurrentCulture);
-
-                                    return GetStringDifferHint((string)obj, (string)arg, GetComparerFromComparison(comparison));
-                                }
-                                else if (obj is IEnumerable && arg is IEnumerable)
-                                {
-                                    if (((IEnumerable)obj).Cast<object>().SequenceEqual(((IEnumerable)arg).Cast<object>()))
-                                    {
-                                        return ", but would have been True with .SequenceEqual()";
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (e is BinaryExpression && e.NodeType == ExpressionType.Equal)
-                {
-                    var be = (BinaryExpression)e;
-                    object left;
-                    object right;
-                    try
-                    {
-                        left = DynamicInvoke(be.Left);
-                        right = DynamicInvoke(be.Right);
-                    }
-                    catch (TargetInvocationException exception)
-                    {
-                        return FormatTargetInvocationException(exception);
-                    }
-                    if (Equals(left, right))
-                    {
-                        return ", but would have been True with Equals()";
-                    }
-                    if (left is string && right is string)
-                    {
-                        if (((string)left).Equals((string)right, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            return ", but would have been True if case-insensitive";
-                        }
-
-                        return GetStringDifferHint((string)left, (string)right, StringComparer.CurrentCulture);
-                    }
-                    if (left is IEnumerable && right is IEnumerable)
-                    {
-                        if (((IEnumerable)left).Cast<object>().SequenceEqual(((IEnumerable)right).Cast<object>()))
-                        {
-                            return ", but would have been True with .SequenceEqual()";
-                        }
-                    }
-                }
+                string hint;
+                if (Hinter.TryGetHint(e, out hint))
+                    return hint;
             }
             return "";
         }
 
-        static string GetStringDifferHint(string left, string right, StringComparer comparer)
-        {
-            if (left == null) return ", left is null";
-            if (right == null) return ", right is null";
 
-            for (int i = 1; i <= left.Length && i <= right.Length; ++i)
-            {
-                //TODO: this doesn't know about surrogate pairs or things like esszett
-                if (!comparer.Equals(left.Substring(0, i), right.Substring(0, i)))
-                    return string.Format(", strings differ at index {0}, '{1}' != '{2}'", i - 1,
-                        left[i - 1], right[i - 1]);
-            }
-
-            return ""; //err: they don't differ!
-        }
-
-        static object DynamicInvoke(Expression e)
+        internal static object DynamicInvoke(Expression e)
         {
             return Expression.Lambda(e).Compile().DynamicInvoke();
         }
 
-        static string FormatObject(object value)
+        internal static string FormatObject(object value)
         {
             if (value == null)
             {

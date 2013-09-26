@@ -1,0 +1,25 @@
+﻿using System;
+
+namespace PowerAssert.Hints
+{
+    class StringOperatorEqualsHint : OperatorEqualsHintBase
+    {
+        protected override bool TryGetHint(object left, object right, out string hint)
+        {
+            if (left is string && right is string)
+            {
+                if (((string)left).Equals((string)right, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    hint = ", but would have been True if case-insensitive";
+                    return true;
+                }
+
+                hint = HintUtils.GetStringDifferHint((string)left, (string)right, StringComparer.CurrentCulture);
+                return true;
+            }
+
+            hint = null;
+            return false;
+        }
+    }
+}
