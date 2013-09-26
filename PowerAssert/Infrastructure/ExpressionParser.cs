@@ -36,11 +36,11 @@ namespace PowerAssert.Infrastructure
                 case ExpressionType.TypeIs:
                     return new BinaryNode
                         {
-                                   Left = Parse(e.Expression),
-                                   Operator = "is",
-                                   Right = new ConstantNode() { Text = NameOfType(e.TypeOperand) },
-                                   Value = GetValue(e)
-                               };
+                            Left = Parse(e.Expression),
+                            Operator = "is",
+                            Right = new ConstantNode() { Text = NameOfType(e.TypeOperand) },
+                            Value = GetValue(e)
+                        };
                 default:
                     throw new NotImplementedException(string.Format(CultureInfo.CurrentCulture,
                                                                     "Can't handle TypeBinaryExpression of type {0}",
@@ -91,7 +91,12 @@ namespace PowerAssert.Infrastructure
 
         static string NameOfType(Type t)
         {
-            return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
+            if (t.IsGenericType)
+            {
+                var typeArgs = t.GetGenericArguments().Select(NameOfType);
+                return string.Format("{0}<{1}>", t.Name.Split('`')[0], string.Join(", ", typeArgs));
+            }
+            else return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
         }
 
         static Node ArrayIndex(BinaryExpression e)
@@ -189,7 +194,7 @@ namespace PowerAssert.Infrastructure
         {
             return new NewObjectNode
                 {
-                    Type = NameOfType(e.Type), 
+                    Type = NameOfType(e.Type),
                     Parameters = e.Arguments.Select(Parse).ToList(),
                     Value = GetValue(e)
                 };
@@ -198,7 +203,7 @@ namespace PowerAssert.Infrastructure
         {
             return new MemberInitNode
                 {
-                    Constructor = (NewObjectNode)ParseExpression(e.NewExpression), 
+                    Constructor = (NewObjectNode)ParseExpression(e.NewExpression),
                     Bindings = e.Bindings.Select(ParseExpression).ToList()
                 };
         }
@@ -209,7 +214,7 @@ namespace PowerAssert.Infrastructure
             {
                 return new MemberAssignmentNode { MemberName = e.Member.Name, Value = Parse(((MemberAssignment)e).Expression) };
             }
-            return new ConstantNode() {Text = e.Member.Name};
+            return new ConstantNode() { Text = e.Member.Name };
         }
 
         private static Node ParseExpression(InvocationExpression e)
@@ -306,6 +311,16 @@ namespace PowerAssert.Infrastructure
                 var k = type.GetProperty("Key").GetValue(value, null);
                 var v = type.GetProperty("Value").GetValue(value, null);
                 return string.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
+            }
+            if (value is Type)
+            {
+                return "typeof(" + NameOfType((Type)value) + ")";
+            }
+            if (value is Delegate)
+            {
+                var del = (Delegate)value;
+
+                return string.Format("delegate of type ({0}) -> {1}", string.Join(", ", del.Method.GetParameters().Select(x => NameOfType(x.ParameterType))), NameOfType(del.Method.ReturnType));
             }
             if (value is IEnumerable)
             {
