@@ -83,7 +83,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Util.Generated.cs</LastGenOutput>
     </None>
-    <None Include="release\powerassert.nuspec" />
+    <None Include="powerassert.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
