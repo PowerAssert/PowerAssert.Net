@@ -1,9 +1,14 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerAssert", "PowerAssert\PowerAssert.csproj", "{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerAssertTests", "PowerAssertTests\PowerAssertTests.csproj", "{665FDD28-99EF-4038-9469-1B27F778BF1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F5DC82BB-5F02-4AC8-AEC9-B3950C829544}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
