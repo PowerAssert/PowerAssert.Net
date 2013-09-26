@@ -57,6 +57,7 @@ namespace PowerAssertTests
             Console.Out.WriteLine(s);
         }
 
+
         [Test]
         public void PrintResultsForNewObject()
         {
@@ -76,6 +77,16 @@ namespace PowerAssertTests
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void TestDifferingLists()
+        {
+            var x = new List<int> { 1, 2, 3, 4, 5, 6 };
+            var y = new List<int> { 1, 2, 3, 4, 5, 7 };
+
+            PAssert.IsTrue(() => x.SequenceEqual(y));
         }
 
         [Test]
