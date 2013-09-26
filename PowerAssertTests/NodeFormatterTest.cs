@@ -29,6 +29,7 @@ namespace PowerAssertTests
 
             string[] expected = {
                                     "5 == 6",
+                                    "  __",
                                     "  false"
                                 };
 
@@ -54,7 +55,8 @@ namespace PowerAssertTests
 
             string[] expected = {
                                     "31 == 5 * 6",
-                                    "   |    '",
+                                    "   __   .",
+                                    "   |    .",
                                     "   |    30",
                                     "   false"
                                 };
@@ -83,8 +85,9 @@ namespace PowerAssertTests
 
             string[] expected = {
                                     "f(a, x) == 314.4",
-                                    "' '  '  |",
-                                    "| '  '  |",
+                                    ". .  .  __",
+                                    ". .  .  |",
+                                    "| .  .  |",
                                     "| |  |  False",
                                     "| |  2.423",
                                     "| 3",
