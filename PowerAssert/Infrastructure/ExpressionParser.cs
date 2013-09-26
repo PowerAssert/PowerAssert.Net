@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -242,43 +243,144 @@ namespace PowerAssert.Infrastructure
             return string.Format("{0}: {1}", i.GetType().Name, i.Message);
         }
 
+        private static StringComparer GetComparerFromComparison(StringComparison comparison)
+        {
+            switch (comparison)
+            {
+                case StringComparison.CurrentCulture:
+                    return StringComparer.CurrentCulture;
+                case StringComparison.CurrentCultureIgnoreCase:
+                    return StringComparer.CurrentCultureIgnoreCase;
+                case StringComparison.InvariantCulture:
+                    return StringComparer.InvariantCulture;
+                case StringComparison.InvariantCultureIgnoreCase:
+                    return StringComparer.InvariantCultureIgnoreCase;
+                case StringComparison.Ordinal:
+                    return StringComparer.Ordinal;
+                case StringComparison.OrdinalIgnoreCase:
+                    return StringComparer.OrdinalIgnoreCase;
+                default: throw new InvalidDataException("Unexpected StringComparison value.");
+            }
+        }
+
         static string GetHints(Expression e, object value)
         {
-            if (value is bool && !(bool)value && e is BinaryExpression && e.NodeType == ExpressionType.Equal)
+            if (value is bool && !(bool)value)
             {
-                var be = (BinaryExpression)e;
-                object left;
-                object right;
-                try
+                if (e is MethodCallExpression)
                 {
-                    left = DynamicInvoke(be.Left);
-                    right = DynamicInvoke(be.Right);
-                }
-                catch (TargetInvocationException exception)
-                {
-                    return FormatTargetInvocationException(exception);
-                }
-                if (Object.Equals(left, right))
-                {
-                    return ", but would have been True with .Equals()";
-                }
-                if (left is string && right is string)
-                {
-                    if (((string)left).Equals((string)right, StringComparison.InvariantCultureIgnoreCase))
+                    var methE = (MethodCallExpression)e;
+                    if (methE.Arguments.Count > 0)
                     {
-                        return ", but would have been True if case insensitive";
+                        if (methE.Object == null) // static method
+                        {
+                            if (methE.Arguments.Count >= 2)
+                            {
+                                var obj = DynamicInvoke(methE.Arguments[0]);
+                                var arg = DynamicInvoke(methE.Arguments[1]);
+                                if (methE.Method.Name == "SequenceEqual" && obj is IEnumerable && arg is IEnumerable)
+                                {
+                                    if (methE.Arguments.Count == 2) // TODO: equality comparer
+                                    {
+                                        var objEnum = (IEnumerable)obj;
+                                        var argEnum = (IEnumerable)arg;
+
+                                        var enumObj = objEnum.GetEnumerator();
+                                        var enumArg = argEnum.GetEnumerator();
+                                        {
+                                            int i = 0;
+                                            while (enumObj.MoveNext() && enumArg.MoveNext())
+                                            {
+                                                if (!Equals(enumObj.Current, enumArg.Current))
+                                                {
+                                                    return string.Format(", enumerables differ at index {0}, {1} != {2}", i,
+                                                            FormatObject(enumObj.Current), FormatObject(enumArg.Current));
+                                                }
+                                                ++i;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else // instance method
+                        {
+                            var obj = DynamicInvoke(methE.Object);
+                            var arg = DynamicInvoke(methE.Arguments.First());
+                            if (methE.Method.Name == "Equals")
+                            {
+                                if (obj is string && arg is string)
+                                {
+                                    var comparison = (StringComparison)(methE.Arguments.Select(DynamicInvoke).FirstOrDefault(x => x is StringComparison) ??
+                                             StringComparison.CurrentCulture);
+
+                                    return GetStringDifferHint((string)obj, (string)arg, GetComparerFromComparison(comparison));
+                                }
+                                else if (obj is IEnumerable && arg is IEnumerable)
+                                {
+                                    if (((IEnumerable)obj).Cast<object>().SequenceEqual(((IEnumerable)arg).Cast<object>()))
+                                    {
+                                        return ", but would have been True with .SequenceEqual()";
+                                    }
+                                }
+                            }
+                        }
                     }
-                    return "";
                 }
-                if (left is IEnumerable && right is IEnumerable)
+
+                if (e is BinaryExpression && e.NodeType == ExpressionType.Equal)
                 {
-                    if (((IEnumerable)left).Cast<object>().SequenceEqual(((IEnumerable)right).Cast<object>()))
+                    var be = (BinaryExpression)e;
+                    object left;
+                    object right;
+                    try
                     {
-                        return ", but would have been True with .SequenceEqual()";
+                        left = DynamicInvoke(be.Left);
+                        right = DynamicInvoke(be.Right);
+                    }
+                    catch (TargetInvocationException exception)
+                    {
+                        return FormatTargetInvocationException(exception);
+                    }
+                    if (Equals(left, right))
+                    {
+                        return ", but would have been True with Equals()";
+                    }
+                    if (left is string && right is string)
+                    {
+                        if (((string)left).Equals((string)right, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            return ", but would have been True if case-insensitive";
+                        }
+
+                        return GetStringDifferHint((string)left, (string)right, StringComparer.CurrentCulture);
+                    }
+                    if (left is IEnumerable && right is IEnumerable)
+                    {
+                        if (((IEnumerable)left).Cast<object>().SequenceEqual(((IEnumerable)right).Cast<object>()))
+                        {
+                            return ", but would have been True with .SequenceEqual()";
+                        }
                     }
                 }
             }
             return "";
+        }
+
+        static string GetStringDifferHint(string left, string right, StringComparer comparer)
+        {
+            if (left == null) return ", left is null";
+            if (right == null) return ", right is null";
+
+            for (int i = 1; i <= left.Length && i <= right.Length; ++i)
+            {
+                //TODO: this doesn't know about surrogate pairs or things like esszett
+                if (!comparer.Equals(left.Substring(0, i), right.Substring(0, i)))
+                    return string.Format(", strings differ at index {0}, '{1}' != '{2}'", i - 1,
+                        left[i - 1], right[i - 1]);
+            }
+
+            return ""; //err: they don't differ!
         }
 
         static object DynamicInvoke(Expression e)
@@ -311,13 +413,16 @@ namespace PowerAssert.Infrastructure
             {
                 var enumerable = (IEnumerable)value;
                 var values = enumerable.Cast<object>().Select(FormatObject);
-
                 //in case the enumerable is really long, let's cut off the end arbitrarily?
-                const int limit = 100;
-                values = values.Take(limit);
-                if (values.Count() == limit)
+                const int Limit = 5;
+
+                var list = enumerable as IList;
+                var knownMax = list != null ? list.Count : default(int?);
+
+                values = values.Take(Limit);
+                if (values.Count() == Limit)
                 {
-                    values = values.Concat(new[] { "... (MORE THAN " + limit + " ITEMS FOUND)" });
+                    values = values.Concat(new[] { knownMax.HasValue && knownMax > Limit ? string.Format("... ({0} total)", knownMax) : "..." });
                 }
                 return "[" + string.Join(", ", values.ToArray()) + "]";
             }
