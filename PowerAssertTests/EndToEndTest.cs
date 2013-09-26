@@ -56,6 +56,18 @@ namespace PowerAssertTests
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
         }
+        
+        [Test]
+        public void PrintResultsForAction()
+        {
+            Func<Action<string>, bool> foo = act => { act("s"); return false; };
+            Action<string> x = k => {};
+            Expression<Func<bool>> expression = () => foo(x);
+            Node constantNode = ExpressionParser.Parse(expression.Body);
+            string[] strings = NodeFormatter.Format(constantNode);
+            string s = string.Join(Environment.NewLine, strings);
+            Console.Out.WriteLine(s);
+        }
 
         [Test]
         public void PrintResultsForNewObject()

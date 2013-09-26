@@ -320,7 +320,7 @@ namespace PowerAssert.Infrastructure
             {
                 var del = (Delegate)value;
 
-                return string.Format("delegate of type ({0}) -> {1}", string.Join(", ", del.Method.GetParameters().Select(x => NameOfType(x.ParameterType))), NameOfType(del.Method.ReturnType));
+                return string.Format("delegate {0}, type: {2} ({1})",  NameOfType(del.GetType()), string.Join(", ", del.Method.GetParameters().Select(x => NameOfType(x.ParameterType))), NameOfType(del.Method.ReturnType));
             }
             if (value is IEnumerable)
             {
