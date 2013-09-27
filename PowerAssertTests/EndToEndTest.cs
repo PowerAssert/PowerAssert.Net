@@ -321,6 +321,36 @@ namespace PowerAssertTests
             PAssert.IsTrue(() => d == f);
         }
 
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringContainsControlChar()
+        {
+            var l = "hello";
+            var r = "hell\u0009o";
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringContainsMismatchedNewlines()
+        {
+            var l = "hell\r\no";
+            var r = "hell\no";
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void OneStringIsDecomposedVersionOfOther()
+        {
+            var l = "hellö".Normalize(NormalizationForm.FormC);
+            var r = "hellö".Normalize(NormalizationForm.FormD);
+
+            PAssert.IsTrue(() => l == r);
+        }
+
         string _expected = "bar";
 
         [Test]

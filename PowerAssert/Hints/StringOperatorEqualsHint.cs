@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
         {
             if (left is string && right is string)
             {
-                if (((string)left).Equals((string)right, StringComparison.InvariantCultureIgnoreCase))
+                if (((string)left).Equals((string)right, StringComparison.OrdinalIgnoreCase)) // TODO: think about ordinal vs culture-invariant here...
                 {
                     hint = ", but would have been True if case-insensitive";
                     return true;
