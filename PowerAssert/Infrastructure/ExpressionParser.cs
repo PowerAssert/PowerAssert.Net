@@ -256,7 +256,8 @@ namespace PowerAssert.Infrastructure
             new SequenceEqualHint(),
             new DelegateShouldHaveBeenInvokedEqualsHint(),
             new StringEqualsHint(),
-            new EnumerableEqualsHint()
+            new EnumerableEqualsHint(),
+            new FloatEqualityHint()
             );
 
         static string GetHints(Expression e, object value)

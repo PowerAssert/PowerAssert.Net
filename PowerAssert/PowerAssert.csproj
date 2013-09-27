@@ -60,6 +60,7 @@
     <Compile Include="Hints\EnumerableEqualsHint.cs" />
     <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHint.cs" />
     <Compile Include="Hints\EnumerableOperatorEqualsHint.cs" />
+    <Compile Include="Hints\FloatEqualityHint.cs" />
     <Compile Include="Hints\HintUtils.cs" />
     <Compile Include="Hints\IHint.cs" />
     <Compile Include="Hints\MethodEqualsInsteadOfOperatorEqualsHint.cs" />

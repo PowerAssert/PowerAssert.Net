@@ -310,6 +310,17 @@ namespace PowerAssertTests
             PAssert.IsTrue(() => Equals(f, x));
         }
 
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void CompareTwoCloseFloats()
+        {
+            double d = 0.1;
+            float f = (float)d*100;
+            f /= 100;
+
+            PAssert.IsTrue(() => d == f);
+        }
+
         string _expected = "bar";
 
         [Test]
