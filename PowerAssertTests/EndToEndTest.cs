@@ -333,6 +333,17 @@ namespace PowerAssertTests
 
         [Test]
         [Ignore("This test will fail for demo purposes")]
+        public void StringContainsFormatChar()
+        {
+            var l = "hello";
+            var r = "hell\u200Co"; //ZWNJ
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
         public void StringContainsMismatchedNewlines()
         {
             var l = "hell\r\no";

@@ -51,7 +51,13 @@ namespace PowerAssert.Hints
                 return string.Format(", left string contains control character '{0}' at index {1}", PrintableChar(leftC), index);
 
             if (char.IsControl(rightC))
-                return string.Format(", right string contains control character '{0}' at index {1}", PrintableChar(leftC), index);
+                return string.Format(", right string contains control character '{0}' at index {1}", PrintableChar(rightC), index);
+
+            if (char.GetUnicodeCategory(leftC) == UnicodeCategory.Format)
+                return string.Format(", left string contains format character '{0}' at index {1}", PrintableChar(leftC), index);
+
+            if (char.GetUnicodeCategory(rightC) == UnicodeCategory.Format)
+                return string.Format(", right string contains format character '{0}' at index {1}", PrintableChar(rightC), index);
 
             if (index + 1 < left.Length)
             {
