@@ -91,7 +91,7 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static string NameOfType(Type t)
+        internal static string NameOfType(Type t)
         {
             if (t.IsGenericType)
             {
@@ -257,7 +257,8 @@ namespace PowerAssert.Infrastructure
             new DelegateShouldHaveBeenInvokedEqualsHint(),
             new StringEqualsHint(),
             new EnumerableEqualsHint(),
-            new FloatEqualityHint()
+            new FloatEqualityHint(),
+            new BrokenEqualityHint()
             );
 
         static string GetHints(Expression e, object value)

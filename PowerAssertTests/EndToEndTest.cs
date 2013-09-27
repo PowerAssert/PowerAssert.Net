@@ -341,6 +341,23 @@ namespace PowerAssertTests
             PAssert.IsTrue(() => l == r);
         }
 
+        class BrokenClass
+        {
+            public override bool Equals(object obj)
+            {
+                return false;
+            }
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void BrokenEqualityTestInstanceEquals()
+        {
+            var x = new BrokenClass();
+
+            PAssert.IsTrue(() => x.Equals(x));
+        }
+
 
         [Test]
         [Ignore("This test will fail for demo purposes")]
