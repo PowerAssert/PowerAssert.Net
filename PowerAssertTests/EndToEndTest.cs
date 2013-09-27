@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using NUnit.Framework;
 using PowerAssert;
@@ -351,12 +352,23 @@ namespace PowerAssertTests
 
         [Test]
         [Ignore("This test will fail for demo purposes")]
+        public void ShouldHaveUsedTotal()
+        {
+            var x = TimeSpan.FromSeconds(100);
+
+            PAssert.IsTrue(() => x.Seconds == 100);
+        }
+
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
         public void BrokenEqualityTestInstanceEquals()
         {
             var x = new BrokenClass();
 
             PAssert.IsTrue(() => x.Equals(x));
         }
+
 
 
         [Test]

@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Annotations.cs" />
     <Compile Include="Hints\BrokenEqualityHint.cs" />
+    <Compile Include="Hints\TimeSpanTotalMistakesHint.cs" />
     <Compile Include="Hints\EnumerableEqualsHint.cs" />
     <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHint.cs" />
     <Compile Include="Hints\EnumerableOperatorEqualsHint.cs" />
