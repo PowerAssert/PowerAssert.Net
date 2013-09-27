@@ -49,7 +49,7 @@ namespace PowerAssert.Infrastructure
                     var line = new StringBuilder().Append(' ', nodeInfos.Max(x => x.Location + x.Width - 1) + 1);
                     nodeInfos.ForEach(x =>
                     {
-                        if (x.Depth == currDepth)
+                        if (x.Depth == currDepth && x.Width > 1)
                         {
                             if (x.Width > 2)
                             {
@@ -62,8 +62,7 @@ namespace PowerAssert.Infrastructure
                             }
                             else
                             {
-                                line[x.Location] = horz;
-                                if (x.Width > 1) line[x.Location+1] = horz;
+                                line[x.Location] = line[x.Location + 1] = horz;
                             }
                         }
                         else if (x.Depth >= currDepth)
