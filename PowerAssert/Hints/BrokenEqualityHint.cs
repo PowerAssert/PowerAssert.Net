@@ -38,7 +38,8 @@ namespace PowerAssert.Hints
 
                 if (binE.Method != null)
                     declaringType = binE.Method.DeclaringType;
-                else declaringType = typeof (object); // this should never happen ;)
+                else 
+                    declaringType = typeof (object); // this should never happen - the hints are only called when the assert fails
             }
 
             if (left != null && left == right)
