@@ -8,6 +8,9 @@ using PowerAssert.Hints;
 
 namespace PowerAssertTests.Hints
 {
+
+    // ReSharper disable EqualExpressionComparison
+
     [TestFixture]
     public class BrokenEqualityHintTests
     {
@@ -108,6 +111,11 @@ namespace PowerAssertTests.Hints
 
         class OverridesEqualsBadly
         {
+            public override int GetHashCode()
+            {
+                return 0;
+            }
+
             public override bool Equals(object obj)
             {
                 return false;
