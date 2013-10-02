@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hints\BrokenEqualityHintTests.cs" />
+    <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHintTests.cs" />
     <Compile Include="NodeFormatterTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,9 @@
       <Project>{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}</Project>
       <Name>PowerAssert</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

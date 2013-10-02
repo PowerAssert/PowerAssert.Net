@@ -22,22 +22,45 @@ namespace PowerAssert.Hints
 
                     if (left is Delegate || right is Delegate)
                     {
-                        var del = left is Delegate ? (Delegate) left : (Delegate) right;
-                        var other = left is Delegate ? right : left;
-
-                        if (!del.Method.GetParameters().Any() && Equals(del.Method.Invoke(null, new object[0]), other))
-                        {
-                            var delExp = left is Delegate ? methE.Arguments[0] : methE.Arguments[1];
-
-                            hint = ", but would have been True if you had invoked '" + NodeFormatter.PrettyPrint(ExpressionParser.Parse(delExp)) + "'";
+                        if (CheckArgument(methE, true, out hint))
                             return true;
-                        }
-                        else
-                        {
-                            hint = ", this is a suspicious comparison";
+
+                        if (CheckArgument(methE, false, out hint))
                             return true;
-                        }
+
+                        hint = ", this is a suspicious comparison";
+                        return true;
                     }
+                }
+            }
+
+            hint = null;
+            return false;
+        }
+
+        private static bool CheckArgument(MethodCallExpression methE, bool left, out string hint)
+        {
+            int ix1 = left ? 0 : 1;
+            int ix2 = left ? 1 : 0;
+
+            if (typeof(Delegate).IsAssignableFrom(methE.Arguments[ix1].Type))
+            {
+                object leftR;
+                try
+                {
+                    leftR = ExpressionParser.DynamicInvoke(Expression.Invoke(methE.Arguments[ix1]));
+                }
+                catch (InvalidOperationException) // delegate needs arguments
+                {
+                    hint = null;
+                    return false;
+                }
+
+                if (Equals(leftR, ExpressionParser.DynamicInvoke(methE.Arguments[ix2])))
+                {
+                    hint = string.Format(", but would have been True if you had invoked '{0}'",
+                        NodeFormatter.PrettyPrint(ExpressionParser.Parse(methE.Arguments[ix1])));
+                    return true;
                 }
             }
 
