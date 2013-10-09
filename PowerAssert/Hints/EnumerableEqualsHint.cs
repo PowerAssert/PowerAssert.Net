@@ -6,6 +6,10 @@ using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
+    /// <summary>
+    /// This hint triggers when you've compared two enumerables with <see cref="object.Equals(object)"/> but
+    /// theyy would have compared equal if you had used <see cref="Enumerable.SequenceEqual{TSource}(System.Collections.Generic.IEnumerable{TSource},System.Collections.Generic.IEnumerable{TSource})"/>.
+    /// </summary>
     internal class EnumerableEqualsHint : IHint
     {
         private static readonly MethodInfo ObjectInstanceEqualsMethodInfo = typeof (object).GetMethods().Single(x => x.Name == "Equals" && !x.IsStatic);

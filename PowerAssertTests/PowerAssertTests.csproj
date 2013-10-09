@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Hints\BrokenEqualityHintTests.cs" />
     <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHintTests.cs" />
+    <Compile Include="Hints\EnumerableEqualsHintTests.cs" />
+    <Compile Include="Hints\EnumerableOperatorEqualsHintTests.cs" />
     <Compile Include="NodeFormatterTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
