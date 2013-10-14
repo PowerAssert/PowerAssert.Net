@@ -45,7 +45,7 @@ namespace PowerAssert.Hints
                         .FirstOrDefault(x => x is StringComparison) ?? StringComparison.CurrentCulture);
 
                     hint = HintUtils.GetStringDifferHint((string) obj, (string) arg, GetComparerFromComparison(comparison));
-                    return true;
+                    return hint != null;
                 }
             }
 

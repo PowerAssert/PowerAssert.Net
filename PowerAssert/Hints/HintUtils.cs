@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace PowerAssert.Hints
 {
     static class HintUtils
     {
+        [CanBeNull]
         public static string GetStringDifferHint(string left, string right, StringComparer comparer)
         {
             if (left == null) return ", left is null";
@@ -24,7 +26,7 @@ namespace PowerAssert.Hints
                 }
             }
 
-            return ""; //err: they don't differ!
+            return null; //err: they don't differ!
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace PowerAssert.Hints
 
             if (leftC == ' ' && rightC == '\t')
                 return string.Format(", left string contains a tab, but right string contains a space at index {0}", index);
-
+            
             if (leftC == '\r' && rightC == '\n')
                 return string.Format(", left string contains a carriage-return, but right string contains a newline at index {0}", index);
 

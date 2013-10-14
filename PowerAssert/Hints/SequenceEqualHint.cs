@@ -10,7 +10,7 @@ namespace PowerAssert.Hints
     {
         private static readonly MethodInfo SequenceEqualMethodInfo =
             typeof (Enumerable).GetMethods().Single(x => x.Name == "SequenceEqual" &&
-                                                         x.GetParameters().Count() == 2); // TODO: equality comparer
+                                                         x.GetParameters().Count() == 2); // TODO: equality comparer support
 
         public bool TryGetHint(Expression expression, out string hint)
         {

@@ -15,7 +15,7 @@ namespace PowerAssert.Hints
                 }
 
                 hint = HintUtils.GetStringDifferHint((string)left, (string)right, StringComparer.CurrentCulture);
-                return true;
+                return hint != null;
             }
 
             hint = null;

@@ -15,7 +15,6 @@ namespace PowerAssertTests.Hints
         {
             var hint = new DelegateShouldHaveBeenInvokedEqualsHint();
 
-            int n = 3;
             Func<int> f = () => 3;
 
             Expression<Func<bool>> ex = () => Equals(f, 3);

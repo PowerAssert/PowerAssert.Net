@@ -1,31 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Reflection;
 using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
-    class TimeSpanTotalMistakesHint : IHint   
+    class TimeSpanTotalMistakesHint : IHint
     {
+        private static readonly MethodInfo[] EqualsMethodInfos =
+        {
+            typeof (object).GetMethod("Equals", BindingFlags.Instance|BindingFlags.Public),
+            typeof (int).GetMethods(BindingFlags.Instance|BindingFlags.Public)
+                .Single(x => x.Name == "Equals" && x.GetParameters().First().ParameterType == typeof(int)),
+        };
+
+        private static readonly MethodInfo[] StaticEqualsMethodInfos =
+        {
+            typeof (object).GetMethod("Equals", BindingFlags.Static|BindingFlags.Public),
+        };
+        
         public bool TryGetHint(Expression expression, out string hint)
         {
             var binaryExpression = expression as BinaryExpression;
-            if (binaryExpression != null)
+            if (binaryExpression != null && binaryExpression.NodeType == ExpressionType.Equal)
             {
-                if (binaryExpression.NodeType == ExpressionType.Equal)
+                var left = binaryExpression.Left as MemberExpression;
+                if (left != null)
                 {
-                    var left = binaryExpression.Left as MemberExpression;
-                    if (left != null)
+                    if (CheckValues(out hint, left, binaryExpression.Right)) return true;
+                }
+
+                var right = binaryExpression.Right as MemberExpression;
+                if (right != null)
+                {
+                    if (CheckValues(out hint, right, binaryExpression.Left)) return true;
+                }
+            }
+
+            var methE = expression as MethodCallExpression;
+            if (methE != null)
+            {
+                if (EqualsMethodInfos.Any(x => x == methE.Method))
+                {
+                    var objectToCheck = methE.Object as MemberExpression;
+                    if (objectToCheck != null)
                     {
-                        if (CheckValues(out hint, left, binaryExpression.Right)) return true;
+                        if (CheckValues(out hint, objectToCheck, methE.Arguments.Single())) return true;
                     }
 
-                    var right = binaryExpression.Right as MemberExpression;
-                    if (right != null)
+                    var argToCheck = methE.Arguments.Single() as MemberExpression;
+                    if (argToCheck != null)
                     {
-                        if (CheckValues(out hint, right, binaryExpression.Left)) return true;
+                        if (CheckValues(out hint, argToCheck, methE.Object)) return true;
+                    }
+                }
+                else if (StaticEqualsMethodInfos.Any(x => x == methE.Method))
+                {
+                    // this gets a little hairy as there is a conversion to object before the Equals method is called
+
+                    var leftOuter = methE.Arguments[0] as UnaryExpression;
+                    if (leftOuter != null && leftOuter.NodeType == ExpressionType.Convert)
+                    {
+                        var leftInner = leftOuter.Operand as MemberExpression;
+                        if (leftInner != null)
+                        {
+                            if (CheckValues(out hint, leftInner, methE.Arguments[1])) return true;
+                        }
+                    }
+
+                    var rightOuter = methE.Arguments[1] as UnaryExpression;
+                    if (rightOuter != null && rightOuter.NodeType == ExpressionType.Convert)
+                    {
+                        var rightInner = rightOuter.Operand as MemberExpression;
+                        if (rightInner != null)
+                        {
+                            if (CheckValues(out hint, rightInner, methE.Arguments[0])) return true;
+                        }
                     }
                 }
             }

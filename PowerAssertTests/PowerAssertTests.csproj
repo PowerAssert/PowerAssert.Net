@@ -53,6 +53,12 @@
     <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHintTests.cs" />
     <Compile Include="Hints\EnumerableEqualsHintTests.cs" />
     <Compile Include="Hints\EnumerableOperatorEqualsHintTests.cs" />
+    <Compile Include="Hints\FloatEqualityHintTests.cs" />
+    <Compile Include="Hints\MethodEqualsInsteadOfOperatorEqualsHintTests.cs" />
+    <Compile Include="Hints\SequenceEqualsHintTests.cs" />
+    <Compile Include="Hints\StringEqualsHintTests.cs" />
+    <Compile Include="Hints\StringOperatorEqualsHint.cs" />
+    <Compile Include="Hints\TimeSpanTotalMistakesHintTests.cs" />
     <Compile Include="NodeFormatterTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

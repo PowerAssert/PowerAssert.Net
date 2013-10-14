@@ -4,7 +4,7 @@ using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
-    abstract class OperatorEqualsHintBase : IHint
+    public abstract class OperatorEqualsHintBase : IHint
     {
         public bool TryGetHint(Expression expression, out string hint)
         {
