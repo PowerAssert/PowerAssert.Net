@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PowerAssert.Infrastructure.Nodes;
@@ -18,17 +16,8 @@ namespace PowerAssert.Infrastructure
 
         internal static string[] Format(Node constantNode)
         {
-            StringBuilder textLine = new StringBuilder();
-            List<NodeInfo> nodeInfos = new List<NodeInfo>();
-
-            constantNode.Walk((text, value, depth) =>
-            {
-                if (value != null)
-                {
-                    nodeInfos.Add(new NodeInfo { Location = textLine.Length, Width = text.Length, Value = value, Depth = depth });
-                }
-                textLine.Append(text);
-            }, 0);
+            List<NodeInfo> nodeInfos;
+            var textLine = PrettyPrint(constantNode, out nodeInfos);
 
             List<StringBuilder> lines = new List<StringBuilder>();
 
@@ -86,6 +75,30 @@ namespace PowerAssert.Infrastructure
                 .Select(x => x.ToString().TrimEnd())
                 .Where(x => x.Length > 0)
                 .ToArray();
+        }
+
+        public static string PrettyPrint(Node node)
+        {
+            List<NodeInfo> ignored;
+            return PrettyPrint(node, out ignored).ToString();
+        }
+
+        private static StringBuilder PrettyPrint(Node constantNode, out List<NodeInfo> outNodeInfos)
+        {
+            StringBuilder textLine = new StringBuilder();
+            var nodeInfos = new List<NodeInfo>();
+
+            constantNode.Walk((text, value, depth) =>
+            {
+                if (value != null)
+                {
+                    nodeInfos.Add(new NodeInfo {Location = textLine.Length, Width = text.Length, Value = value, Depth = depth});
+                }
+                textLine.Append(text);
+            }, 0);
+
+            outNodeInfos = nodeInfos;
+            return textLine;
         }
 
         class NodeInfo
