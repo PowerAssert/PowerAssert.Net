@@ -11,7 +11,7 @@ namespace PowerAssertTests.Hints
     internal class DelegateShouldHaveBeenInvokedEqualsHintTests
     {
         [Test]
-        public void ShouldBeTriggeredWithoutClosure()
+        public void ShouldBeTriggeredWithoutClosure_Left()
         {
             var hint = new DelegateShouldHaveBeenInvokedEqualsHint();
 
@@ -25,7 +25,7 @@ namespace PowerAssertTests.Hints
         }
 
         [Test]
-        public void ShouldBeTriggeredWithClosure()
+        public void ShouldBeTriggeredWithClosure_Left()
         {
             var hint = new DelegateShouldHaveBeenInvokedEqualsHint();
 
@@ -33,6 +33,36 @@ namespace PowerAssertTests.Hints
             Func<int> f = () => n; // now this func requires a closure
 
             Expression<Func<bool>> ex = () => Equals(f, 3);
+
+            string ignored;
+            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsNotNull(ignored);
+        }
+
+
+        [Test]
+        public void ShouldBeTriggeredWithoutClosure_Right()
+        {
+            var hint = new DelegateShouldHaveBeenInvokedEqualsHint();
+
+            Func<int> f = () => 3;
+
+            Expression<Func<bool>> ex = () => Equals(3, f);
+
+            string ignored;
+            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsNotNull(ignored);
+        }
+
+        [Test]
+        public void ShouldBeTriggeredWithClosure_Right()
+        {
+            var hint = new DelegateShouldHaveBeenInvokedEqualsHint();
+
+            int n = 3;
+            Func<int> f = () => n; // now this func requires a closure
+
+            Expression<Func<bool>> ex = () => Equals(3, f);
 
             string ignored;
             Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));

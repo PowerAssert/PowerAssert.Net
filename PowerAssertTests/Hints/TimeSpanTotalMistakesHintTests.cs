@@ -96,5 +96,18 @@ namespace PowerAssertTests.Hints
             Assert.IsFalse(hint.TryGetHint(x.Body, out description));
             Assert.IsNull(description);
         }
+
+
+        [Test]
+        public void DoesntTriggerIfTheyWouldNotBeEqual()
+        {
+            var hint = new TimeSpanTotalMistakesHint();
+
+            Expression<Func<bool>> x = () => Equals(TimeSpan.FromMinutes(63).Minutes, 62);
+
+            string description;
+            Assert.IsFalse(hint.TryGetHint(x.Body, out description));
+            Assert.IsNull(description);
+        }
     }
 }

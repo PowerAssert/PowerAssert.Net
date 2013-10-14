@@ -104,5 +104,20 @@ namespace PowerAssertTests.Hints
             Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
             Assert.IsNull(message);
         }
+
+        [Test]
+        public void DoesntExplodeIfOneIsNull()
+        {
+            var hint = new EnumerableEqualsHint();
+
+            var x = new[] { 3 };
+            object y = null;
+
+            Expression<Func<bool>> assertion = () => x.Equals(y);
+
+            string message;
+            Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsNull(message);
+        }
     }
 }
