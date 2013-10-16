@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using NUnit.Framework;
 using PowerAssert;
@@ -298,6 +299,96 @@ namespace PowerAssertTests
         {
             var a = 4;
             PAssert.IsTrue(() => (a * 5).Equals((a + 5)));
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void CompareDelegateAndObject()
+        {
+            var x = 1;
+            Func<int> f = () => 1;
+
+            PAssert.IsTrue(() => Equals(f, x));
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void CompareTwoCloseFloats()
+        {
+            double d = 0.1;
+            float f = (float)d*100;
+            f /= 100;
+
+            PAssert.IsTrue(() => d == f);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringContainsControlChar()
+        {
+            var l = "hello";
+            var r = "hell\u0009o";
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringContainsFormatChar()
+        {
+            var l = "hello";
+            var r = "hell\u200Co"; //ZWNJ
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+        class BrokenClass
+        {
+            public override bool Equals(object obj)
+            {
+                return false;
+            }
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void ShouldHaveUsedTotal()
+        {
+            var x = TimeSpan.FromSeconds(100);
+
+            PAssert.IsTrue(() => x.Seconds == 100);
+        }
+
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void BrokenEqualityTestInstanceEquals()
+        {
+            var x = new BrokenClass();
+
+            PAssert.IsTrue(() => x.Equals(x));
+        }
+
+
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void StringContainsMismatchedNewlines()
+        {
+            var l = "hell\r\no";
+            var r = "hell\no";
+
+            PAssert.IsTrue(() => l == r);
+        }
+
+        [Test]
+        [Ignore("This test will fail for demo purposes")]
+        public void OneStringIsDecomposedVersionOfOther()
+        {
+            var l = "hellö".Normalize(NormalizationForm.FormC);
+            var r = "hellö".Normalize(NormalizationForm.FormD);
+
+            PAssert.IsTrue(() => l == r);
         }
 
         string _expected = "bar";
