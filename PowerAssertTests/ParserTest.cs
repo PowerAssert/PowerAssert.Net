@@ -194,11 +194,58 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new UnaryNode
-                               {
-                                   Prefix = "!",
-                                   PrefixValue = "False",
-                                   Operand = new ConstantNode(){Text = "v", Value = "True"},
-                               };
+                                {
+                                    Prefix = "!",
+                                    PrefixValue = "False",
+                                    Operand = new ConstantNode() { Text = "v", Value = "True" },
+                                };
+
+            Assert.AreEqual(expected, node);
+        }
+
+        [Test]
+        public void ParseUnaryNotAsPartOfBinaryOperation()
+        {
+            var v = true;
+            Expression<Func<bool>> f = () => !v == false;
+            var node = ExpressionParser.Parse(f.Body);
+
+            var expected = new BinaryNode
+                            {
+                                Left = new UnaryNode
+                                        {
+                                            Prefix = "!",
+                                            PrefixValue = "False",
+                                            Operand = new ConstantNode() { Text = "v", Value = "True" },
+                                        },
+                                Right = new ConstantNode { Text = "False", Value = null },
+                                Operator = "==",
+                                Value = "True"
+                            };
+
+            Assert.AreEqual(expected, node);
+        }
+
+        [Test]
+        public void ParseUnaryNotWrappingBinaryOperation()
+        {
+            var v = true;
+            Expression<Func<bool>> f = () => !(v == false);
+            var node = ExpressionParser.Parse(f.Body);
+
+            var expected = new UnaryNode
+                            {
+                                Prefix = "!(",
+                                PrefixValue = "True",
+                                Operand = new BinaryNode
+                                            {
+                                                Left = new ConstantNode { Text = "v", Value = "True" },
+                                                Right = new ConstantNode { Text = "False", Value = null },
+                                                Operator = "==",
+                                                Value = "False"
+                                            },
+                                Suffix = ")"
+                            };
 
             Assert.AreEqual(expected, node);
         }
