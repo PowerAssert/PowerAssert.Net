@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -13,7 +12,7 @@ using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Infrastructure
 {
-    internal class ExpressionParser
+    internal static class ExpressionParser
     {
         public static Node Parse(Expression e)
         {
@@ -27,7 +26,7 @@ namespace PowerAssert.Infrastructure
             }
             catch (RuntimeBinderException exception)
             {
-                throw new Exception(string.Format("Unable to dispach expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
+                throw new Exception(string.Format("Unable to dispatch expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
             }
         }
 
@@ -40,7 +39,7 @@ namespace PowerAssert.Infrastructure
                         {
                             Left = Parse(e.Expression),
                             Operator = "is",
-                            Right = new ConstantNode() { Text = NameOfType(e.TypeOperand) },
+                            Right = new ConstantNode { Text = NameOfType(e.TypeOperand) },
                             Value = GetValue(e)
                         };
                 default:
@@ -52,7 +51,7 @@ namespace PowerAssert.Infrastructure
 
         static Node Lambda(Expression e)
         {
-            return new ConstantNode() { Text = e.ToString() };
+            return new ConstantNode { Text = e.ToString() };
         }
 
         static Node ParseExpression(UnaryExpression e)
@@ -92,9 +91,7 @@ namespace PowerAssert.Infrastructure
                         Items = e.Expressions.Select(Parse).ToList(),
                         Type = NameOfType(t)
                     };
-                case ExpressionType.NewArrayBounds:
-                //todo:
-                default:
+                default: // TODO
                     throw new ArgumentOutOfRangeException();
             }
         }
@@ -106,12 +103,13 @@ namespace PowerAssert.Infrastructure
                 var typeArgs = t.GetGenericArguments().Select(NameOfType);
                 return string.Format("{0}<{1}>", t.Name.Split('`')[0], string.Join(", ", typeArgs));
             }
-            else return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
+
+            return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
         }
 
         static Node ArrayIndex(BinaryExpression e)
         {
-            return new ArrayIndexNode() { Array = Parse(e.Left), Index = Parse(e.Right), Value = GetValue(e) };
+            return new ArrayIndexNode { Array = Parse(e.Left), Index = Parse(e.Right), Value = GetValue(e) };
         }
 
         static Node ParseExpression(ConditionalExpression e)
@@ -129,7 +127,7 @@ namespace PowerAssert.Infrastructure
 
         static Node ParseExpression(MethodCallExpression e)
         {
-            var parameters = e.Arguments.Select(Parse);
+            var parameters = e.Arguments.Select(Parse).ToArray();
             if (e.Method.GetCustomAttributes(typeof(ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
@@ -220,11 +218,13 @@ namespace PowerAssert.Infrastructure
 
         static Node ParseExpression(MemberBinding e)
         {
-            if (e is MemberAssignment)
+            var assignment = e as MemberAssignment;
+            if (assignment != null)
             {
-                return new MemberAssignmentNode { MemberName = e.Member.Name, Value = Parse(((MemberAssignment)e).Expression) };
+                return new MemberAssignmentNode { MemberName = assignment.Member.Name, Value = Parse(assignment.Expression) };
             }
-            return new ConstantNode() { Text = e.Member.Name };
+
+            return new ConstantNode { Text = e.Member.Name };
         }
 
         private static Node ParseExpression(InvocationExpression e)
@@ -323,15 +323,15 @@ namespace PowerAssert.Infrastructure
                 var enumerable = (IEnumerable)value;
                 var values = enumerable.Cast<object>().Select(FormatObject);
                 //in case the enumerable is really long, let's cut off the end arbitrarily?
-                const int Limit = 5;
+                const int limit = 5;
 
                 var list = enumerable as IList;
                 var knownMax = list != null ? list.Count : default(int?);
 
-                values = values.Take(Limit);
-                if (values.Count() == Limit)
+                values = values.Take(limit);
+                if (values.Count() == limit)
                 {
-                    values = values.Concat(new[] { knownMax.HasValue && knownMax > Limit ? string.Format("... ({0} total)", knownMax) : "..." });
+                    values = values.Concat(new[] { knownMax.HasValue && knownMax > limit ? string.Format("... ({0} total)", knownMax) : "..." });
                 }
                 return "[" + string.Join(", ", values.ToArray()) + "]";
             }
