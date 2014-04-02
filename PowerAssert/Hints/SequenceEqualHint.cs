@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -23,8 +24,8 @@ namespace PowerAssert.Hints
                     var instantiatedMethodInfo = SequenceEqualMethodInfo.MakeGenericMethod(typeParams);
                     if (methE.Method == instantiatedMethodInfo)
                     {
-                        var left = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
-                        var right = ExpressionParser.DynamicInvoke(methE.Arguments[1]);
+                        var left = Node.DynamicInvoke(methE.Arguments[0]);
+                        var right = Node.DynamicInvoke(methE.Arguments[1]);
 
                         var enumLeft = ((IEnumerable) left).GetEnumerator();
                         var enumRight = ((IEnumerable) right).GetEnumerator();
@@ -35,8 +36,8 @@ namespace PowerAssert.Hints
                                 if (!Equals(enumLeft.Current, enumRight.Current))
                                 {
                                     hint = string.Format(", enumerables differ at index {0}, {1} != {2}", i,
-                                        ExpressionParser.FormatObject(enumLeft.Current),
-                                        ExpressionParser.FormatObject(enumRight.Current));
+                                        Node.FormatObject(enumLeft.Current),
+                                        Node.FormatObject(enumRight.Current));
                                     return true;
                                 }
                                 ++i;

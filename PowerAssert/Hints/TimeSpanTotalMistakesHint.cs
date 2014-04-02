@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -90,7 +91,7 @@ namespace PowerAssert.Hints
             var totalValue = TryToGetTotalValue(left);
             if (totalValue.HasValue)
             {
-                var right = ExpressionParser.DynamicInvoke(rightEx);
+                var right = Node.DynamicInvoke(rightEx);
                 var rightValue = Convert.ToInt64(right);
 
                 if (totalValue.Value == rightValue)
@@ -111,7 +112,7 @@ namespace PowerAssert.Hints
                 var totalVersion = typeof(TimeSpan).GetProperty("Total" + expresssion.Member.Name);
                 if (totalVersion != null)
                 {
-                    var owner = ExpressionParser.DynamicInvoke(expresssion.Expression);
+                    var owner = Node.DynamicInvoke(expresssion.Expression);
 
                     return Convert.ToInt64(totalVersion.GetValue(owner, null));
                 }

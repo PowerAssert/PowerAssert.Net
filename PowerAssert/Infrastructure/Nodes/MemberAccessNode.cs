@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
@@ -11,19 +12,19 @@ namespace PowerAssert.Infrastructure.Nodes
         public string MemberName { get; set; }
 
         [NotNull]
-        public string MemberValue { get; set; }
+        public object MemberValue { get; set; }
 
         internal override void Walk(NodeWalker walker, int depth)
         {
             Container.Walk(walker, depth + 1);
             if (MemberName == "get_Item")
             {
-                walker("[", MemberValue, depth);
+                walker("[", FormatObject(MemberValue), depth);
             }
             else
             {
                 walker(".");
-                walker(MemberName, MemberValue, depth);
+                walker(MemberName, FormatObject(MemberValue), depth);
             }
         }
     }

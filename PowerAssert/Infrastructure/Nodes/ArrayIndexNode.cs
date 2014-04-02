@@ -2,22 +2,13 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class ArrayIndexNode : Node
+    internal class ArrayIndexNode : BinaryNode
     {
-        [NotNull]
-        public Node Array { get; set; }
-        
-        [NotNull]
-        public Node Index { get; set; }
-
-        [NotNull]
-        public string Value { get; set; }
-
         internal override void Walk(NodeWalker walker, int depth)
         {
-            Array.Walk(walker, depth + 1);
-            walker("[", Value, depth);
-            Index.Walk(walker, depth + 1);
+            Left.Walk(walker, depth + 1);
+            walker("[", FormatObject(Value), depth);
+            Right.Walk(walker, depth + 1);
             walker("]");
         }
     }

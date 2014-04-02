@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
@@ -14,7 +15,7 @@ namespace PowerAssert.Infrastructure.Nodes
         public Node Operand { get; set; }
 
         [CanBeNull]
-        public string PrefixValue { get; set; }
+        public object PrefixValue { get; set; }
 
         [CanBeNull]
         public string SuffixValue { get; set; }
@@ -23,7 +24,7 @@ namespace PowerAssert.Infrastructure.Nodes
         {
             if (!string.IsNullOrEmpty(Prefix))
             {
-                walker(Prefix, PrefixValue, depth + 1);
+                walker(Prefix, FormatObject(PrefixValue), depth + 1);
             }
             Operand.Walk(walker, depth);
             if (!string.IsNullOrEmpty(Suffix))

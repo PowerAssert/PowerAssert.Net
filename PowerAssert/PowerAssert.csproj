@@ -71,7 +71,6 @@
     <Compile Include="Hints\SequenceEqualHint.cs" />
     <Compile Include="Hints\StringEqualsHint.cs" />
     <Compile Include="Hints\StringOperatorEqualsHint.cs" />
-    <Compile Include="Infrastructure\ExpressionParser.cs" />
     <Compile Include="Infrastructure\Nodes\InvocationNode.cs" />
     <Compile Include="Infrastructure\NodeFormatter.cs" />
     <Compile Include="Infrastructure\Nodes\ArrayIndexNode.cs" />
@@ -79,6 +78,8 @@
     <Compile Include="Infrastructure\Nodes\ConditionalNode.cs" />
     <Compile Include="Infrastructure\Nodes\ConstantNode.cs" />
     <Compile Include="Infrastructure\Nodes\MemberAccessNode.cs" />
+    <Compile Include="Infrastructure\Nodes\MemberAssignmentNode.cs" />
+    <Compile Include="Infrastructure\Nodes\MemberInitNode.cs" />
     <Compile Include="Infrastructure\Nodes\MethodCallNode.cs" />
     <Compile Include="Infrastructure\Nodes\NewArrayNode.cs" />
     <Compile Include="Infrastructure\Nodes\NewObjectNode.cs" />

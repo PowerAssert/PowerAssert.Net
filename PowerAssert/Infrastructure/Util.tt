@@ -35,6 +35,7 @@ namespace PowerAssert.Infrastructure
         {
             {ExpressionType.AndAlso, "&&"},
             {ExpressionType.OrElse, "||"},
+			{ExpressionType.TypeIs, " is "},
 <# 
 foreach( var v in Enum.GetValues(typeof(ExpressionType))) 
 {

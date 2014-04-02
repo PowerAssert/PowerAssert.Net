@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using PowerAssert.Infrastructure;
 using PowerAssert.Infrastructure.Nodes;
@@ -12,7 +12,7 @@ namespace PowerAssertTests
         [Test]
         public void FormatConstant()
         {
-            string[] s = NodeFormatter.Format(new ConstantNode {Text = "5", Value = null});
+            string[] s = NodeFormatter.Format(new ConstantNode {Value = 5});
             AssertLines(new[] { "5" }, s);
         }
 
@@ -21,16 +21,16 @@ namespace PowerAssertTests
         {
             string[] s = NodeFormatter.Format(new BinaryNode
                                               {
-                                                  Operator = "==",
-                                                  Value = "false",
-                                                  Left = new ConstantNode {Text = "5"},
-                                                  Right = new ConstantNode {Text = "6"}
+                                                  Value = false,
+                                                  Left = new ConstantNode {Value = 5},
+                                                  Right = new ConstantNode {Value = 6},
+                                                  Type = ExpressionType.Equal
                                               });
 
             string[] expected = {
                                     "5 == 6",
                                     "  __",
-                                    "  false"
+                                    "  False"
                                 };
 
             AssertLines(expected, s);
@@ -41,15 +41,15 @@ namespace PowerAssertTests
         {
             string[] s = NodeFormatter.Format(new BinaryNode
                                               {
-                                                  Operator = "==",
+                                                  Type = ExpressionType.Equal,
                                                   Value = "false",
-                                                  Left = new ConstantNode {Text = "31"},
+                                                  Left = new ConstantNode {Value = "31"},
                                                   Right = new BinaryNode
                                                   {
-                                                      Operator = "*",
+                                                      Type = ExpressionType.Multiply,
                                                       Value = "30",
-                                                      Left = new ConstantNode { Text = "5" },
-                                                      Right = new ConstantNode { Text = "6" }
+                                                      Left = new ConstantNode { Value = "5" },
+                                                      Right = new ConstantNode { Value = "6" }
                                                   }
                                               });
 
@@ -67,21 +67,11 @@ namespace PowerAssertTests
         [Test]
         public void FormatInvocationNode()
         {
-            string[] s = NodeFormatter.Format(new BinaryNode
-            {
-                Left = new InvocationNode
-                {
-                    Arguments = new Node[] 
-                                       {
-                                            new ConstantNode { Text = "a", Value = "3" },
-                                            new ConstantNode { Text = "x", Value = "2.423" }
-                                       },
-                    Expression = new ConstantNode { Text = "f", Value = "System.Func`3[System.Int32,System.Double,System.Double]" }
-                },
-                Operator = "==",
-                Right = new ConstantNode { Text = "314.4" },
-                Value = "False"
-            });
+            Func<int, double, double> f = (i, i2) => i + i2;
+            int a = 3;
+            double x = 2.423;
+
+            string[] s = NodeFormatter.Format(BinaryNode.Create((BinaryExpression)((Expression<Func<bool>>) (() => f(a, x) == 314.4)).Body));
 
             string[] expected = {
                                     "f(a, x) == 314.4",
@@ -91,7 +81,7 @@ namespace PowerAssertTests
                                     "| |  |  False",
                                     "| |  2.423",
                                     "| 3",
-                                    "System.Func`3[System.Int32,System.Double,System.Double]"
+                                    "delegate Func<int, double, double>, type: double (int, double)"
                                 };
 
             AssertLines(expected, s);

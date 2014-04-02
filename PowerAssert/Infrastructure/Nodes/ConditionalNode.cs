@@ -14,12 +14,12 @@ namespace PowerAssert.Infrastructure.Nodes
         public Node FalseNode { get; set; }
 
         public bool TestValue { get; set; }
-        public string TrueValue { get; set; }
-        public string FalseValue { get; set; }
+        public object TrueValue { get; set; }
+        public object FalseValue { get; set; }
 
         internal override void Walk(NodeWalker walker, int depth)
         {
-            walker("(", TestValue ? TrueValue : FalseValue, depth);
+            walker("(", FormatObject(TestValue ? TrueValue : FalseValue), depth);
             Condition.Walk(walker, depth + 1);
             walker(" ? ");
             TrueNode.Walk(walker, depth + 1);

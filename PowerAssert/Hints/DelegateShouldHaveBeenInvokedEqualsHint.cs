@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -17,8 +18,8 @@ namespace PowerAssert.Hints
             {
                 if (methE.Method == ObjectEqualsMethodInfo)
                 {
-                    var left = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
-                    var right = ExpressionParser.DynamicInvoke(methE.Arguments[1]);
+                    var left = Node.DynamicInvoke(methE.Arguments[0]);
+                    var right = Node.DynamicInvoke(methE.Arguments[1]);
 
                     if (left is Delegate || right is Delegate)
                     {
@@ -48,7 +49,7 @@ namespace PowerAssert.Hints
                 object leftR;
                 try
                 {
-                    leftR = ExpressionParser.DynamicInvoke(Expression.Invoke(methE.Arguments[ix1]));
+                    leftR = Node.DynamicInvoke(Expression.Invoke(methE.Arguments[ix1]));
                 }
                 catch (InvalidOperationException) // delegate needs arguments
                 {
@@ -56,10 +57,10 @@ namespace PowerAssert.Hints
                     return false;
                 }
 
-                if (Equals(leftR, ExpressionParser.DynamicInvoke(methE.Arguments[ix2])))
+                if (Equals(leftR, Node.DynamicInvoke(methE.Arguments[ix2])))
                 {
                     hint = string.Format(", but would have been True if you had invoked '{0}'",
-                        NodeFormatter.PrettyPrint(ExpressionParser.Parse(methE.Arguments[ix1])));
+                        NodeFormatter.PrettyPrint(Node.Parse(methE.Arguments[ix1])));
                     return true;
                 }
             }

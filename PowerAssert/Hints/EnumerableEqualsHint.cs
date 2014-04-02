@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -20,8 +21,8 @@ namespace PowerAssert.Hints
             {
                 if (methE.Method == ObjectInstanceEqualsMethodInfo)
                 {
-                    var obj = ExpressionParser.DynamicInvoke(methE.Object) as IEnumerable;
-                    var arg = ExpressionParser.DynamicInvoke(methE.Arguments.First()) as IEnumerable;
+                    var obj = Node.DynamicInvoke(methE.Object) as IEnumerable;
+                    var arg = Node.DynamicInvoke(methE.Arguments.First()) as IEnumerable;
                     if (obj != null && arg != null)
                     {
                         if (obj.Cast<object>().SequenceEqual(arg.Cast<object>()))

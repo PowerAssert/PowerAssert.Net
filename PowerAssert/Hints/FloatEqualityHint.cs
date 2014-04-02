@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -13,7 +17,7 @@ namespace PowerAssert.Hints
                 var dLeft = Convert.ToDouble(left);
                 var dRight = Convert.ToDouble(right);
 
-                var diff = Math.Abs(dLeft - dRight)/Math.Max(dLeft, dRight);
+                var diff = ProportionalDiff(dLeft, dRight);
                 if (diff < maxProportionDifference)
                 {
                     hint = string.Format(", but the values only differ by {0:e2}%", diff*100);
@@ -25,5 +29,23 @@ namespace PowerAssert.Hints
             return false;
         }
 
+        private static double ProportionalDiff(double left, double right)
+        {
+            return Math.Abs(left - right)/Math.Max(left, right);
+        }
+
+        private static bool FuzzyEqual(double left, double right)
+        {
+            return ProportionalDiff(left, right) < maxProportionDifference;
+        }
+
+        protected override IEnumerable<Alternative> GetAlternatives(Expression left, Expression right)
+        {
+            if ((typeof (double) == left.Type || typeof(float) == left.Type) && 
+                (typeof (double) == right.Type || typeof(float) == right.Type))
+            {
+                yield break; //TODO!!
+            }
+        }
     }
 }

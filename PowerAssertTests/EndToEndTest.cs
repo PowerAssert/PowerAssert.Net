@@ -22,7 +22,7 @@ namespace PowerAssertTests
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1);
             Expression<Func<bool>> expression = () => x + 5 == d.Month * y;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
@@ -37,7 +37,7 @@ namespace PowerAssertTests
             int a = 11;
             double x = 1.234;
             Expression<Func<bool>> expression = () => f(a, x) == 5.678;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
@@ -52,7 +52,7 @@ namespace PowerAssertTests
             int a = 11;
             double x = 1.234;
             Expression<Func<bool>> expression = () => f.Compile()(a, x) == 5.678;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
@@ -64,7 +64,7 @@ namespace PowerAssertTests
             Func<Action<string>, bool> foo = act => { act("s"); return false; };
             Action<string> x = k => {};
             Expression<Func<bool>> expression = () => foo(x);
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
@@ -76,7 +76,7 @@ namespace PowerAssertTests
         {
 
             Expression<Func<bool>> expression = () => new List<string>(5).Count == 0;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);
@@ -86,7 +86,7 @@ namespace PowerAssertTests
         {
             var ten = 10;
             Expression<Func<bool>> expression = () => new List<string>(5) { Capacity = ten }.Capacity == 10;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
+            Node constantNode = Node.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
             Console.Out.WriteLine(s);

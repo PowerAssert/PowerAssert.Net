@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
-    internal class MultiHint : IHint
+    internal class MultiHint : IHint, IFancyHint<Expression>
     {
         private readonly IEnumerable<IHint> _hints;
 
@@ -28,6 +29,15 @@ namespace PowerAssert.Hints
             return false;
         }
 
-
+        public IEnumerable<Alternative> GetAlternatives(Expression expression)
+        {
+            foreach (var hinter in _hints)
+            {
+                var fancy = hinter as IFancyHint;
+                if (fancy == null) continue;
+                foreach (var alternative in fancy.GetAlternatives(expression))
+                    yield return alternative;
+            }
+        }
     }
 }

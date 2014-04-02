@@ -1,18 +1,42 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
+using JetBrains.Annotations;
+using PowerAssert.Hints;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class ConstantNode : Node
+    internal class NamedNode : Node
     {
         [NotNull]
-        public string Text { get; set; }
+        public string Name { get; set; }
 
         [CanBeNull]
-        public string Value { get; set; }
+        public object Value { get; set; }
+
+        public override IEnumerable<Alternative> EnumerateAlternatives(IHint hinter)
+        {
+            yield return new Alternative {Expression = Expression.Constant(Value)};
+        }
+
+        internal override void Walk(Node.NodeWalker walker, int depth)
+        {
+            walker(Name, FormatObject(Value), depth);
+        }
+    }
+
+    internal class ConstantNode : Node
+    {
+        [CanBeNull]
+        public object Value { get; set; }
+
+        public override IEnumerable<Alternative> EnumerateAlternatives(IHint hinter)
+        {
+            yield return new Alternative {Expression = Expression.Constant(Value)};
+        }
 
         internal override void Walk(NodeWalker walker, int depth)
         {
-            walker(Text, Value, depth);
+            walker(FormatObject(Value), null, depth);
         }
     }
 }

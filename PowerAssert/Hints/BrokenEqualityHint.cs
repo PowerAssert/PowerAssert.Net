@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -21,8 +22,8 @@ namespace PowerAssert.Hints
             {
                 if (methE.Method == ObjectEqualsMethodInfo)
                 {
-                    left = ExpressionParser.DynamicInvoke(methE.Object);
-                    right = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
+                    left = Node.DynamicInvoke(methE.Object);
+                    right = Node.DynamicInvoke(methE.Arguments[0]);
 
                     // methE.Method.DeclaringType doesn't work here, it will
                     // always return the base class method
@@ -33,8 +34,8 @@ namespace PowerAssert.Hints
             var binE = expression as BinaryExpression;
             if (binE != null && binE.NodeType == ExpressionType.Equal)
             {
-                left = ExpressionParser.DynamicInvoke(binE.Left);
-                right = ExpressionParser.DynamicInvoke(binE.Right);
+                left = Node.DynamicInvoke(binE.Left);
+                right = Node.DynamicInvoke(binE.Right);
 
                 if (binE.Method != null)
                     declaringType = binE.Method.DeclaringType;
@@ -44,7 +45,7 @@ namespace PowerAssert.Hints
 
             if (left != null && left == right)
             {
-                hint = ", type " + ExpressionParser.NameOfType(declaringType) + " has a broken equality implementation (both sides are the same object)";
+                hint = ", type " + Node.NameOfType(declaringType) + " has a broken equality implementation (both sides are the same object)";
                 return true;
             }
 

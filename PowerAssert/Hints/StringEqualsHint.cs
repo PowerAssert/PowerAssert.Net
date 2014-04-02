@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using PowerAssert.Infrastructure;
+using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Hints
 {
@@ -38,10 +39,10 @@ namespace PowerAssert.Hints
             {
                 if (StringEqualsMethodInfo.Any(x => x == methE.Method))
                 {
-                    var obj = ExpressionParser.DynamicInvoke(methE.Object);
-                    var arg = ExpressionParser.DynamicInvoke(methE.Arguments.First());
+                    var obj = Node.DynamicInvoke(methE.Object);
+                    var arg = Node.DynamicInvoke(methE.Arguments.First());
 
-                    var comparison = (StringComparison) (methE.Arguments.Select(ExpressionParser.DynamicInvoke)
+                    var comparison = (StringComparison) (methE.Arguments.Select(Node.DynamicInvoke)
                         .FirstOrDefault(x => x is StringComparison) ?? StringComparison.CurrentCulture);
 
                     hint = HintUtils.GetStringDifferHint((string) obj, (string) arg, GetComparerFromComparison(comparison));

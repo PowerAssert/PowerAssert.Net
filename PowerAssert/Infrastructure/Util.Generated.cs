@@ -29,6 +29,7 @@ namespace PowerAssert.Infrastructure
         {
             {ExpressionType.AndAlso, "&&"},
             {ExpressionType.OrElse, "||"},
+			{ExpressionType.TypeIs, " is "},
             {ExpressionType.Add, "+"},
             {ExpressionType.AddChecked, "+"},
             {ExpressionType.And, "&"},
