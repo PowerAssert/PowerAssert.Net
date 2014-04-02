@@ -221,7 +221,7 @@ namespace PowerAssert.Infrastructure.Nodes
         static Node ParseExpression(MethodCallExpression e)
         {
             var parameters = e.Arguments.Select(Parse).ToArray();
-            if (e.Method.GetCustomAttributes(typeof(ExtensionAttribute), true).Any())
+            if (e.Method.GetCustomAttributes(typeof (ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
                 {
@@ -231,9 +231,10 @@ namespace PowerAssert.Infrastructure.Nodes
                     Parameters = parameters.Skip(1).ToList(),
                 };
             }
+
             return new MethodCallNode
             {
-                Container = e.Object == null ? new NamedNode { Name = e.Method.DeclaringType.Name, Value = e.Method.DeclaringType} : Parse(e.Object),
+                Container = e.Object == null ? new NameOnlyNode{Name=NameOfType(e.Method.DeclaringType)} : Parse(e.Object),
                 MemberName = e.Method.Name,
                 MemberValue = GetValue(e),
                 Parameters = parameters.ToList(),
@@ -256,6 +257,7 @@ namespace PowerAssert.Infrastructure.Nodes
             {
                 return new NamedNode
                 {
+                    Expression = e,
                     Value = GetValue(e),
                     Name = e.Member.Name
                 };

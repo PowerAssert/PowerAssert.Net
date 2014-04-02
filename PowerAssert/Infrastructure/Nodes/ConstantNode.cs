@@ -5,6 +5,17 @@ using PowerAssert.Hints;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
+    internal class NameOnlyNode : Node
+    {
+        [NotNull]
+        public string Name { get; set; }
+
+        internal override void Walk(Node.NodeWalker walker, int depth)
+        {
+            walker(Name, null, depth);
+        }
+    }
+
     internal class NamedNode : Node
     {
         [NotNull]
@@ -13,9 +24,15 @@ namespace PowerAssert.Infrastructure.Nodes
         [CanBeNull]
         public object Value { get; set; }
 
+        [CanBeNull]
+        public Expression Expression { get; set; }
+
         public override IEnumerable<Alternative> EnumerateAlternatives(IHint hinter)
         {
-            yield return new Alternative {Expression = Expression.Constant(Value)};
+            yield return new Alternative
+            {
+                Expression = Expression ?? Expression.Constant(Value)
+            };
         }
 
         internal override void Walk(Node.NodeWalker walker, int depth)
