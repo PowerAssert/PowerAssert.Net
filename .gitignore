@@ -18,3 +18,4 @@ pacakges
 *.ncrunchsolution
 
 *.cache
+*.nupkg
