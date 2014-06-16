@@ -301,6 +301,13 @@ namespace PowerAssert.Infrastructure
             {
                 return "'" + value + "'";
             }
+
+            var exception = value as Exception;
+            if (exception != null)
+            {
+                return "{"+exception.GetType().Name + "}";
+            }
+
             var type = value.GetType();
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {

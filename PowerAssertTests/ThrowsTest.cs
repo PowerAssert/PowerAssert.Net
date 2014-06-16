@@ -39,6 +39,16 @@
         }
 
         [Test]
+        public void Should_assert_on_the_thrown_exception()
+        {
+            var expectedException = new Exception("broken");
+
+            var actualException = PAssert.Throws<Exception>(() => MethodThatDoesThrow(expectedException), x => x.Message == "broken");
+
+            Assert.That(actualException, Is.EqualTo(expectedException));
+        }
+
+        [Test]
         public void Should_fail_if_thrown_exception_is_of_wrong_type()
         {
             try
