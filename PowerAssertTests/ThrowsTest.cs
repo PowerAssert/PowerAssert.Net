@@ -1,4 +1,6 @@
-﻿namespace PowerAssertTests
+﻿using System.Threading.Tasks;
+
+namespace PowerAssertTests
 {
     using System;
     using NUnit.Framework;
@@ -49,6 +51,32 @@
         }
 
         [Test]
+        public async Task Should_succeed_when_async_expression_does_throw_exception()
+        {
+            await PAssert.Throws<Exception>(async () => await AsyncMethodThatDoesThrow(new Exception()));
+        }
+
+        [Test]
+        public async Task Should_return_the_thrown_exception_when_async()
+        {
+            var expectedException = new Exception();
+
+            var actualException = await PAssert.Throws<Exception>(async () => await AsyncMethodThatDoesThrow(expectedException));
+
+            Assert.That(actualException, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public async Task Should_assert_on_the_thrown_exception_when_async()
+        {
+            var expectedException = new Exception("broken");
+
+            var actualException = await PAssert.Throws<Exception>(async () => await AsyncMethodThatDoesThrow(expectedException), x => x.Message == "broken");
+
+            Assert.That(actualException, Is.EqualTo(expectedException));
+        }
+
+        [Test]
         public void Should_fail_if_thrown_exception_is_of_wrong_type()
         {
             try
@@ -73,5 +101,9 @@
             throw ex;
         }
 
+        private static async Task AsyncMethodThatDoesThrow(Exception ex)
+        {
+            throw ex;
+        }
     }
 }
