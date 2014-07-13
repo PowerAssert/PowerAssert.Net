@@ -27,7 +27,7 @@ namespace PowerAssert
             }
             catch (TException exception)
             {
-                return ExceptionCheck(exceptionAssertion, exception);
+                return ValidateExceptionAssertion(exceptionAssertion, exception);
             }
 
             throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
@@ -45,18 +45,18 @@ namespace PowerAssert
                 var baseException = exception.GetBaseException();
                 if(baseException is TException)
                 {
-                    return TaskFromResult(ExceptionCheck(exceptionAssertion, baseException as TException));
+                    return TaskFromResult(ValidateExceptionAssertion(exceptionAssertion, baseException as TException));
                 }
             }
             catch (TException exception)
             {
-                return TaskFromResult(ExceptionCheck(exceptionAssertion, exception));
+                return TaskFromResult(ValidateExceptionAssertion(exceptionAssertion, exception));
             }
 
             throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
         }
 
-       private static TException ExceptionCheck<TException>(Expression<Func<TException, bool>> exceptionAssertion, TException exception)
+       private static TException ValidateExceptionAssertion<TException>(Expression<Func<TException, bool>> exceptionAssertion, TException exception)
           where TException : Exception
        {
            if (exceptionAssertion != null)
