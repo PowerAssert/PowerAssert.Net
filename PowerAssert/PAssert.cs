@@ -40,11 +40,15 @@ namespace PowerAssert
                 if (task.IsFaulted)
                 {
                     // Unwrap the AggregateException
-                    var baseException = task.Exception.GetBaseException() as TException;
-                    if (baseException != null)
+                    var baseException = task.Exception.GetBaseException();
+
+                    var exception = baseException as TException;
+                    if (exception != null)
                     {
-                        return ValidateExceptionAssertion(exceptionAssertion, baseException);
+                        return ValidateExceptionAssertion(exceptionAssertion, exception);
                     }
+
+                    throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but it was of type " + baseException.GetType());
                 }
 
                 throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
