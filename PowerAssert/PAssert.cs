@@ -33,27 +33,22 @@ namespace PowerAssert
             throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
         }
 
-       public static Task<TException> Throws<TException>(Func<Task> a, Expression<Func<TException, bool>> exceptionAssertion = null) where TException : Exception
+        public static Task<TException> Throws<TException>(Func<Task> a, Expression<Func<TException, bool>> exceptionAssertion = null) where TException : Exception
         {
-            try
+            return a().ContinueWith(task =>
             {
-                a().Wait();
-            }
-            catch (AggregateException exception)
-            {
-                // Unwrap the AggregateException if we have one
-                var baseException = exception.GetBaseException();
-                if(baseException is TException)
+                if (task.IsFaulted)
                 {
-                    return TaskFromResult(ValidateExceptionAssertion(exceptionAssertion, baseException as TException));
+                    // Unwrap the AggregateException
+                    var baseException = task.Exception.GetBaseException() as TException;
+                    if (baseException != null)
+                    {
+                        return ValidateExceptionAssertion(exceptionAssertion, baseException);
+                    }
                 }
-            }
-            catch (TException exception)
-            {
-                return TaskFromResult(ValidateExceptionAssertion(exceptionAssertion, exception));
-            }
 
-            throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
+                throw new Exception("An exception of type " + typeof(TException).Name + " was expected, but no exception occured");
+            });
         }
 
        private static TException ValidateExceptionAssertion<TException>(Expression<Func<TException, bool>> exceptionAssertion, TException exception)
