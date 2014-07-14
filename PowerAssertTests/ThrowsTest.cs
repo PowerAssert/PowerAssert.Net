@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PowerAssertTests
 {
@@ -64,6 +65,22 @@ namespace PowerAssertTests
             var actualException = await PAssert.Throws<Exception>(async () => await AsyncMethodThatDoesThrow(expectedException));
 
             Assert.That(actualException, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public void Should_not_block_when_async()
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            // no await here:
+            var assert = PAssert.Throws<Exception>(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(10));
+                throw new Exception("uncaught");
+            });
+            sw.Stop();
+
+            Assert.That(sw.Elapsed, Is.LessThan(TimeSpan.FromSeconds(1)));
         }
 
         [Test]
