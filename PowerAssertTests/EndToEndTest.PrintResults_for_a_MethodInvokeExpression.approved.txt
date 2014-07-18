@@ -1,8 +1,0 @@
-﻿f(a, x) == 5.678
-. .  .  __
-. .  .  |
-| .  .  |
-| |  |  False
-| |  1.234
-| 11
-delegate Func<int, double, double>, type: double (int, double)

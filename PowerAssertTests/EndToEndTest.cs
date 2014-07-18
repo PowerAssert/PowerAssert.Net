@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using ApprovalTests;
 using ApprovalTests.Utilities;
 using NUnit.Framework;
@@ -16,83 +17,6 @@ namespace PowerAssertTests
     [TestFixture]
     public class EndToEndTest
     {
-        [Test]
-        public void PrintResults()
-        {
-            int x = 11;
-            int y = 6;
-            DateTime d = new DateTime(2010, 3, 1);
-            Expression<Func<bool>> expression = () => x + 5 == d.Month * y;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-
-        [Test]
-        public void PrintResults_for_a_MethodInvokeExpression()
-        {
-            Func<int, double, double> f = (A, X) =>
-                A * Math.Log(X);
-
-            int a = 11;
-            double x = 1.234;
-            Expression<Func<bool>> expression = () => f(a, x) == 5.678;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-
-        [Test]
-        public void PrintResults_for_a_MethodInvokeExpression_on_an_Expression()
-        {
-            Expression<Func<int, double, double>> f = (A, X) =>
-                A * Math.Log(X);
-
-            int a = 11;
-            double x = 1.234;
-            Expression<Func<bool>> expression = () => f.Compile()(a, x) == 5.678;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-
-        [Test]
-        public void PrintResultsForAction()
-        {
-            Func<Action<string>, bool> foo = act => { act("s"); return false; };
-            Action<string> x = k => { };
-            Expression<Func<bool>> expression = () => foo(x);
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-
-
-        [Test]
-        public void PrintResultsForNewObject()
-        {
-
-            Expression<Func<bool>> expression = () => new List<string>(5).Count == 0;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-        [Test]
-        public void PrintResultsForNewObjectWithInitialiser()
-        {
-            var ten = 10;
-            Expression<Func<bool>> expression = () => new List<string>(5) { Capacity = ten }.Capacity == 10;
-            Node constantNode = ExpressionParser.Parse(expression.Body);
-            string[] strings = NodeFormatter.Format(constantNode);
-            string s = string.Join(Environment.NewLine, strings);
-            Approvals.Verify(s);
-        }
-
         [Test]
         public void TestDifferingLists()
         {
@@ -347,6 +271,7 @@ namespace PowerAssertTests
         [Test]
         public void StringContainsMismatchedNewlines()
         {
+            //todo: it'd be good for powerassert to escape special characters in strings
             var l = "hell\r\no";
             var r = "hell\no";
 
@@ -388,8 +313,15 @@ namespace PowerAssertTests
             catch (Exception e)
             {
                 Console.Out.WriteLine(e);
-                Approvals.Verify(e.ToString(), x=>StackTraceScrubber.ScrubPaths(StackTraceScrubber.ScrubLineNumbers(x)));
+                Approvals.Verify(DosifyLineEndings(e.ToString()), x => StackTraceScrubber.ScrubPaths(StackTraceScrubber.ScrubLineNumbers(x)));
             }
+        }
+
+        static readonly Regex Newline = new Regex(@"\r?\n", RegexOptions.Compiled);
+
+        static string DosifyLineEndings(string text)
+        {
+            return Newline.Replace(text, "\r\n");
         }
     }
 }
