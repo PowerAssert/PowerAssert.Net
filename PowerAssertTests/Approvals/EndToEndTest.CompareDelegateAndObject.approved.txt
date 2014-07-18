@@ -1,11 +1,11 @@
 ﻿System.Exception: IsTrue failed, expression was:
 
-Object.Equals(f, (object)(x))
-       \_ __/ .  .       ..
-         |    .  .       ..
-         |    |  \___ ___/|
-         |    |      |    1
-         |    |      1
+Object.Equals(f, (object)x)
+       \_ __/ .  .      ..
+         |    .  .      ..
+         |    |  \__ ___/|
+         |    |     |    1
+         |    |     1
          |    delegate Func<int>, type: int ()
          False, but would have been True if you had invoked 'f'
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs

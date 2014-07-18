@@ -292,6 +292,13 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => l.ToUpperInvariant() == "Oops");
         }
 
+        [Test]
+        public void Casting()
+        {
+            int x = 5;
+            ApproveException(() => (long)x == 10L);
+        }
+
         string _expected = "bar";
 
         [Test]

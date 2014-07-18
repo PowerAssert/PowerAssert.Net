@@ -159,10 +159,9 @@ namespace PowerAssertTests
 
             var expected = new UnaryNode
                                {
-                                   Prefix = "(int)(",
+                                   Prefix = "(int)",
                                    PrefixValue = "5",
                                    Operand = new ConstantNode(){Text = "x", Value = 5.1M.ToString()},
-                                   Suffix = ")"
                                };
 
             Assert.AreEqual(expected, node);

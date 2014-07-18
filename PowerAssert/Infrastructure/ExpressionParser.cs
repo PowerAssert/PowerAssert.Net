@@ -60,7 +60,7 @@ namespace PowerAssert.Infrastructure
             switch (e.NodeType)
             {
                 case ExpressionType.Convert:
-                    return new UnaryNode { Prefix = "(" + NameOfType(e.Type) + ")(", Operand = Parse(e.Operand), Suffix = ")", PrefixValue = GetValue(e) };
+                    return new UnaryNode { Prefix = "(" + NameOfType(e.Type) + ")", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
                 case ExpressionType.Not:
                     return ParseUnaryNot(e);
                 case ExpressionType.Negate:
