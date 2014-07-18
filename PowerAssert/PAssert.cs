@@ -17,6 +17,7 @@ namespace PowerAssert
         [ThreadStatic]
         internal static Type CurrentTestClass;
         static readonly Assembly MyAssembly = typeof(PAssert).Assembly;
+        static readonly string CRLF = Environment.NewLine;
 
 
         public static TException Throws<TException>(Action a, Expression<Func<TException, bool>> exceptionAssertion = null) where TException : Exception
@@ -76,11 +77,21 @@ namespace PowerAssert
         public static void IsTrue(Expression<Func<bool>> expression)
         {
             Func<bool> func = expression.Compile();
-            if (!func())
+            bool b;
+            try
             {
-                CurrentTestClass = new StackTrace(1, false).GetFrames().Select(x => x.GetMethod().DeclaringType).Where(x => x != null).First(x => x.Assembly != MyAssembly);
+                b = func();
+            }
+            catch (NullReferenceException e)
+            {
+                var output = RenderExpression(expression);
+                throw new NullReferenceException("IsTrue encountered NullReferenceException" + CRLF + CRLF + output + CRLF + CRLF, e);
+            }
+            if (!b)
+            {
                 throw CreateException(expression, "IsTrue failed");
             }
+           
         }
 
         static Expression<Func<bool>> Substitute<TException>(Expression<Func<TException, bool>> expression, TException exception)
@@ -94,10 +105,16 @@ namespace PowerAssert
 
         static Exception CreateException(Expression<Func<bool>> expression, string message)
         {
+            var output = RenderExpression(expression);
+            return new Exception(message + ", expression was:" + CRLF + CRLF + output);
+        }
+
+        static string RenderExpression(Expression<Func<bool>> expression)
+        {
+            CurrentTestClass = new StackTrace(1, false).GetFrames().Select(x => x.GetMethod().DeclaringType).Where(x => x != null).First(x => x.Assembly != MyAssembly);
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] lines = NodeFormatter.Format(constantNode);
-            string nl = Environment.NewLine;
-            return new Exception(message + ", expression was:" + nl + nl + String.Join(nl, lines));
+            return string.Join(CRLF, lines);
         }
     }
 }

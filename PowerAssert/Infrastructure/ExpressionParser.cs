@@ -27,7 +27,7 @@ namespace PowerAssert.Infrastructure
             }
             catch (RuntimeBinderException exception)
             {
-                throw new Exception(string.Format("Unable to dispach expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
+                throw new Exception(string.Format("Unable to dispatch expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
             }
         }
 
@@ -254,7 +254,7 @@ namespace PowerAssert.Infrastructure
         internal static string FormatTargetInvocationException(TargetInvocationException exception)
         {
             var i = exception.InnerException;
-            return string.Format("{0}: {1}", i.GetType().Name, i.Message);
+            return string.Format("(Threw {0}: {1})", i.GetType().Name, i.Message);
         }
 
         private static readonly IHint Hinter = new MultiHint(

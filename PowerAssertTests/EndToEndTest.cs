@@ -362,6 +362,14 @@ namespace PowerAssertTests
             ApproveException(() => l == r);
         }
 
+        [Test]
+        public void NullDereference()
+        {
+            string l = null;
+
+            ApproveException(() => l.ToUpperInvariant() == "Oops");
+        }
+
         string _expected = "bar";
 
         [Test]
