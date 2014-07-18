@@ -12,5 +12,6 @@ x + 5 == d.Month * y
 | |   False
 | 16
 11
+
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

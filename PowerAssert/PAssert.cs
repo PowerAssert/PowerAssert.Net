@@ -114,7 +114,7 @@ namespace PowerAssert
             CurrentTestClass = new StackTrace(1, false).GetFrames().Select(x => x.GetMethod().DeclaringType).Where(x => x != null).First(x => x.Assembly != MyAssembly);
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] lines = NodeFormatter.Format(constantNode);
-            return string.Join(CRLF, lines);
+            return string.Join(CRLF, lines)+CRLF;
         }
     }
 }

@@ -14,5 +14,6 @@ x.Trim().Length == Math.Max(4, new int[]{5, 4, i / 3, 2}[0])
 |  |       7
 |  "lalalaa"
 " lalalaa "
+
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

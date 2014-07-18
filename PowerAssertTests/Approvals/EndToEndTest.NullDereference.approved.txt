@@ -8,6 +8,7 @@ l.ToUpperInvariant() == "Oops"
 |        (Threw NullReferenceException: Object reference not set to an instance of an object.)
 null
 
+
  ---> System.NullReferenceException: Object reference not set to an instance of an object.
    at lambda_method(Closure )
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs

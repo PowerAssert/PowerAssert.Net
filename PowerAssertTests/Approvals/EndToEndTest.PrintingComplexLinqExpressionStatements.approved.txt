@@ -13,5 +13,6 @@ list.SelectMany(x => value(PowerAssertTests.Approvals.EndToEndTest+<>c__DisplayC
  |       |                                                                                                                                         [{ x = 1, y = 0 }, { x = 2, y = 0 }, { x = 2, y = 1 }, { x = 3, y = 0 }, { x = 3, y = 1 }, ...]
  |       [{ x = 0, y = 0 }, { x = 0, y = 1 }, { x = 0, y = 2 }, { x = 0, y = 3 }, { x = 0, y = 4 }, ...]
  [0, 1, 2, 3, 4, ...]
+
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

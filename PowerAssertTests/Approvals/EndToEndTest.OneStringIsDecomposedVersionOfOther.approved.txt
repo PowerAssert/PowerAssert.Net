@@ -6,5 +6,6 @@ l == r
 | |  "hellö"
 | False, right string contains a decomposed character 'ö' at index 4
 "hellö"
+
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
