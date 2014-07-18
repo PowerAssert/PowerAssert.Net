@@ -299,6 +299,13 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => (long)x == 10L);
         }
 
+        [Test]
+        public void ArrayLength()
+        {
+            int[] values = new int[0];
+            ApproveException(() => values.Length == 1);
+        }
+
         string _expected = "bar";
 
         [Test]

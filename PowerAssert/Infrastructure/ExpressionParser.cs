@@ -66,7 +66,8 @@ namespace PowerAssert.Infrastructure
                 case ExpressionType.Negate:
                 case ExpressionType.NegateChecked:
                     return new UnaryNode { Prefix = "-", Operand = Parse(e.Operand), PrefixValue = GetValue(e) };
-
+                case ExpressionType.ArrayLength:
+                    return new MemberAccessNode {Container = Parse(e.Operand), MemberName = "Length", MemberValue = GetValue(e)};
 
             }
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle UnaryExpression expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
