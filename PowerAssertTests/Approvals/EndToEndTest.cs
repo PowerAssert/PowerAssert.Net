@@ -314,6 +314,13 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => o == FileOptions.Encrypted);
         }
 
+        [Test]
+        public void EnumBackwards()
+        {
+            var o = FileOptions.SequentialScan;
+            ApproveException(() => FileOptions.Encrypted == o);
+        }
+
         string _expected = "bar";
 
         [Test]

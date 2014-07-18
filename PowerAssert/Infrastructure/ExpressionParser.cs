@@ -268,7 +268,8 @@ namespace PowerAssert.Infrastructure
             new EnumerableEqualsHint(),
             new FloatEqualityHint(),
             new BrokenEqualityHint(),
-            new TimeSpanTotalMistakesHint()
+            new TimeSpanTotalMistakesHint(),
+            new EnumComparisonShowValuesHint()
             );
 
         static string GetHints(Expression e, object value)
