@@ -1,0 +1,5 @@
+﻿foo(x)
+\ / .
+ |  .
+ |  delegate Action<string>, type: void (string)
+ delegate Func<Action<string>, bool>, type: bool (Action<string>)

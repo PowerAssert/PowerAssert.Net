@@ -1,0 +1,10 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+s1.Equals(s2)
+.. \_ __/ ..
+__   |    __
+|    |    "hello2"
+|    False, strings differ at index 5, '1' != '2'
+"hello1"
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using ApprovalTests;
+using ApprovalTests.Utilities;
 using NUnit.Framework;
 using PowerAssert;
 using PowerAssert.Infrastructure;
@@ -25,7 +26,7 @@ namespace PowerAssertTests
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
 
         [Test]
@@ -40,7 +41,7 @@ namespace PowerAssertTests
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
 
         [Test]
@@ -55,19 +56,19 @@ namespace PowerAssertTests
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
-        
+
         [Test]
         public void PrintResultsForAction()
         {
             Func<Action<string>, bool> foo = act => { act("s"); return false; };
-            Action<string> x = k => {};
+            Action<string> x = k => { };
             Expression<Func<bool>> expression = () => foo(x);
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
 
 
@@ -79,7 +80,7 @@ namespace PowerAssertTests
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
         [Test]
         public void PrintResultsForNewObjectWithInitialiser()
@@ -89,201 +90,179 @@ namespace PowerAssertTests
             Node constantNode = ExpressionParser.Parse(expression.Body);
             string[] strings = NodeFormatter.Format(constantNode);
             string s = string.Join(Environment.NewLine, strings);
-            Console.Out.WriteLine(s);
+            Approvals.Verify(s);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void TestDifferingLists()
         {
             var x = new List<int> { 1, 2, 3, 4, 5, 6 };
             var y = new List<int> { 1, 2, 3, 4, 5, 7 };
 
-            PAssert.IsTrue(() => x.SequenceEqual(y));
+            ApproveException(() => x.SequenceEqual(y));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunComplexExpression()
         {
             int x = 11;
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1);
-            PAssert.IsTrue(() => x + 5 == d.Month * y);
+            ApproveException(() => x + 5 == d.Month * y);
         }
 
         static int field = 11;
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunComplexExpressionWithStaticField()
         {
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1);
-            PAssert.IsTrue(() => field + 5 == d.Month * y);
+            ApproveException(() => field + 5 == d.Month * y);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunComplexExpression2()
         {
             string x = " lalalaa ";
             int i = 10;
-            PAssert.IsTrue(() => x.Trim().Length == Math.Max(4, new int[] { 5, 4, i / 3, 2 }[0]));
+            ApproveException(() => x.Trim().Length == Math.Max(4, new int[] { 5, 4, i / 3, 2 }[0]));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunComplexExpression3()
         {
             List<int> l = new List<int> { 1, 2, 3 };
             bool b = false;
-            PAssert.IsTrue(() => l[2].ToString() == (b ? "three" : "four"));
+            ApproveException(() => l[2].ToString() == (b ? "three" : "four"));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunStringCompare()
         {
             string s = "hello, bobby";
             Tuple<string> t = new Tuple<string>("hello, Bobby");
-            PAssert.IsTrue(() => s == t.Item1);
+            ApproveException(() => s == t.Item1);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void RunRoundingEdgeCase()
         {
             double d = 3;
             int i = 2;
 
 
-            PAssert.IsTrue(() => 4.5 == d + 3 / i);
+            ApproveException(() => 4.5 == d + 3 / i);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void EnumerablesThatDiffer()
         {
             var s1 = "hello1";
             var s2 = "hello2";
 
-            PAssert.IsTrue(() => s1.SequenceEqual(s2));
+            ApproveException(() => s1.SequenceEqual(s2));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void StringsThatDiffer()
         {
             var s1 = "hello1";
             var s2 = "hello2";
 
-            PAssert.IsTrue(() => s1.Equals(s2));
+            ApproveException(() => s1.Equals(s2));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void StringsThatDifferAndAreComparedCaseInsensitively()
         {
             var s1 = "Hello1";
             var s2 = "hello2";
 
-            PAssert.IsTrue(() => s1.Equals(s2, StringComparison.OrdinalIgnoreCase));
+            ApproveException(() => s1.Equals(s2, StringComparison.OrdinalIgnoreCase));
         }
 
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void EqualsButNotOperatorEquals()
         {
             var t1 = new Tuple<string>("foo");
             var t2 = new Tuple<string>("foo");
 
-            PAssert.IsTrue(() => t1 == t2);
+            ApproveException(() => t1 == t2);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void SequenceEqualButNotOperatorEquals()
         {
             object list = new List<int> { 1, 2, 3 };
             object array = new[] { 1, 2, 3 };
-            PAssert.IsTrue(() => list == array);
+            ApproveException(() => list == array);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void SequenceEqualButNotDotEquals()
         {
             object list = new List<int> { 1, 2, 3 };
             object array = new[] { 1, 2, 3 };
-            PAssert.IsTrue(() => list.Equals(array));
+            ApproveException(() => list.Equals(array));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingLinqStatements()
         {
             var list = Enumerable.Range(0, 150);
-            PAssert.IsTrue(() => list.Where(x => x % 2 == 0).Sum() == 0);
+            ApproveException(() => list.Where(x => x % 2 == 0).Sum() == 0);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingLinqExpressionStatements()
         {
             var list = Enumerable.Range(0, 150);
-            PAssert.IsTrue(() => (from l in list where l % 2 == 0 select l).Sum() == 0);
+            ApproveException(() => (from l in list where l % 2 == 0 select l).Sum() == 0);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingComplexLinqExpressionStatements()
         {
             var list = Enumerable.Range(0, 5);
-            PAssert.IsTrue(() => (from x in list from y in list where x > y select x + "," + y).Count() == 0);
+            ApproveException(() => (from x in list from y in list where x > y select x + "," + y).Count() == 0);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingEnumerablesWithNulls()
         {
             var list = new List<int?> { 1, 2, null, 4, 5 };
-            PAssert.IsTrue(() => list.Sum() == null);
+            ApproveException(() => list.Sum() == null);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingUnaryNot()
         {
             var b = true;
-            PAssert.IsTrue(() => !b);
+            ApproveException(() => !b);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingUnaryNegate()
         {
             var b = 5;
-            PAssert.IsTrue(() => -b == 0);
+            ApproveException(() => -b == 0);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingIsTest()
         {
             var b = new object();
-            PAssert.IsTrue(() => b is string);
+            ApproveException(() => b is string);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingNewExpression()
         {
-            PAssert.IsTrue(() => new List<string>() == null);
+            ApproveException(() => new List<string>() == null);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingDictionary()
         {
             var dictionary = new Dictionary<string, string>
@@ -291,55 +270,51 @@ namespace PowerAssertTests
                     {"foo", "bar"},
                     {"foo2", "bar2"}
                 };
-            PAssert.IsTrue(() => dictionary == null);
-        }
-        [Test]
-        [Ignore("This test will fail for demo purposes")]
-        public void PrintingMethodCall()
-        {
-            var a = 4;
-            PAssert.IsTrue(() => (a * 5).Equals((a + 5)));
+            ApproveException(() => dictionary == null);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
+        public void PrintingMethodCall()
+        {
+            var a = 4;
+            ApproveException(() => (a * 5).Equals((a + 5)));
+        }
+
+        [Test]
         public void CompareDelegateAndObject()
         {
             var x = 1;
             Func<int> f = () => 1;
 
-            PAssert.IsTrue(() => Equals(f, x));
+            ApproveException(() => Equals(f, x));
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void CompareTwoCloseFloats()
         {
             double d = 0.1;
-            float f = (float)d*100;
+            float f = (float)d * 100;
             f /= 100;
 
-            PAssert.IsTrue(() => d == f);
+            ApproveException(() => d == f);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void StringContainsControlChar()
         {
             var l = "hello";
             var r = "hell\u0009o";
 
-            PAssert.IsTrue(() => l == r);
+            ApproveException(() => l == r);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void StringContainsFormatChar()
         {
             var l = "hello";
             var r = "hell\u200Co"; //ZWNJ
 
-            PAssert.IsTrue(() => l == r);
+            ApproveException(() => l == r);
         }
 
         class BrokenClass
@@ -351,54 +326,62 @@ namespace PowerAssertTests
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void ShouldHaveUsedTotal()
         {
             var x = TimeSpan.FromSeconds(100);
 
-            PAssert.IsTrue(() => x.Seconds == 100);
+            ApproveException(() => x.Seconds == 100);
         }
 
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void BrokenEqualityTestInstanceEquals()
         {
             var x = new BrokenClass();
 
-            PAssert.IsTrue(() => x.Equals(x));
+            ApproveException(() => x.Equals(x));
         }
 
 
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void StringContainsMismatchedNewlines()
         {
             var l = "hell\r\no";
             var r = "hell\no";
 
-            PAssert.IsTrue(() => l == r);
+            ApproveException(() => l == r);
         }
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void OneStringIsDecomposedVersionOfOther()
         {
             var l = "hellö".Normalize(NormalizationForm.FormC);
             var r = "hellö".Normalize(NormalizationForm.FormD);
 
-            PAssert.IsTrue(() => l == r);
+            ApproveException(() => l == r);
         }
 
         string _expected = "bar";
 
         [Test]
-        [Ignore("This test will fail for demo purposes")]
         public void PrintingTestClassFields()
         {
-            PAssert.IsTrue(() => this._expected == "foo");
+            ApproveException(() => this._expected == "foo");
         }
 
+        void ApproveException(Expression<Func<bool>> func)
+        {
+            try
+            {
+                PAssert.IsTrue(func);
+                Assert.Fail("No PowerAssertion");
+            }
+            catch (Exception e)
+            {
+                Console.Out.WriteLine(e);
+                Approvals.Verify(e.ToString(), x=>StackTraceScrubber.ScrubPaths(StackTraceScrubber.ScrubLineNumbers(x)));
+            }
+        }
     }
 }
