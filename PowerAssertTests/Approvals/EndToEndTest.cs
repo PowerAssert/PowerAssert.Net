@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using ApprovalTests.Utilities;
 using NUnit.Framework;
 using PowerAssert;
@@ -27,6 +29,7 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void RunComplexExpression()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; //so that approvals work anywhere
             int x = 11;
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -37,6 +40,7 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void RunComplexExpressionWithStaticField()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; //so that approvals work anywhere
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
             ApproveException(() => field + 5 == d.Month * y);
