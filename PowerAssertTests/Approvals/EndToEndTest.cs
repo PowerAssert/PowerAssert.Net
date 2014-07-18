@@ -29,7 +29,7 @@ namespace PowerAssertTests.Approvals
         {
             int x = 11;
             int y = 6;
-            DateTime d = new DateTime(2010, 3, 1);
+            DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
             ApproveException(() => x + 5 == d.Month * y);
         }
 
@@ -38,7 +38,7 @@ namespace PowerAssertTests.Approvals
         public void RunComplexExpressionWithStaticField()
         {
             int y = 6;
-            DateTime d = new DateTime(2010, 3, 1);
+            DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
             ApproveException(() => field + 5 == d.Month * y);
         }
 
