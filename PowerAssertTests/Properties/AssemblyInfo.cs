@@ -36,4 +36,4 @@ using PowerAssertTests.Approvals;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: FrontLoadedReporter(typeof(CiReporter))]
-[assembly: UseReporter(typeof(DiffReporter))]
+[assembly: UseReporter(typeof(HappyDiffReporter))]
