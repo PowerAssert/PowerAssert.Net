@@ -1,0 +1,11 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+x.Seconds == 100
+. .     . __
+. \__ __/ |
+.    |    |
+|    |    False, but would have been True if you had used TotalSeconds instead of Seconds
+|    40
+00:01:40
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

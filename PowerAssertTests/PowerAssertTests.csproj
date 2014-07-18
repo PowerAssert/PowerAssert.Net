@@ -68,7 +68,7 @@
     <Compile Include="NodeFormatterTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EndToEndTest.cs" />
+    <Compile Include="Approvals\EndToEndTest.cs" />
     <Compile Include="ThrowsTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +82,41 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Approvals\EndToEndTest.BrokenEqualityTestInstanceEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.CompareDelegateAndObject.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.CompareTwoCloseFloats.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.EnumerablesThatDiffer.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.EqualsButNotOperatorEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.NullDereference.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.OneStringIsDecomposedVersionOfOther.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingComplexLinqExpressionStatements.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingDictionary.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingEnumerablesWithNulls.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingIsTest.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingLinqExpressionStatements.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingLinqStatements.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingMethodCall.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingNewExpression.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingTestClassFields.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingUnaryNegate.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PrintingUnaryNot.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunComplexExpression.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunComplexExpression2.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunComplexExpression3.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunComplexExpressionWithStaticField.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunRoundingEdgeCase.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.RunStringCompare.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.SequenceEqualButNotDotEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.SequenceEqualButNotOperatorEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.ShouldHaveUsedTotal.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.StringContainsControlChar.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.StringContainsFormatChar.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.StringContainsMismatchedNewlines.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.StringsThatDiffer.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.StringsThatDifferAndAreComparedCaseInsensitively.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.TestDifferingLists.approved.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
