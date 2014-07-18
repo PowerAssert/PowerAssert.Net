@@ -84,9 +84,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Approvals\EndToEndTest.ArrayLength.approved.txt" />
     <Content Include="Approvals\EndToEndTest.BrokenEqualityTestInstanceEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.Casting.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareDelegateAndObject.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareTwoCloseFloats.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.Enum.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EnumerablesThatDiffer.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EqualsButNotOperatorEquals.approved.txt" />
     <Content Include="Approvals\EndToEndTest.NullDereference.approved.txt" />

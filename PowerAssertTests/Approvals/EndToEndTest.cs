@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -304,6 +305,13 @@ namespace PowerAssertTests.Approvals
         {
             int[] values = new int[0];
             ApproveException(() => values.Length == 1);
+        }
+
+        [Test]
+        public void Enum()
+        {
+            var o = FileOptions.SequentialScan;
+            ApproveException(() => o == FileOptions.Encrypted);
         }
 
         string _expected = "bar";
