@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class SequenceEqualHint : IHint
     {
-        private static readonly MethodInfo SequenceEqualMethodInfo =
+        static readonly MethodInfo SequenceEqualMethodInfo =
             typeof (Enumerable).GetMethods().Single(x => x.Name == "SequenceEqual" &&
                                                          x.GetParameters().Count() == 2); // TODO: equality comparer support
 
@@ -40,7 +40,7 @@ namespace PowerAssert.Hints
                                     return true;
                                 }
                                 ++i;
-                            } 
+                            }
                         }
                     }
                 }

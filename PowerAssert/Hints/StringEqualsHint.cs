@@ -7,12 +7,12 @@ using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
-    internal class StringEqualsHint : IHint
+    class StringEqualsHint : IHint
     {
-        private static readonly MethodInfo[] StringEqualsMethodInfo = typeof (string).GetMethods()
-            .Where(x => x.Name == "Equals" && !x.IsStatic && x.GetParameters().First().ParameterType == typeof(string)).ToArray();
+        static readonly MethodInfo[] StringEqualsMethodInfo = typeof (string).GetMethods()
+            .Where(x => x.Name == "Equals" && !x.IsStatic && x.GetParameters().First().ParameterType == typeof (string)).ToArray();
 
-        private static StringComparer GetComparerFromComparison(StringComparison comparison)
+        static StringComparer GetComparerFromComparison(StringComparison comparison)
         {
             switch (comparison)
             {
@@ -28,9 +28,11 @@ namespace PowerAssert.Hints
                     return StringComparer.Ordinal;
                 case StringComparison.OrdinalIgnoreCase:
                     return StringComparer.OrdinalIgnoreCase;
-                default: throw new InvalidDataException("Unexpected StringComparison value.");
+                default:
+                    throw new InvalidDataException("Unexpected StringComparison value.");
             }
         }
+
         public bool TryGetHint(Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;

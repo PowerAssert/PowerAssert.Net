@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class DelegateShouldHaveBeenInvokedEqualsHint : IHint
     {
-        private static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Static|BindingFlags.Public);
+        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public);
 
         public bool TryGetHint(Expression expression, out string hint)
         {
@@ -23,10 +23,14 @@ namespace PowerAssert.Hints
                     if (left is Delegate || right is Delegate)
                     {
                         if (CheckArgument(methE, true, out hint))
+                        {
                             return true;
+                        }
 
                         if (CheckArgument(methE, false, out hint))
+                        {
                             return true;
+                        }
 
                         hint = ", this is a suspicious comparison";
                         return true;
@@ -38,12 +42,12 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        private static bool CheckArgument(MethodCallExpression methE, bool left, out string hint)
+        static bool CheckArgument(MethodCallExpression methE, bool left, out string hint)
         {
             int ix1 = left ? 0 : 1;
             int ix2 = left ? 1 : 0;
 
-            if (typeof(Delegate).IsAssignableFrom(methE.Arguments[ix1].Type))
+            if (typeof (Delegate).IsAssignableFrom(methE.Arguments[ix1].Type))
             {
                 object leftR;
                 try

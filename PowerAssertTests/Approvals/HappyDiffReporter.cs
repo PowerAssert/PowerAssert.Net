@@ -7,15 +7,15 @@ namespace PowerAssertTests.Approvals
     {
         public HappyDiffReporter()
             : base(
-            (IEnvironmentAwareReporter)CodeCompareReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)BeyondCompareReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)TortoiseDiffReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)AraxisMergeReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)P4MergeReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)WinMergeReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)KDiffReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)FrameworkAssertReporter.INSTANCE, 
-            (IEnvironmentAwareReporter)QuietReporter.INSTANCE)
+                (IEnvironmentAwareReporter) CodeCompareReporter.INSTANCE,
+                (IEnvironmentAwareReporter) BeyondCompareReporter.INSTANCE,
+                (IEnvironmentAwareReporter) TortoiseDiffReporter.INSTANCE,
+                (IEnvironmentAwareReporter) AraxisMergeReporter.INSTANCE,
+                (IEnvironmentAwareReporter) P4MergeReporter.INSTANCE,
+                (IEnvironmentAwareReporter) WinMergeReporter.INSTANCE,
+                (IEnvironmentAwareReporter) KDiffReporter.INSTANCE,
+                (IEnvironmentAwareReporter) FrameworkAssertReporter.INSTANCE,
+                (IEnvironmentAwareReporter) QuietReporter.INSTANCE)
         {
         }
     }

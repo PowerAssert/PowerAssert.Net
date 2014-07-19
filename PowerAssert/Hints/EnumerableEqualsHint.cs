@@ -10,9 +10,10 @@ namespace PowerAssert.Hints
     /// This hint triggers when you've compared two enumerables with <see cref="object.Equals(object)"/> but
     /// theyy would have compared equal if you had used <see cref="Enumerable.SequenceEqual{TSource}(System.Collections.Generic.IEnumerable{TSource},System.Collections.Generic.IEnumerable{TSource})"/>.
     /// </summary>
-    internal class EnumerableEqualsHint : IHint
+    class EnumerableEqualsHint : IHint
     {
-        private static readonly MethodInfo ObjectInstanceEqualsMethodInfo = typeof (object).GetMethods().Single(x => x.Name == "Equals" && !x.IsStatic);
+        static readonly MethodInfo ObjectInstanceEqualsMethodInfo = typeof (object).GetMethods().Single(x => x.Name == "Equals" && !x.IsStatic);
+
         public bool TryGetHint(Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;

@@ -17,8 +17,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableOperatorEqualsHint();
 
-            var x = new[] { 2 };
-            var y = new[] { 3 };
+            var x = new[] {2};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x == y;
 
@@ -32,8 +32,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableOperatorEqualsHint();
 
-            var x = new[] { 3 };
-            var y = new[] { 3 };
+            var x = new[] {3};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x == y;
 
@@ -47,8 +47,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableOperatorEqualsHint();
 
-            var x = new[] { 3 };
-            var y = new[] { 3 };
+            var x = new[] {3};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
 
@@ -62,8 +62,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableOperatorEqualsHint();
 
-            object x = new[] { 3 };
-            object y = new List<int> { 3 };
+            object x = new[] {3};
+            object y = new List<int> {3};
 
             Expression<Func<bool>> assertion = () => x == y;
 

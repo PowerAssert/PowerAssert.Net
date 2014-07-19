@@ -13,15 +13,14 @@ using PowerAssert;
 
 namespace PowerAssertTests.Approvals
 {
-
     [TestFixture]
     public class EndToEndTest
     {
         [Test]
         public void TestDifferingLists()
         {
-            var x = new List<int> { 1, 2, 3, 4, 5, 6 };
-            var y = new List<int> { 1, 2, 3, 4, 5, 7 };
+            var x = new List<int> {1, 2, 3, 4, 5, 6};
+            var y = new List<int> {1, 2, 3, 4, 5, 7};
 
             ApproveException(() => x.SequenceEqual(y));
         }
@@ -33,17 +32,18 @@ namespace PowerAssertTests.Approvals
             int x = 11;
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
-            ApproveException(() => x + 5 == d.Month * y);
+            ApproveException(() => x + 5 == d.Month*y);
         }
 
         static int field = 11;
+
         [Test]
         public void RunComplexExpressionWithStaticField()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; //so that approvals work anywhere
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
-            ApproveException(() => field + 5 == d.Month * y);
+            ApproveException(() => field + 5 == d.Month*y);
         }
 
         [Test]
@@ -51,13 +51,13 @@ namespace PowerAssertTests.Approvals
         {
             string x = " lalalaa ";
             int i = 10;
-            ApproveException(() => x.Trim().Length == Math.Max(4, new int[] { 5, 4, i / 3, 2 }[0]));
+            ApproveException(() => x.Trim().Length == Math.Max(4, new int[] {5, 4, i/3, 2}[0]));
         }
 
         [Test]
         public void RunComplexExpression3()
         {
-            List<int> l = new List<int> { 1, 2, 3 };
+            List<int> l = new List<int> {1, 2, 3};
             bool b = false;
             ApproveException(() => l[2].ToString() == (b ? "three" : "four"));
         }
@@ -77,7 +77,7 @@ namespace PowerAssertTests.Approvals
             int i = 2;
 
 
-            ApproveException(() => 4.5 == d + 3 / i);
+            ApproveException(() => 4.5 == d + 3/i);
         }
 
         [Test]
@@ -120,16 +120,16 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void SequenceEqualButNotOperatorEquals()
         {
-            object list = new List<int> { 1, 2, 3 };
-            object array = new[] { 1, 2, 3 };
+            object list = new List<int> {1, 2, 3};
+            object array = new[] {1, 2, 3};
             ApproveException(() => list == array);
         }
 
         [Test]
         public void SequenceEqualButNotDotEquals()
         {
-            object list = new List<int> { 1, 2, 3 };
-            object array = new[] { 1, 2, 3 };
+            object list = new List<int> {1, 2, 3};
+            object array = new[] {1, 2, 3};
             ApproveException(() => list.Equals(array));
         }
 
@@ -137,14 +137,14 @@ namespace PowerAssertTests.Approvals
         public void PrintingLinqStatements()
         {
             var list = Enumerable.Range(0, 150);
-            ApproveException(() => list.Where(x => x % 2 == 0).Sum() == 0);
+            ApproveException(() => list.Where(x => x%2 == 0).Sum() == 0);
         }
 
         [Test]
         public void PrintingLinqExpressionStatements()
         {
             var list = Enumerable.Range(0, 150);
-            ApproveException(() => (from l in list where l % 2 == 0 select l).Sum() == 0);
+            ApproveException(() => (from l in list where l%2 == 0 select l).Sum() == 0);
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void PrintingEnumerablesWithNulls()
         {
-            var list = new List<int?> { 1, 2, null, 4, 5 };
+            var list = new List<int?> {1, 2, null, 4, 5};
             ApproveException(() => list.Sum() == null);
         }
 
@@ -192,10 +192,10 @@ namespace PowerAssertTests.Approvals
         public void PrintingDictionary()
         {
             var dictionary = new Dictionary<string, string>
-                {
-                    {"foo", "bar"},
-                    {"foo2", "bar2"}
-                };
+            {
+                {"foo", "bar"},
+                {"foo2", "bar2"}
+            };
             ApproveException(() => dictionary == null);
         }
 
@@ -203,7 +203,7 @@ namespace PowerAssertTests.Approvals
         public void PrintingMethodCall()
         {
             var a = 4;
-            ApproveException(() => (a * 5).Equals((a + 5)));
+            ApproveException(() => (a*5).Equals((a + 5)));
         }
 
         [Test]
@@ -219,7 +219,7 @@ namespace PowerAssertTests.Approvals
         public void CompareTwoCloseFloats()
         {
             double d = 0.1;
-            float f = (float)d * 100;
+            float f = (float) d*100;
             f /= 100;
 
             ApproveException(() => d == f);
@@ -269,7 +269,6 @@ namespace PowerAssertTests.Approvals
         }
 
 
-
         [Test]
         public void StringContainsMismatchedNewlines()
         {
@@ -301,7 +300,7 @@ namespace PowerAssertTests.Approvals
         public void Casting()
         {
             int x = 5;
-            ApproveException(() => (long)x == 10L);
+            ApproveException(() => (long) x == 10L);
         }
 
         [Test]

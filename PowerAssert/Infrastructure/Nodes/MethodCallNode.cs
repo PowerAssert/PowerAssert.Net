@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class MethodCallNode : MemberAccessNode
+    class MethodCallNode : MemberAccessNode
     {
         internal MethodCallNode()
         {

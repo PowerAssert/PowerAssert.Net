@@ -15,14 +15,13 @@ namespace PowerAssert.Hints
             typeof (byte),
             typeof (sbyte),
             typeof (short),
-            typeof (ushort),            
+            typeof (ushort),
             typeof (int),
-            typeof (uint),            
+            typeof (uint),
             typeof (long),
             typeof (ulong),
-
         };
-        
+
         public bool TryGetHint(Expression expression, out string hint)
         {
             var binE = expression as BinaryExpression;
@@ -33,7 +32,7 @@ namespace PowerAssert.Hints
                 const string format = ", {0} != {1}";
                 if (lr != null)
                 {
-                    hint =  string.Format(format, lr.Item1, lr.Item2);
+                    hint = string.Format(format, lr.Item1, lr.Item2);
                     return true;
                 }
                 var rl = Check(binE.Right, binE.Left);
@@ -68,7 +67,7 @@ namespace PowerAssert.Hints
 
         string Parse(Type enumType, Expression expression)
         {
-            return enumType.Name+"."+Enum.GetName(enumType, ExpressionParser.DynamicInvoke(expression));
+            return enumType.Name + "." + Enum.GetName(enumType, ExpressionParser.DynamicInvoke(expression));
         }
     }
 }

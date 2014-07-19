@@ -15,7 +15,7 @@ namespace PowerAssertTests.Hints
         {
             var hint = new SequenceEqualHint();
 
-            Expression<Func<bool>> exp = () => new List<int>{ 1 }.SequenceEqual(new[]{ 2 });
+            Expression<Func<bool>> exp = () => new List<int> {1}.SequenceEqual(new[] {2});
 
             string description;
             Assert.IsTrue(hint.TryGetHint(exp.Body, out description));
@@ -27,12 +27,11 @@ namespace PowerAssertTests.Hints
         {
             var hint = new SequenceEqualHint();
 
-            Expression<Func<bool>> exp = () => new List<int> { 1 }.Equals(new[] { 2 });
+            Expression<Func<bool>> exp = () => new List<int> {1}.Equals(new[] {2});
 
             string description;
             Assert.IsFalse(hint.TryGetHint(exp.Body, out description));
             Assert.IsNull(description);
         }
-        
     }
 }

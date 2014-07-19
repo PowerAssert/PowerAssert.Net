@@ -5,7 +5,7 @@ using PowerAssert.Infrastructure.Nodes;
 
 namespace PowerAssert.Infrastructure
 {
-    internal class NodeFormatter
+    class NodeFormatter
     {
         const char pipe = '|';
         const char dot = '.';
@@ -45,7 +45,9 @@ namespace PowerAssert.Infrastructure
                                 line[x.Location] = lhorz;
                                 line[x.Location + x.Width - 1] = rhorz;
                                 for (int w = 1; w < x.Width - 1; ++w)
+                                {
                                     line[x.Location + w] = horz;
+                                }
 
                                 line[x.StalkOffset] = intersect;
                             }
@@ -83,7 +85,7 @@ namespace PowerAssert.Infrastructure
             return PrettyPrint(node, out ignored).ToString();
         }
 
-        private static StringBuilder PrettyPrint(Node constantNode, out List<NodeInfo> outNodeInfos)
+        static StringBuilder PrettyPrint(Node constantNode, out List<NodeInfo> outNodeInfos)
         {
             StringBuilder textLine = new StringBuilder();
             var nodeInfos = new List<NodeInfo>();
@@ -108,9 +110,10 @@ namespace PowerAssert.Infrastructure
             public int Depth { get; set; }
             public int Width { get; set; }
 
-            public int StalkOffset { get { return Location + (Width - 1) / 2; } }
+            public int StalkOffset
+            {
+                get { return Location + (Width - 1)/2; }
+            }
         }
-
     }
-
 }

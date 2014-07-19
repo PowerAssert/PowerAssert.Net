@@ -9,7 +9,7 @@ namespace PowerAssert.Hints
         {
             if (left is IEnumerable && right is IEnumerable)
             {
-                if (((IEnumerable)left).Cast<object>().SequenceEqual(((IEnumerable)right).Cast<object>()))
+                if (((IEnumerable) left).Cast<object>().SequenceEqual(((IEnumerable) right).Cast<object>()))
                 {
                     hint = ", but would have been True with .SequenceEqual()";
                     return true;

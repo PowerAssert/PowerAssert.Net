@@ -44,8 +44,7 @@ namespace PowerAssertTests
             int x = 5;
             Expression<Func<int>> f = () => x;
             Node constantNode = ExpressionParser.Parse(f.Body);
-            Assert.AreEqual(new ConstantNode { Text = "x", Value = "5" }, constantNode);
-
+            Assert.AreEqual(new ConstantNode {Text = "x", Value = "5"}, constantNode);
         }
 
         [Test]
@@ -53,17 +52,18 @@ namespace PowerAssertTests
         {
             DateTime d = new DateTime(2010, 12, 25);
             Expression<Func<int>> f = () => d.Day;
-            MemberAccessNode node = (MemberAccessNode)ExpressionParser.Parse(f.Body);
+            MemberAccessNode node = (MemberAccessNode) ExpressionParser.Parse(f.Body);
 
             MemberAccessNode expected = new MemberAccessNode
-                                        {
-                                            Container = new ConstantNode { Text = "d", Value = d.ToString() },
-                                            MemberName = "Day",
-                                            MemberValue = "25"
-                                        };
+            {
+                Container = new ConstantNode {Text = "d", Value = d.ToString()},
+                MemberName = "Day",
+                MemberValue = "25"
+            };
 
             Assert.AreEqual(expected, node);
         }
+
         [Test]
         public void ParseMethodAccess()
         {
@@ -72,13 +72,12 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new MethodCallNode
-                                        {
-                                            Container = new ConstantNode { Text = "s", Value = @"""hello""" },
-                                            MemberName = "Substring",
-                                            MemberValue = @"""ello""",
-                                            Parameters = new List<Node>() { new ConstantNode { Text = "1" } }
-
-                                        };
+            {
+                Container = new ConstantNode {Text = "s", Value = @"""hello"""},
+                MemberName = "Substring",
+                MemberValue = @"""ello""",
+                Parameters = new List<Node>() {new ConstantNode {Text = "1"}}
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -90,12 +89,11 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new MethodCallNode
-                                        {
-                                            Container = new ConstantNode { Text = "PowerAssertTests.ParserTest"},
-                                            MemberName = "ThrowException",
-                                            MemberValue = @"(Threw DivideByZeroException: Attempted to divide by zero.)",
-
-                                        };
+            {
+                Container = new ConstantNode {Text = "PowerAssertTests.ParserTest"},
+                MemberName = "ThrowException",
+                MemberValue = @"(Threw DivideByZeroException: Attempted to divide by zero.)",
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -114,13 +112,13 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new ConditionalNode
-                                        {
-                                            Condition = new ConstantNode { Text = "b", Value = "False" },
-                                            TrueNode = new ConstantNode { Text = "1" },
-                                            TrueValue = "1",
-                                            FalseNode = new ConstantNode { Text = "2" },
-                                            FalseValue = "2",
-                                        };
+            {
+                Condition = new ConstantNode {Text = "b", Value = "False"},
+                TrueNode = new ConstantNode {Text = "1"},
+                TrueValue = "1",
+                FalseNode = new ConstantNode {Text = "2"},
+                FalseValue = "2",
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -128,24 +126,24 @@ namespace PowerAssertTests
         [Test]
         public void ParseArrayCreateAndIndex()
         {
-            Expression<Func<int>> f = () => new int[] { 1, 2, 3 }[1];
+            Expression<Func<int>> f = () => new int[] {1, 2, 3}[1];
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new ArrayIndexNode
-                               {
-                                   Array = new NewArrayNode
-                                   {
-                                       Type = "int",
-                                       Items = new List<Node>
-                                       {
-                                           new ConstantNode{Text= "1"},
-                                           new ConstantNode{Text= "2"},
-                                           new ConstantNode{Text= "3"},
-                                       }
-                                   },
-                                   Index = new ConstantNode { Text = "1"},
-                                   Value = "2"
-                               };
+            {
+                Array = new NewArrayNode
+                {
+                    Type = "int",
+                    Items = new List<Node>
+                    {
+                        new ConstantNode {Text = "1"},
+                        new ConstantNode {Text = "2"},
+                        new ConstantNode {Text = "3"},
+                    }
+                },
+                Index = new ConstantNode {Text = "1"},
+                Value = "2"
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -154,15 +152,15 @@ namespace PowerAssertTests
         public void ParseCast()
         {
             double x = 5.1;
-            Expression<Func<int>> f = () => (int)x;
+            Expression<Func<int>> f = () => (int) x;
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new UnaryNode
-                               {
-                                   Prefix = "(int)",
-                                   PrefixValue = "5",
-                                   Operand = new ConstantNode(){Text = "x", Value = 5.1M.ToString()},
-                               };
+            {
+                Prefix = "(int)",
+                PrefixValue = "5",
+                Operand = new ConstantNode() {Text = "x", Value = 5.1M.ToString()},
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -175,12 +173,12 @@ namespace PowerAssertTests
 
             var node = ExpressionParser.Parse(f.Body);
             var expected = new BinaryNode()
-                               {
-                                   Left = new ConstantNode() {Text = "x", Value = "\"xValue\""},
-                                   Operator = "is",
-                                   Right = new ConstantNode() { Text = "string" },
-                                   Value = "True"
-                               };
+            {
+                Left = new ConstantNode() {Text = "x", Value = "\"xValue\""},
+                Operator = "is",
+                Right = new ConstantNode() {Text = "string"},
+                Value = "True"
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -193,11 +191,11 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new UnaryNode
-                                {
-                                    Prefix = "!",
-                                    PrefixValue = "False",
-                                    Operand = new ConstantNode() { Text = "v", Value = "True" },
-                                };
+            {
+                Prefix = "!",
+                PrefixValue = "False",
+                Operand = new ConstantNode() {Text = "v", Value = "True"},
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -210,17 +208,17 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new BinaryNode
-                            {
-                                Left = new UnaryNode
-                                        {
-                                            Prefix = "!",
-                                            PrefixValue = "False",
-                                            Operand = new ConstantNode() { Text = "v", Value = "True" },
-                                        },
-                                Right = new ConstantNode { Text = "False", Value = null },
-                                Operator = "==",
-                                Value = "True"
-                            };
+            {
+                Left = new UnaryNode
+                {
+                    Prefix = "!",
+                    PrefixValue = "False",
+                    Operand = new ConstantNode() {Text = "v", Value = "True"},
+                },
+                Right = new ConstantNode {Text = "False", Value = null},
+                Operator = "==",
+                Value = "True"
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -233,18 +231,18 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new UnaryNode
-                            {
-                                Prefix = "!(",
-                                PrefixValue = "True",
-                                Operand = new BinaryNode
-                                            {
-                                                Left = new ConstantNode { Text = "v", Value = "True" },
-                                                Right = new ConstantNode { Text = "False", Value = null },
-                                                Operator = "==",
-                                                Value = "False"
-                                            },
-                                Suffix = ")"
-                            };
+            {
+                Prefix = "!(",
+                PrefixValue = "True",
+                Operand = new BinaryNode
+                {
+                    Left = new ConstantNode {Text = "v", Value = "True"},
+                    Right = new ConstantNode {Text = "False", Value = null},
+                    Operator = "==",
+                    Value = "False"
+                },
+                Suffix = ")"
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -257,11 +255,11 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new UnaryNode
-                               {
-                                   Prefix = "-",
-                                   PrefixValue = "-5",
-                                   Operand = new ConstantNode(){Text = "v", Value = "5"},
-                               };
+            {
+                Prefix = "-",
+                PrefixValue = "-5",
+                Operand = new ConstantNode() {Text = "v", Value = "5"},
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -269,16 +267,15 @@ namespace PowerAssertTests
         [Test]
         public void ParseEnumerableWithNulls()
         {
-            var v = new List<int?>{1,2,null,4};
+            var v = new List<int?> {1, 2, null, 4};
             Expression<Func<List<int?>>> f = () => v;
             var node = ExpressionParser.Parse(f.Body);
 
             var expected = new ConstantNode()
-                               {
-                                   Text = "v",
-                                   Value = "[1, 2, null, 4]"
-
-                               };
+            {
+                Text = "v",
+                Value = "[1, 2, null, 4]"
+            };
 
             Assert.AreEqual(expected, node);
         }
@@ -291,8 +288,8 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
             var expected = new BinaryNode
             {
-                Left = new ConstantNode { Text = "leftHandSide", Value = "null" },
-                Right = new ConstantNode { Text = "\"foo\"" },
+                Left = new ConstantNode {Text = "leftHandSide", Value = "null"},
+                Right = new ConstantNode {Text = "\"foo\""},
                 Operator = "==",
                 Value = "False"
             };
@@ -308,8 +305,8 @@ namespace PowerAssertTests
             var node = ExpressionParser.Parse(f.Body);
             var expected = new BinaryNode
             {
-                Left = new ConstantNode { Text = "\"foo\"" },
-                Right = new ConstantNode { Text = "rightHandSide", Value = "null" },
+                Left = new ConstantNode {Text = "\"foo\""},
+                Right = new ConstantNode {Text = "rightHandSide", Value = "null"},
                 Operator = "==",
                 Value = "False"
             };

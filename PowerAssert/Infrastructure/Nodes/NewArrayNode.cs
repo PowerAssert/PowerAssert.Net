@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class NewArrayNode : Node
+    class NewArrayNode : Node
     {
         [NotNull]
         public List<Node> Items { get; set; }

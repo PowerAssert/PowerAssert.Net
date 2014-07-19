@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class InvocationNode : Node
+    class InvocationNode : Node
     {
         [NotNull]
         public IEnumerable<Node> Arguments { get; set; }

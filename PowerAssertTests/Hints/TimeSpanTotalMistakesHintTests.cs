@@ -17,7 +17,7 @@ namespace PowerAssertTests.Hints
 
             string description;
             Assert.IsTrue(hint.TryGetHint(x.Body, out description));
-            Assert.IsNotNull(description);   
+            Assert.IsNotNull(description);
         }
 
 

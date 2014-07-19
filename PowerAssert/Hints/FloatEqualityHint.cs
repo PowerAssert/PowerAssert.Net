@@ -4,7 +4,7 @@ namespace PowerAssert.Hints
 {
     public class FloatEqualityHint : OperatorEqualsHintBase
     {
-        private const double maxProportionDifference = 0.001;
+        const double maxProportionDifference = 0.001;
 
         protected override bool TryGetHint(object left, object right, out string hint)
         {
@@ -24,6 +24,5 @@ namespace PowerAssert.Hints
             hint = null;
             return false;
         }
-
     }
 }

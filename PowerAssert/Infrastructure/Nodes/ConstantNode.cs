@@ -2,7 +2,7 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class ConstantNode : Node
+    class ConstantNode : Node
     {
         [NotNull]
         public string Text { get; set; }

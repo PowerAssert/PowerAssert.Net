@@ -8,18 +8,18 @@ namespace PowerAssert.Hints
 {
     class TimeSpanTotalMistakesHint : IHint
     {
-        private static readonly MethodInfo[] EqualsMethodInfos =
+        static readonly MethodInfo[] EqualsMethodInfos =
         {
-            typeof (object).GetMethod("Equals", BindingFlags.Instance|BindingFlags.Public),
-            typeof (int).GetMethods(BindingFlags.Instance|BindingFlags.Public)
-                .Single(x => x.Name == "Equals" && x.GetParameters().First().ParameterType == typeof(int)),
+            typeof (object).GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public),
+            typeof (int).GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Single(x => x.Name == "Equals" && x.GetParameters().First().ParameterType == typeof (int)),
         };
 
-        private static readonly MethodInfo[] StaticEqualsMethodInfos =
+        static readonly MethodInfo[] StaticEqualsMethodInfos =
         {
-            typeof (object).GetMethod("Equals", BindingFlags.Static|BindingFlags.Public),
+            typeof (object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public),
         };
-        
+
         public bool TryGetHint(Expression expression, out string hint)
         {
             var binaryExpression = expression as BinaryExpression;
@@ -28,13 +28,19 @@ namespace PowerAssert.Hints
                 var left = binaryExpression.Left as MemberExpression;
                 if (left != null)
                 {
-                    if (CheckValues(out hint, left, binaryExpression.Right)) return true;
+                    if (CheckValues(out hint, left, binaryExpression.Right))
+                    {
+                        return true;
+                    }
                 }
 
                 var right = binaryExpression.Right as MemberExpression;
                 if (right != null)
                 {
-                    if (CheckValues(out hint, right, binaryExpression.Left)) return true;
+                    if (CheckValues(out hint, right, binaryExpression.Left))
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -46,13 +52,19 @@ namespace PowerAssert.Hints
                     var objectToCheck = methE.Object as MemberExpression;
                     if (objectToCheck != null)
                     {
-                        if (CheckValues(out hint, objectToCheck, methE.Arguments.Single())) return true;
+                        if (CheckValues(out hint, objectToCheck, methE.Arguments.Single()))
+                        {
+                            return true;
+                        }
                     }
 
                     var argToCheck = methE.Arguments.Single() as MemberExpression;
                     if (argToCheck != null)
                     {
-                        if (CheckValues(out hint, argToCheck, methE.Object)) return true;
+                        if (CheckValues(out hint, argToCheck, methE.Object))
+                        {
+                            return true;
+                        }
                     }
                 }
                 else if (StaticEqualsMethodInfos.Any(x => x == methE.Method))
@@ -65,7 +77,10 @@ namespace PowerAssert.Hints
                         var leftInner = leftOuter.Operand as MemberExpression;
                         if (leftInner != null)
                         {
-                            if (CheckValues(out hint, leftInner, methE.Arguments[1])) return true;
+                            if (CheckValues(out hint, leftInner, methE.Arguments[1]))
+                            {
+                                return true;
+                            }
                         }
                     }
 
@@ -75,7 +90,10 @@ namespace PowerAssert.Hints
                         var rightInner = rightOuter.Operand as MemberExpression;
                         if (rightInner != null)
                         {
-                            if (CheckValues(out hint, rightInner, methE.Arguments[0])) return true;
+                            if (CheckValues(out hint, rightInner, methE.Arguments[0]))
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -85,7 +103,7 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        private bool CheckValues(out string hint, MemberExpression left, Expression rightEx)
+        bool CheckValues(out string hint, MemberExpression left, Expression rightEx)
         {
             var totalValue = TryToGetTotalValue(left);
             if (totalValue.HasValue)
@@ -108,7 +126,7 @@ namespace PowerAssert.Hints
         {
             if (expresssion.Member.DeclaringType == typeof (TimeSpan))
             {
-                var totalVersion = typeof(TimeSpan).GetProperty("Total" + expresssion.Member.Name);
+                var totalVersion = typeof (TimeSpan).GetProperty("Total" + expresssion.Member.Name);
                 if (totalVersion != null)
                 {
                     var owner = ExpressionParser.DynamicInvoke(expresssion.Expression);

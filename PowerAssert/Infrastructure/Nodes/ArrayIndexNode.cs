@@ -2,11 +2,11 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class ArrayIndexNode : Node
+    class ArrayIndexNode : Node
     {
         [NotNull]
         public Node Array { get; set; }
-        
+
         [NotNull]
         public Node Index { get; set; }
 

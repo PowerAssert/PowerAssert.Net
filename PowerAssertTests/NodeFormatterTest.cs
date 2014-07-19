@@ -13,25 +13,26 @@ namespace PowerAssertTests
         public void FormatConstant()
         {
             string[] s = NodeFormatter.Format(new ConstantNode {Text = "5", Value = null});
-            AssertLines(new[] { "5" }, s);
+            AssertLines(new[] {"5"}, s);
         }
 
         [Test]
         public void FormatOperator()
         {
             string[] s = NodeFormatter.Format(new BinaryNode
-                                              {
-                                                  Operator = "==",
-                                                  Value = "false",
-                                                  Left = new ConstantNode {Text = "5"},
-                                                  Right = new ConstantNode {Text = "6"}
-                                              });
+            {
+                Operator = "==",
+                Value = "false",
+                Left = new ConstantNode {Text = "5"},
+                Right = new ConstantNode {Text = "6"}
+            });
 
-            string[] expected = {
-                                    "5 == 6",
-                                    "  __",
-                                    "  false"
-                                };
+            string[] expected =
+            {
+                "5 == 6",
+                "  __",
+                "  false"
+            };
 
             AssertLines(expected, s);
         }
@@ -40,26 +41,27 @@ namespace PowerAssertTests
         public void FormatTwoOperators()
         {
             string[] s = NodeFormatter.Format(new BinaryNode
-                                              {
-                                                  Operator = "==",
-                                                  Value = "false",
-                                                  Left = new ConstantNode {Text = "31"},
-                                                  Right = new BinaryNode
-                                                  {
-                                                      Operator = "*",
-                                                      Value = "30",
-                                                      Left = new ConstantNode { Text = "5" },
-                                                      Right = new ConstantNode { Text = "6" }
-                                                  }
-                                              });
+            {
+                Operator = "==",
+                Value = "false",
+                Left = new ConstantNode {Text = "31"},
+                Right = new BinaryNode
+                {
+                    Operator = "*",
+                    Value = "30",
+                    Left = new ConstantNode {Text = "5"},
+                    Right = new ConstantNode {Text = "6"}
+                }
+            });
 
-            string[] expected = {
-                                    "31 == 5 * 6",
-                                    "   __   .",
-                                    "   |    .",
-                                    "   |    30",
-                                    "   false"
-                                };
+            string[] expected =
+            {
+                "31 == 5 * 6",
+                "   __   .",
+                "   |    .",
+                "   |    30",
+                "   false"
+            };
 
             AssertLines(expected, s);
         }
@@ -71,28 +73,29 @@ namespace PowerAssertTests
             {
                 Left = new InvocationNode
                 {
-                    Arguments = new Node[] 
-                                       {
-                                            new ConstantNode { Text = "a", Value = "3" },
-                                            new ConstantNode { Text = "x", Value = "2.423" }
-                                       },
-                    Expression = new ConstantNode { Text = "f", Value = "System.Func`3[System.Int32,System.Double,System.Double]" }
+                    Arguments = new Node[]
+                    {
+                        new ConstantNode {Text = "a", Value = "3"},
+                        new ConstantNode {Text = "x", Value = "2.423"}
+                    },
+                    Expression = new ConstantNode {Text = "f", Value = "System.Func`3[System.Int32,System.Double,System.Double]"}
                 },
                 Operator = "==",
-                Right = new ConstantNode { Text = "314.4" },
+                Right = new ConstantNode {Text = "314.4"},
                 Value = "False"
             });
 
-            string[] expected = {
-                                    "f(a, x) == 314.4",
-                                    ". .  .  __",
-                                    ". .  .  |",
-                                    "| .  .  |",
-                                    "| |  |  False",
-                                    "| |  2.423",
-                                    "| 3",
-                                    "System.Func`3[System.Int32,System.Double,System.Double]"
-                                };
+            string[] expected =
+            {
+                "f(a, x) == 314.4",
+                ". .  .  __",
+                ". .  .  |",
+                "| .  .  |",
+                "| |  |  False",
+                "| |  2.423",
+                "| 3",
+                "System.Func`3[System.Int32,System.Double,System.Double]"
+            };
 
             AssertLines(expected, s);
         }

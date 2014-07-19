@@ -5,7 +5,6 @@ using PowerAssert.Hints;
 
 namespace PowerAssertTests.Hints
 {
-
     // ReSharper disable EqualExpressionComparison
 
     [TestFixture]
@@ -40,7 +39,7 @@ namespace PowerAssertTests.Hints
             Assert.IsTrue(hint.TryGetHint(exp.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
-        
+
 
         [Test]
         public void TriggersOnSameObjectForOperatorEquals()
@@ -73,7 +72,7 @@ namespace PowerAssertTests.Hints
             Assert.IsNull(ignored);
         }
 
-    
+
         [Test]
         public void PicksUpCorrectTypeForOverriddenMethodEquals()
         {

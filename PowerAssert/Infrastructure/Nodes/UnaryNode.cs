@@ -2,7 +2,7 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class UnaryNode : Node
+    class UnaryNode : Node
     {
         [CanBeNull]
         public string Prefix { get; set; }

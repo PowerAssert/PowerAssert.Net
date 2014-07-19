@@ -2,7 +2,7 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class MemberAccessNode : Node
+    class MemberAccessNode : Node
     {
         [NotNull]
         public Node Container { get; set; }

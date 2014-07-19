@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class BrokenEqualityHint : IHint
     {
-        private static readonly MethodInfo ObjectEqualsMethodInfo = typeof(object).GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public);
+        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public);
 
         public bool TryGetHint(Expression expression, out string hint)
         {
@@ -37,9 +37,13 @@ namespace PowerAssert.Hints
                 right = ExpressionParser.DynamicInvoke(binE.Right);
 
                 if (binE.Method != null)
+                {
                     declaringType = binE.Method.DeclaringType;
-                else 
+                }
+                else
+                {
                     declaringType = typeof (object); // this should never happen - the hints are only called when the assert fails
+                }
             }
 
             if (left != null && left == right)
@@ -53,7 +57,7 @@ namespace PowerAssert.Hints
         }
 
         // this can be improved
-        private static MethodInfo GetDerivedMethodInfo(Type derivedType, MethodInfo baseMethod)
+        static MethodInfo GetDerivedMethodInfo(Type derivedType, MethodInfo baseMethod)
         {
             return derivedType.GetMethod(baseMethod.Name,
                 baseMethod.GetParameters().Select(x => x.ParameterType).ToArray());

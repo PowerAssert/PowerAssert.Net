@@ -2,7 +2,7 @@
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class ConditionalNode : Node
+    class ConditionalNode : Node
     {
         [NotNull]
         public Node Condition { get; set; }

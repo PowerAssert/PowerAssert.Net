@@ -17,8 +17,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableEqualsHint();
 
-            var x = new[] { 2 };
-            var y = new[] { 3 };
+            var x = new[] {2};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
 
@@ -32,8 +32,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableEqualsHint();
 
-            var x = new[] { 3 };
-            var y = new[] { 3 };
+            var x = new[] {3};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
 
@@ -47,8 +47,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableEqualsHint();
 
-            var x = new[] { 3 };
-            var y = new[] { 3 };
+            var x = new[] {3};
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x == y;
 
@@ -62,8 +62,8 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableEqualsHint();
 
-            var x = new[] { 3 };
-            var y = new List<int> { 3 };
+            var x = new[] {3};
+            var y = new List<int> {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
 
@@ -72,7 +72,7 @@ namespace PowerAssertTests.Hints
             Assert.IsNotNull(message);
         }
 
-        private class StupidClass : IEnumerable<int>
+        class StupidClass : IEnumerable<int>
         {
             public bool Equals(int[] other)
             {
@@ -96,7 +96,7 @@ namespace PowerAssertTests.Hints
             var hint = new EnumerableEqualsHint();
 
             var x = new StupidClass();
-            var y = new[] { 3 };
+            var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
 
@@ -110,7 +110,7 @@ namespace PowerAssertTests.Hints
         {
             var hint = new EnumerableEqualsHint();
 
-            var x = new[] { 3 };
+            var x = new[] {3};
             object y = null;
 
             Expression<Func<bool>> assertion = () => x.Equals(y);

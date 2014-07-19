@@ -8,7 +8,7 @@ namespace PowerAssertTests.Hints
     // ReSharper disable EqualExpressionComparison
 
     [TestFixture]
-    internal class DelegateShouldHaveBeenInvokedEqualsHintTests
+    class DelegateShouldHaveBeenInvokedEqualsHintTests
     {
         [Test]
         public void ShouldBeTriggeredWithoutClosure_Left()

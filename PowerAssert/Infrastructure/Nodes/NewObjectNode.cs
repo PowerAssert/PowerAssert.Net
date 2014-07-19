@@ -4,14 +4,14 @@ using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
-    internal class NewObjectNode : Node
+    class NewObjectNode : Node
     {
         [NotNull]
         public List<Node> Parameters { get; set; }
 
         [NotNull]
-        public string Type { get; set; }        
-        
+        public string Type { get; set; }
+
         [NotNull]
         public string Value { get; set; }
 
@@ -31,7 +31,7 @@ namespace PowerAssert.Infrastructure.Nodes
         }
     }
 
-    internal class MemberInitNode : Node
+    class MemberInitNode : Node
     {
         [NotNull]
         public NewObjectNode Constructor { get; set; }
@@ -56,7 +56,7 @@ namespace PowerAssert.Infrastructure.Nodes
         }
     }
 
-    internal class MemberAssignmentNode : Node
+    class MemberAssignmentNode : Node
     {
         [NotNull]
         public string MemberName { get; set; }

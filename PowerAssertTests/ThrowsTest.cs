@@ -108,17 +108,17 @@ namespace PowerAssertTests
             throw new Exception("Expected throws assertion to fail.");
         }
 
-        private static void MethodThatDoesNotThrowAnException()
+        static void MethodThatDoesNotThrowAnException()
         {
             //NOP
         }
 
-        private static void MethodThatDoesThrow(Exception ex)
+        static void MethodThatDoesThrow(Exception ex)
         {
             throw ex;
         }
 
-        private static async Task AsyncMethodThatDoesThrow(Exception ex)
+        static async Task AsyncMethodThatDoesThrow(Exception ex)
         {
             throw ex;
         }

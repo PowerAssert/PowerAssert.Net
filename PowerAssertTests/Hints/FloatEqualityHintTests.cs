@@ -13,7 +13,7 @@ namespace PowerAssertTests.Hints
         public void TestFloatDoubleComparison()
         {
             double d = 0.1;
-            float f = (float)d * 100;
+            float f = (float) d*100;
             f /= 100;
 
             var floatHint = new FloatEqualityHint();
@@ -29,7 +29,7 @@ namespace PowerAssertTests.Hints
         public void TestDoubleDoubleComparison()
         {
             double d = 0.1;
-            double f = (float)d * 100;
+            double f = (float) d*100;
             f /= 100;
 
             var floatHint = new FloatEqualityHint();
@@ -46,7 +46,7 @@ namespace PowerAssertTests.Hints
         public void TestFloatFloatComparison()
         {
             float d = 0.1f;
-            float f = d * 100;
+            float f = d*100;
             f /= 100;
 
             var floatHint = new FloatEqualityHint();
