@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using ApprovalTests.Core;
-using ApprovalTests.Reporters;
 
-namespace PowerAssertTests.Approvals
+namespace PowerAssertTests.Approvals.ApprovalTestExtensions
 {
     public class CiReporter : IEnvironmentAwareReporter, IApprovalFailureReporter
     {

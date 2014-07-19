@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using ApprovalTests.Core;
 
-namespace PowerAssertTests.Approvals
+namespace PowerAssertTests.Approvals.ApprovalTestExtensions
 {
     public class OverwriteReporter : IApprovalFailureReporter
     {

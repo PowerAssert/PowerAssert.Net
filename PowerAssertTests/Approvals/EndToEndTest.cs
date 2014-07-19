@@ -350,15 +350,18 @@ namespace PowerAssertTests.Approvals
             catch (Exception e)
             {
                 Console.Out.WriteLine(e);
-                ApprovalTests.Approvals.Verify(DosifyLineEndings(e.ToString()), x => StackTraceScrubber.ScrubPaths(StackTraceScrubber.ScrubLineNumbers(x)));
+                ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
             }
         }
 
-        static readonly Regex Newline = new Regex(@"\r?\n", RegexOptions.Compiled);
-
-        static string DosifyLineEndings(string text)
+        string Scrubber(string s)
         {
-            return Newline.Replace(text, "\r\n");
+            s = StackTraceScrubber.ScrubLineNumbers(s);
+            s = StackTraceScrubber.ScrubPaths(s);
+            s = Regex.Replace(s, @"\r?\n", "\r\n");
+            //the throwhelper seems to be present on some environments' stack traces but not others, cut it out to make tha approvals pass on most machines
+            s = Regex.Replace(s, @"\r\n.*ThrowHelper.*\r\n", "\r\n"); 
+            return s;
         }
     }
 }

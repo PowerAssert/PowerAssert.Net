@@ -11,7 +11,6 @@ ints[150] == 49
 
  ---> System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
 Parameter name: index
-   at System.ThrowHelper.ThrowArgumentOutOfRangeException()
    at lambda_method(Closure )
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    --- End of inner exception stack trace ---

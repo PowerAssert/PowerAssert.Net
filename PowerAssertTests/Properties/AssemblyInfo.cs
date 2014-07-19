@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using ApprovalTests.Reporters;
 using PowerAssertTests.Approvals;
+using PowerAssertTests.Approvals.ApprovalTestExtensions;
 
 [assembly: AssemblyTitle("PowerAssertTests")]
 [assembly: AssemblyDescription("")]

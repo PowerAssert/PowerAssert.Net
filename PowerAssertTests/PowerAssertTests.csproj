@@ -55,9 +55,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Approvals\CiReporter.cs" />
-    <Compile Include="Approvals\HappyDiffReporter.cs" />
-    <Compile Include="Approvals\OverwriteReporter.cs" />
+    <Compile Include="Approvals\ApprovalTestExtensions\CiReporter.cs" />
+    <Compile Include="Approvals\ApprovalTestExtensions\HappyDiffReporter.cs" />
+    <Compile Include="Approvals\ApprovalTestExtensions\OverwriteReporter.cs" />
     <Compile Include="Hints\BrokenEqualityHintTests.cs" />
     <Compile Include="Hints\DelegateShouldHaveBeenInvokedEqualsHintTests.cs" />
     <Compile Include="Hints\EnumerableEqualsHintTests.cs" />

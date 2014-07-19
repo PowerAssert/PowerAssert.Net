@@ -1,7 +1,7 @@
 ﻿using ApprovalTests.Core;
 using ApprovalTests.Reporters;
 
-namespace PowerAssertTests.Approvals
+namespace PowerAssertTests.Approvals.ApprovalTestExtensions
 {
     public class HappyDiffReporter : FirstWorkingReporter
     {
