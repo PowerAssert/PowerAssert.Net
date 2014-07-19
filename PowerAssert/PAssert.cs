@@ -81,10 +81,10 @@ namespace PowerAssert
             {
                 b = func();
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 var output = RenderExpression(expression);
-                throw new NullReferenceException("IsTrue encountered NullReferenceException" + CRLF + CRLF + output + CRLF + CRLF, e);
+                throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
             }
             if (!b)
             {

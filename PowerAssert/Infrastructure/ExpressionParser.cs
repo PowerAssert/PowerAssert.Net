@@ -257,7 +257,7 @@ namespace PowerAssert.Infrastructure
         internal static string FormatTargetInvocationException(TargetInvocationException exception)
         {
             var i = exception.InnerException;
-            return string.Format("(Threw {0}: {1})", i.GetType().Name, i.Message);
+            return string.Format("(threw {0})", i.GetType().Name);
         }
 
         static readonly IHint Hinter = new MultiHint(

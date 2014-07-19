@@ -92,7 +92,7 @@ namespace PowerAssertTests
             {
                 Container = new ConstantNode {Text = "PowerAssertTests.ParserTest"},
                 MemberName = "ThrowException",
-                MemberValue = @"(Threw DivideByZeroException: Attempted to divide by zero.)",
+                MemberValue = @"(threw DivideByZeroException)",
             };
 
             Assert.AreEqual(expected, node);

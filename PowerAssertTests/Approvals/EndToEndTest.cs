@@ -297,6 +297,14 @@ namespace PowerAssertTests.Approvals
         }
 
         [Test]
+        public void OutOfBoundsException()
+        {
+            var ints = new List<int> {1, 2, 3, 4, 5, 8};
+
+            ApproveException(() => ints[150] == '1');
+        }
+
+        [Test]
         public void Casting()
         {
             int x = 5;

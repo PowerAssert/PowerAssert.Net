@@ -1,11 +1,11 @@
-﻿System.NullReferenceException: IsTrue encountered NullReferenceException
+﻿System.Exception: IsTrue encountered NullReferenceException, expression was:
 
 l.ToUpperInvariant() == "Oops"
 . .              .   __
 . \______ _______/   |
 .        |           |
-|        |           (Threw NullReferenceException: Object reference not set to an instance of an object.)
-|        (Threw NullReferenceException: Object reference not set to an instance of an object.)
+|        |           (threw NullReferenceException)
+|        (threw NullReferenceException)
 null
 
 
