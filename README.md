@@ -1,5 +1,7 @@
 #PowerAssert.NET
 
+[![Build status](https://ci.appveyor.com/api/projects/status/pcj7c0cvh2xxbobg)](https://ci.appveyor.com/project/robfe/powerassert-net)
+
 *Readable, Writable Test Assertions for .NET*
 
 A .NET port of [Groovy's PowerAssert](http://dontmindthelanguage.wordpress.com/2009/12/11/groovy-1-7-power-assert/). It prints an easy-to-understand decomposition of your assertion
