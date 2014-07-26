@@ -20,7 +20,7 @@ namespace PowerAssert.Hints
                 }
                 catch (TargetInvocationException exception)
                 {
-                    hint = ExpressionParser.FormatTargetInvocationException(exception);
+                    hint = ObjectFormatter.FormatTargetInvocationException(exception);
                     return true;
                 }
 

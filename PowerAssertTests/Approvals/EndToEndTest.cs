@@ -338,6 +338,20 @@ namespace PowerAssertTests.Approvals
         public void PrintingTestClassFields()
         {
             ApproveException(() => this._expected == "foo");
+        }       
+        
+        [Test]
+        public void Groupings()
+        {
+            var g = Enumerable.Range(0, 5).GroupBy(x => x%2==0?"even":"odd");
+            ApproveException(() => !g.Any());
+        }
+
+        [Test]
+        public void Lookups()
+        {
+            var g = Enumerable.Range(0, 5).ToLookup(x => x%2==0?"even":"odd");
+            ApproveException(() => !g.Any());
         }
 
         void ApproveException(Expression<Func<bool>> func)

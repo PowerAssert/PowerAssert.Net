@@ -35,8 +35,8 @@ namespace PowerAssert.Hints
                                 if (!Equals(enumLeft.Current, enumRight.Current))
                                 {
                                     hint = string.Format(", enumerables differ at index {0}, {1} != {2}", i,
-                                        ExpressionParser.FormatObject(enumLeft.Current),
-                                        ExpressionParser.FormatObject(enumRight.Current));
+                                        ObjectFormatter.FormatObject(enumLeft.Current),
+                                        ObjectFormatter.FormatObject(enumRight.Current));
                                     return true;
                                 }
                                 ++i;

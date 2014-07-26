@@ -248,16 +248,10 @@ namespace PowerAssert.Infrastructure
             }
             catch (TargetInvocationException exception)
             {
-                return FormatTargetInvocationException(exception);
+                return ObjectFormatter.FormatTargetInvocationException(exception);
             }
-            var s = FormatObject(value);
+            var s = ObjectFormatter.FormatObject(value);
             return s + GetHints(e, value);
-        }
-
-        internal static string FormatTargetInvocationException(TargetInvocationException exception)
-        {
-            var i = exception.InnerException;
-            return string.Format("(threw {0})", i.GetType().Name);
         }
 
         static readonly IHint Hinter = new MultiHint(
@@ -291,64 +285,6 @@ namespace PowerAssert.Infrastructure
         internal static object DynamicInvoke(Expression e)
         {
             return Expression.Lambda(e).Compile().DynamicInvoke();
-        }
-
-        internal static string FormatObject(object value)
-        {
-            if (value == null)
-            {
-                return "null";
-            }
-            if (value is string)
-            {
-                return "\"" + value + "\"";
-            }
-            if (value is char)
-            {
-                return "'" + value + "'";
-            }
-
-            var exception = value as Exception;
-            if (exception != null)
-            {
-                return "{" + exception.GetType().Name + "}";
-            }
-
-            var type = value.GetType();
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
-            {
-                var k = type.GetProperty("Key").GetValue(value, null);
-                var v = type.GetProperty("Value").GetValue(value, null);
-                return string.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
-            }
-            if (value is Type)
-            {
-                return "typeof(" + NameOfType((Type) value) + ")";
-            }
-            if (value is Delegate)
-            {
-                var del = (Delegate) value;
-
-                return string.Format("delegate {0}, type: {2} ({1})", NameOfType(del.GetType()), string.Join(", ", del.Method.GetParameters().Select(x => NameOfType(x.ParameterType))), NameOfType(del.Method.ReturnType));
-            }
-            if (value is IEnumerable)
-            {
-                var enumerable = (IEnumerable) value;
-                var values = enumerable.Cast<object>().Select(FormatObject);
-                //in case the enumerable is really long, let's cut off the end arbitrarily?
-                const int Limit = 5;
-
-                var list = enumerable as IList;
-                var knownMax = list != null ? list.Count : default(int?);
-
-                values = values.Take(Limit);
-                if (values.Count() == Limit)
-                {
-                    values = values.Concat(new[] {knownMax.HasValue && knownMax > Limit ? string.Format("... ({0} total)", knownMax) : "..."});
-                }
-                return "[" + string.Join(", ", values.ToArray()) + "]";
-            }
-            return value.ToString();
         }
     }
 }
