@@ -355,6 +355,14 @@ namespace PowerAssertTests.Approvals
         }
 
         [Test]
+        public void TestListInitializer()
+        {
+            var y = new List<int> {1, 2};
+
+            ApproveException(() => new List<int>(new[]{0}) {1, 2, 3}.SequenceEqual(y));
+        }
+
+        [Test]
         public void TestObjectInitializer()
         {
             var b = new UriBuilder{Scheme = "http"};

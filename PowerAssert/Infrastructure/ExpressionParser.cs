@@ -235,7 +235,22 @@ namespace PowerAssert.Infrastructure
             return new ConstantNode() {Text = e.Member.Name};
         }
 
-        static Node ParseExpression(InvocationExpression e)
+        static Node ParseExpression(ListInitExpression e)
+        {
+            var items = e.Initializers.SelectMany(x => x.Arguments);
+            return new ListInitNode
+            {
+                Constructor = new NewObjectNode
+                {
+                    Type = NameOfType(e.NewExpression.Type),
+                    Parameters = e.NewExpression.Arguments.Select(Parse).ToList(),
+                    Value = GetValue(e)
+                },
+                Items = items.Select(x => (Node)ParseExpression((dynamic)x)).ToList()
+            };
+        }
+
+	    static Node ParseExpression(InvocationExpression e)
         {
             return new InvocationNode
             {

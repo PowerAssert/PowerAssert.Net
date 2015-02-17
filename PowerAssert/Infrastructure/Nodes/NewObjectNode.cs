@@ -56,6 +56,31 @@ namespace PowerAssert.Infrastructure.Nodes
         }
     }
 
+    class ListInitNode : Node
+    {
+        [NotNull]
+        public NewObjectNode Constructor { get; set; }
+
+        [NotNull]
+        public List<Node> Items { get; set; }
+
+        internal override void Walk(NodeWalker walker, int depth)
+        {
+            Constructor.Walk(walker, depth);
+            walker("{");
+            foreach (var node in Items.Take(1))
+            {
+                node.Walk(walker, depth + 1);
+            }
+            foreach (var node in Items.Skip(1))
+            {
+                walker(", ");
+                node.Walk(walker, depth + 1);
+            }
+            walker("}");
+        }
+    }
+
     class MemberAssignmentNode : Node
     {
         [NotNull]
