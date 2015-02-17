@@ -354,6 +354,15 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => !g.Any());
         }
 
+        [Test]
+        public void TestObjectInitializer()
+        {
+            var b = new UriBuilder{Scheme = "http"};
+
+            ApproveException(() => new UriBuilder{Scheme = "https"} == b);
+        }
+
+
         void ApproveException(Expression<Func<bool>> func)
         {
             try

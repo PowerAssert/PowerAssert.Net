@@ -216,7 +216,12 @@ namespace PowerAssert.Infrastructure
         {
             return new MemberInitNode
             {
-                Constructor = (NewObjectNode) ParseExpression(e.NewExpression),
+                Constructor = new NewObjectNode
+                {
+                    Type = NameOfType(e.NewExpression.Type),
+                    Parameters = e.NewExpression.Arguments.Select(Parse).ToList(),
+                    Value = GetValue(e)
+                },
                 Bindings = e.Bindings.Select(ParseExpression).ToList()
             };
         }
