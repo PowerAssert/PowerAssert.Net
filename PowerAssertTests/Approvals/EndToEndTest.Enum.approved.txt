@@ -1,0 +1,12 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+(int)o == 16384
+.   .. __
+.   .. |
+\_ _/| |
+  |  | False, FileOptions.SequentialScan != FileOptions.Encrypted
+  |  SequentialScan
+  134217728
+
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

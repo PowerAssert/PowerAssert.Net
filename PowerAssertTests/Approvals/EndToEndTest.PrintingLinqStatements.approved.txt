@@ -1,0 +1,14 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+list.Where(x => ((x % 2) == 0)).Sum() == 0
+.  . .   .                      . .   __
+.  . .   .                      \ /   |
+.  . \_ _/                       |    |
+\ _/   |                         |    |
+ |     |                         |    False
+ |     |                         5550
+ |     [0, 2, 4, 6, 8, ...]
+ [0, 1, 2, 3, 4, ...]
+
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

@@ -1,0 +1,10 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+!b
+..
+.|
+|True
+False
+
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

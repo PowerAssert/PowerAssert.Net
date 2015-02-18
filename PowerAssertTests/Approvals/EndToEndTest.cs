@@ -389,9 +389,9 @@ namespace PowerAssertTests.Approvals
         {
             s = StackTraceScrubber.ScrubLineNumbers(s);
             s = StackTraceScrubber.ScrubPaths(s);
-            s = Regex.Replace(s, @"\r?\n", "\r\n");
             //the throwhelper seems to be present on some environments' stack traces but not others, cut it out to make tha approvals pass on most machines
-            s = Regex.Replace(s, @"\r\n.*ThrowHelper.*\r\n", "\r\n"); 
+            s = Regex.Replace(s, @"\n.*ThrowHelper.*\n", "\n"); 
+            s = Regex.Replace(s, @"\r?\n", "\n");
             return s;
         }
     }
