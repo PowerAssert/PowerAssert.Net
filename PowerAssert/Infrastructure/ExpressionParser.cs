@@ -168,14 +168,14 @@ namespace PowerAssert.Infrastructure
                 return new ConstantNode
                 {
                     Value = GetValue(e),
-                    Text = e.Member.Name
+                    Text = GetDisplayText(e.Member)
                 };
             }
             return new MemberAccessNode
             {
                 Container = Parse(e.Expression),
                 MemberValue = GetValue(e),
-                MemberName = e.Member.Name
+                MemberName = GetDisplayText(e.Member)
             };
         }
 
@@ -184,7 +184,8 @@ namespace PowerAssert.Infrastructure
         {
             if (expression is ConstantExpression)
             {
-                return expression.Type.Name.StartsWith("<") || expression.Type == PAssert.CurrentTestClass;
+                var typeName = expression.Type.Name;
+                return typeName.StartsWith("<") || typeName.StartsWith("_Closure$__") || expression.Type == PAssert.CurrentTestClass;
             }
             return false;
         }
@@ -230,9 +231,9 @@ namespace PowerAssert.Infrastructure
         {
             if (e is MemberAssignment)
             {
-                return new MemberAssignmentNode {MemberName = e.Member.Name, Value = Parse(((MemberAssignment) e).Expression)};
+                return new MemberAssignmentNode {MemberName = GetDisplayText(e.Member), Value = Parse(((MemberAssignment) e).Expression)};
             }
-            return new ConstantNode() {Text = e.Member.Name};
+            return new ConstantNode() {Text = GetDisplayText(e.Member)};
         }
 
         static Node ParseExpression(ListInitExpression e)
@@ -272,6 +273,12 @@ namespace PowerAssert.Infrastructure
             }
             var s = ObjectFormatter.FormatObject(value);
             return s + GetHints(e, value);
+        }
+
+        const string VBLOCAL_PREFIX = "$VB$Local_";
+        static string GetDisplayText(MemberInfo member)
+        {
+            return member.Name.StartsWith(VBLOCAL_PREFIX) ? member.Name.Substring(VBLOCAL_PREFIX.Length) : member.Name;
         }
 
         static readonly IHint Hinter = new MultiHint(
