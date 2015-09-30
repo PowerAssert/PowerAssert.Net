@@ -16,6 +16,22 @@ namespace PowerAssertTests.Approvals
     [TestFixture]
     public class EndToEndTest
     {
+        static CultureInfo _en = CultureInfo.GetCultureInfo("en");
+        CultureInfo _originalUICulture;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _originalUICulture = Thread.CurrentThread.CurrentUICulture;
+            Thread.CurrentThread.CurrentUICulture = _en;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Thread.CurrentThread.CurrentUICulture = _originalUICulture;
+        }
+
         [Test]
         public void TestDifferingLists()
         {
