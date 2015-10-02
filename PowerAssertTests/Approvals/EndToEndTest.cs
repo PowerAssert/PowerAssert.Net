@@ -386,6 +386,12 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => new UriBuilder{Scheme = "https"} == b);
         }
 
+        [Test]
+        public void NullCoalesce()
+        {
+            string x = null;
+            ApproveException(() => (x ?? "foo") == "bar");
+        }
 
         void ApproveException(Expression<Func<bool>> func)
         {

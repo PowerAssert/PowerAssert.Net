@@ -4,6 +4,14 @@
 <#@ Assembly Name="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral" #>
 <#@ import namespace="System.Linq.Expressions" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Threading" #>
+<#@ import namespace="System.Globalization" #>
+<#
+var orgUICulture = Thread.CurrentThread.CurrentUICulture;
+Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+try
+{
+#>
 using System;
 using System.Linq.Expressions;
 using System.Collections.Generic;
@@ -78,19 +86,31 @@ foreach (var v in Enum.GetValues(typeof (ExpressionType)))
         };
     }
 }
+<#
+}
+finally
+{
+    Thread.CurrentThread.CurrentUICulture = orgUICulture;
+}
+#>
 
 <#+
 
     string GetBinaryFormat(ExpressionType v)
     {
-        try
+        var lastRaised = new InvalidOperationException("Unknown error");
+        foreach (var t in new [] {typeof(int), typeof(double), typeof(string)})
         {
-            return GetBinaryFormat(v, typeof (int));
+            try
+            {
+                return GetBinaryFormat(v, t);
+            }
+            catch (InvalidOperationException ex)
+            {
+                lastRaised = ex;
+            }
         }
-        catch (InvalidOperationException)
-        {
-            return GetBinaryFormat(v, typeof (double));
-        }
+        throw lastRaised;
     }
 
     string GetBinaryFormat(ExpressionType v, Type t)
