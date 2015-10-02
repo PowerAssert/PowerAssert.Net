@@ -32,11 +32,11 @@ namespace PowerAssert.Infrastructure
             {ExpressionType.Add, "+"},
             {ExpressionType.AddChecked, "+"},
             {ExpressionType.And, "&"},
-			// AndAlso: The binary operator AndAlso is not defined for the types 'System.Double' and 'System.Double'.
+			// AndAlso: The binary operator AndAlso is not defined for the types 'System.String' and 'System.String'.
 			// ArrayLength: Unhandled binary: ArrayLength
 			// ArrayIndex: Argument must be array
 			// Call: Unhandled binary: Call
-			// Coalesce: Coalesce used with type that cannot be null
+            {ExpressionType.Coalesce, "??"},
 			// Conditional: Unhandled binary: Conditional
 			// Constant: Unhandled binary: Constant
 			// Convert: Unhandled binary: Convert
@@ -66,7 +66,7 @@ namespace PowerAssert.Infrastructure
 			// Not: Unhandled binary: Not
             {ExpressionType.NotEqual, "!="},
             {ExpressionType.Or, "|"},
-			// OrElse: The binary operator OrElse is not defined for the types 'System.Double' and 'System.Double'.
+			// OrElse: The binary operator OrElse is not defined for the types 'System.String' and 'System.String'.
 			// Parameter: Unhandled binary: Parameter
             {ExpressionType.Power, "^"},
 			// Quote: Unhandled binary: Quote

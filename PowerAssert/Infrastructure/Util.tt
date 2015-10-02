@@ -98,14 +98,19 @@ finally
 
     string GetBinaryFormat(ExpressionType v)
     {
-        try
+        var lastRaised = new InvalidOperationException("Unknown error");
+        foreach (var t in new [] {typeof(int), typeof(double), typeof(string)})
         {
-            return GetBinaryFormat(v, typeof (int));
+            try
+            {
+                return GetBinaryFormat(v, t);
+            }
+            catch (InvalidOperationException ex)
+            {
+                lastRaised = ex;
+            }
         }
-        catch (InvalidOperationException)
-        {
-            return GetBinaryFormat(v, typeof (double));
-        }
+        throw lastRaised;
     }
 
     string GetBinaryFormat(ExpressionType v, Type t)

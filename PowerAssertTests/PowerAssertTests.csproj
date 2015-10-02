@@ -95,6 +95,7 @@
     <Content Include="Approvals\EndToEndTest.Enum.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EnumerablesThatDiffer.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EqualsButNotOperatorEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.NullCoalesce.approved.txt" />
     <Content Include="Approvals\EndToEndTest.NullDereference.approved.txt" />
     <Content Include="Approvals\EndToEndTest.OneStringIsDecomposedVersionOfOther.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingComplexLinqExpressionStatements.approved.txt" />

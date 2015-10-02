@@ -313,5 +313,22 @@ namespace PowerAssertTests
 
             Assert.AreEqual(expected, node);
         }
+
+        [Test]
+        public void ParseCoalesce()
+        {
+            string x = null;
+            Expression<Func<string>> f = () => x ?? "foo";
+            var node = ExpressionParser.Parse(f.Body);
+            var expected = new BinaryNode
+            {
+                Left = new ConstantNode { Text = "x", Value = "null" },
+                Right = new ConstantNode { Text = "\"foo\"" },
+                Operator = "??",
+                Value = "\"foo\""
+            };
+
+            Assert.AreEqual(expected, node);
+        }
     }
 }
