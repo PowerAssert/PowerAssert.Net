@@ -1,0 +1,16 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+String.Compare(x + "", y + "", False) == 0
+       .     . . .     . .            __
+       \__ __/ . .     . .            |
+          |    . .     . .            |
+          |    . |     . |            |
+          |    | |     | |            False
+          |    | |     | "bar"
+          |    | |     "bar"
+          |    | "foo"
+          |    "foo"
+          1
+
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

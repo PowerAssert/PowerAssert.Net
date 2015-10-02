@@ -97,7 +97,7 @@ namespace PowerAssert.Infrastructure
                     nodeInfos.Add(new NodeInfo {Location = textLine.Length, Width = text.Length, Value = value, Depth = depth});
                 }
                 textLine.Append(text);
-            }, 0);
+            }, 0, false);
 
             outNodeInfos = nodeInfos;
             return textLine;

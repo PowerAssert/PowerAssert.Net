@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
@@ -17,14 +18,14 @@ namespace PowerAssert.Infrastructure.Nodes
         public string TrueValue { get; set; }
         public string FalseValue { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
             walker("(", TestValue ? TrueValue : FalseValue, depth);
-            Condition.Walk(walker, depth + 1);
+            Condition.Walk(walker, depth + 1, false);
             walker(" ? ");
-            TrueNode.Walk(walker, depth + 1);
+            TrueNode.Walk(walker, depth + 1, false);
             walker(" : ");
-            FalseNode.Walk(walker, depth + 1);
+            FalseNode.Walk(walker, depth + 1, false);
             walker(")");
         }
     }

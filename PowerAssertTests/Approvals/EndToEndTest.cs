@@ -393,6 +393,63 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => (x ?? "foo") == "bar");
         }
 
+        [Test]
+        public void OperatorPriority()
+        {
+            var x = 1;
+            ApproveException(() => (x + 2) * 2 == 3 / (x + 2));
+        }
+
+        [Test]
+        public void BinaryCombinationOfSamePriority()
+        {
+            var x = 1;
+            ApproveException(() => (2 * x) * 2 != 2 * (x * 2));
+        }
+
+        [Test]
+        public void MethodCallOfBinary()
+        {
+            var x = 1;
+            ApproveException(() => (x + 2).ToString() == "12");
+        }
+
+        [Test]
+        public void MethodCallOfBinaryBackward()
+        {
+            var x = 1;
+            ApproveException(() => "12" == (x + 2).ToString());
+        }
+
+        [Test]
+        public void PropertyAccessOfBinary()
+        {
+            var x = "foo";
+            ApproveException(() => (x + "").Length == 0);
+        }
+
+        [Test]
+        public void ArrayIndexOfBinary()
+        {
+            var x = "foo";
+            ApproveException(() => (x + "bar")[0] == 'x');
+        }
+
+        [Test]
+        public void BinaryArguments()
+        {
+            var x = "foo";
+            var y = "bar";
+            ApproveException(() => String.Compare(x + "", y + "", false) == 0);
+        }
+
+        [Test]
+        public void BinaryArrayElement()
+        {
+            var x = 1;
+            ApproveException(() => new[] { x + 1, x + 2 }[0] == 3);
+        }
+
         void ApproveException(Expression<Func<bool>> func)
         {
             try

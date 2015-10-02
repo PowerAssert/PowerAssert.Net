@@ -19,13 +19,13 @@ namespace PowerAssert.Infrastructure.Nodes
         [CanBeNull]
         public string SuffixValue { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
             if (!string.IsNullOrEmpty(Prefix))
             {
                 walker(Prefix, PrefixValue, depth + 1);
             }
-            Operand.Walk(walker, depth);
+            Operand.Walk(walker, depth, Priority < Operand.Priority);
             if (!string.IsNullOrEmpty(Suffix))
             {
                 walker(Suffix, SuffixValue, depth + 1);

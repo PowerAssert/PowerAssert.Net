@@ -15,17 +15,17 @@ namespace PowerAssert.Infrastructure.Nodes
         [NotNull]
         public string Value { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
             walker("new " + Type + "(", Value, depth);
             foreach (var node in Parameters.Take(1))
             {
-                node.Walk(walker, depth);
+                node.Walk(walker, depth, false);
             }
             foreach (var node in Parameters.Skip(1))
             {
                 walker(", ");
-                node.Walk(walker, depth);
+                node.Walk(walker, depth, false);
             }
             walker(")");
         }
@@ -39,18 +39,18 @@ namespace PowerAssert.Infrastructure.Nodes
         [NotNull]
         public List<Node> Bindings { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
-            Constructor.Walk(walker, depth);
+            Constructor.Walk(walker, depth, false);
             walker("{");
             foreach (var node in Bindings.Take(1))
             {
-                node.Walk(walker, depth + 1);
+                node.Walk(walker, depth + 1, false);
             }
             foreach (var node in Bindings.Skip(1))
             {
                 walker(", ");
-                node.Walk(walker, depth + 1);
+                node.Walk(walker, depth + 1, false);
             }
             walker("}");
         }
@@ -64,18 +64,18 @@ namespace PowerAssert.Infrastructure.Nodes
         [NotNull]
         public List<Node> Items { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
-            Constructor.Walk(walker, depth);
+            Constructor.Walk(walker, depth, false);
             walker("{");
             foreach (var node in Items.Take(1))
             {
-                node.Walk(walker, depth + 1);
+                node.Walk(walker, depth + 1, false);
             }
             foreach (var node in Items.Skip(1))
             {
                 walker(", ");
-                node.Walk(walker, depth + 1);
+                node.Walk(walker, depth + 1, false);
             }
             walker("}");
         }
@@ -89,11 +89,11 @@ namespace PowerAssert.Infrastructure.Nodes
         [NotNull]
         public Node Value { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
             walker(MemberName);
             walker(" = ");
-            Value.Walk(walker, depth);
+            Value.Walk(walker, depth, false);
         }
     }
 }
