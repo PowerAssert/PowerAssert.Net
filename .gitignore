@@ -20,3 +20,4 @@ pacakges
 *.cache
 *.nupkg
 *.received.txt
+*.orig

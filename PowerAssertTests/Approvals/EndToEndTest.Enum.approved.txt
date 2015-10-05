@@ -1,9 +1,10 @@
 ﻿System.Exception: IsTrue failed, expression was:
 
-(int)o == 16384
-.   .. __
-.   .. |
-\_ _/| |
+(int)o == (int)Encrypted
+.   .. __ .   .
+.   .. |  .   .
+\_ _/| |  \_ _/
+  |  | |    16384
   |  | False, FileOptions.SequentialScan != FileOptions.Encrypted
   |  SequentialScan
   134217728
