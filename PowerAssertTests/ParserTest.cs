@@ -232,7 +232,7 @@ namespace PowerAssertTests
 
             var expected = new UnaryNode
             {
-                Prefix = "!(",
+                Prefix = "!",
                 PrefixValue = "True",
                 Operand = new BinaryNode
                 {
@@ -240,8 +240,7 @@ namespace PowerAssertTests
                     Right = new ConstantNode {Text = "False", Value = null},
                     Operator = "==",
                     Value = "False"
-                },
-                Suffix = ")"
+                }
             };
 
             Assert.AreEqual(expected, node);

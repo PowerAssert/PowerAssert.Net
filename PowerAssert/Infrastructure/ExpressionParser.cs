@@ -62,7 +62,7 @@ namespace PowerAssert.Infrastructure
                 case ExpressionType.Convert:
                     return new UnaryNode {Prefix = "(" + NameOfType(e.Type) + ")", Operand = Parse(e.Operand), PrefixValue = GetValue(e)};
                 case ExpressionType.Not:
-                    return ParseUnaryNot(e);
+                    return new UnaryNode {Prefix = "!", Operand = Parse(e.Operand), PrefixValue = GetValue(e)};
                 case ExpressionType.Negate:
                 case ExpressionType.NegateChecked:
                     return new UnaryNode {Prefix = "-", Operand = Parse(e.Operand), PrefixValue = GetValue(e)};
@@ -70,14 +70,6 @@ namespace PowerAssert.Infrastructure
                     return new MemberAccessNode {Container = Parse(e.Operand), MemberName = "Length", MemberValue = GetValue(e)};
             }
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle UnaryExpression expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
-        }
-
-        static Node ParseUnaryNot(UnaryExpression e)
-        {
-            string suffix = e.Operand is BinaryExpression ? ")" : null;
-            string prefix = e.Operand is BinaryExpression ? "!(" : "!";
-
-            return new UnaryNode {Prefix = prefix, Operand = Parse(e.Operand), PrefixValue = GetValue(e), Suffix = suffix};
         }
 
         static Node ParseExpression(NewArrayExpression e)

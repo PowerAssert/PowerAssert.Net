@@ -444,11 +444,27 @@ namespace PowerAssertTests.Approvals
         }
 
         [Test]
+        public void UnaryNotOfBinary()
+        {
+            var x = true;
+            ApproveException(() => !(x && true));
+        }
+
+        [Test]
+        public void UnaryCastOfBinary()
+        {
+            var x = 1.5;
+            ApproveException(() => (int)(x + 1.8) == 2);
+        }
+
+        [Test]
         public void BinaryArrayElement()
         {
             var x = 1;
             ApproveException(() => new[] { x + 1, x + 2 }[0] == 3);
         }
+
+
 
         void ApproveException(Expression<Func<bool>> func)
         {
