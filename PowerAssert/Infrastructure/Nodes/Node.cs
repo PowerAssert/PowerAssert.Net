@@ -6,7 +6,10 @@ namespace PowerAssert.Infrastructure.Nodes
 {
     abstract class Node
     {
-        internal abstract void Walk(NodeWalker walker, int depth);
+        // If `wrap` specified, output from this node should be unified.
+        // For BinaryNode, it means output should be wrapped by "(" and ")".
+        // For others, nothing to do (outputs from others are unified by default)
+        internal abstract void Walk(NodeWalker walker, int depth, bool wrap);
 
         internal delegate void NodeWalker(string text, string value = null, int depth = 0);
 
@@ -51,6 +54,11 @@ namespace PowerAssert.Infrastructure.Nodes
         {
             var strings = NodeFormatter.Format(this);
             return string.Join(Environment.NewLine, strings);
+        }
+
+        public virtual int Priority
+        {
+            get { return 0; }
         }
     }
 }

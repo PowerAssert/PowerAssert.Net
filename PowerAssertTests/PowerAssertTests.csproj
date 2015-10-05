@@ -87,17 +87,24 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Approvals\EndToEndTest.ArrayIndexOfBinary.approved.txt" />
     <Content Include="Approvals\EndToEndTest.ArrayLength.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.BinaryArguments.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.BinaryArrayElement.approved.txt" />
     <Content Include="Approvals\EndToEndTest.BrokenEqualityTestInstanceEquals.approved.txt" />
     <Content Include="Approvals\EndToEndTest.Casting.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.UnaryCastOfBinary.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareDelegateAndObject.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareTwoCloseFloats.approved.txt" />
     <Content Include="Approvals\EndToEndTest.Enum.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EnumerablesThatDiffer.approved.txt" />
     <Content Include="Approvals\EndToEndTest.EqualsButNotOperatorEquals.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.MethodCallOfBinary.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.MethodCallOfBinaryBackward.approved.txt" />
     <Content Include="Approvals\EndToEndTest.NullCoalesce.approved.txt" />
     <Content Include="Approvals\EndToEndTest.NullDereference.approved.txt" />
     <Content Include="Approvals\EndToEndTest.OneStringIsDecomposedVersionOfOther.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.OperatorPriority.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingComplexLinqExpressionStatements.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingDictionary.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingEnumerablesWithNulls.approved.txt" />
@@ -109,6 +116,7 @@
     <Content Include="Approvals\EndToEndTest.PrintingTestClassFields.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingUnaryNegate.approved.txt" />
     <Content Include="Approvals\EndToEndTest.PrintingUnaryNot.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PropertyAccessOfBinary.approved.txt" />
     <Content Include="Approvals\EndToEndTest.RunComplexExpression.approved.txt" />
     <Content Include="Approvals\EndToEndTest.RunComplexExpression2.approved.txt" />
     <Content Include="Approvals\EndToEndTest.RunComplexExpression3.approved.txt" />
@@ -124,6 +132,7 @@
     <Content Include="Approvals\EndToEndTest.StringsThatDiffer.approved.txt" />
     <Content Include="Approvals\EndToEndTest.StringsThatDifferAndAreComparedCaseInsensitively.approved.txt" />
     <Content Include="Approvals\EndToEndTest.TestDifferingLists.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.UnaryNotOfBinary.approved.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

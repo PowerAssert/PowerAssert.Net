@@ -13,11 +13,11 @@ namespace PowerAssert.Infrastructure.Nodes
         [NotNull]
         public string Value { get; set; }
 
-        internal override void Walk(NodeWalker walker, int depth)
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
         {
-            Array.Walk(walker, depth + 1);
+            Array.Walk(walker, depth + 1, Priority < Array.Priority);
             walker("[", Value, depth);
-            Index.Walk(walker, depth + 1);
+            Index.Walk(walker, depth + 1, false);
             walker("]");
         }
     }

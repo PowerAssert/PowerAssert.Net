@@ -1,0 +1,16 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+new int[]{x + 1, x + 2}[0] == 3
+          . .    . .   .   __
+          . .    . .   .   |
+          . .    . .   |   |
+          . |    . |   |   |
+          | |    | |   |   False
+          | |    | |   2
+          | |    | 3
+          | |    1
+          | 2
+          1
+
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
