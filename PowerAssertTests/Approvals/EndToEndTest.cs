@@ -464,8 +464,6 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => new[] { x + 1, x + 2 }[0] == 3);
         }
 
-
-
         void ApproveException(Expression<Func<bool>> func)
         {
             try

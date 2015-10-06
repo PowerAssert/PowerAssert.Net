@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -21,9 +22,10 @@ namespace PowerAssertTests.Hints
             var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsFalse(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNull(message);
         }
 
@@ -36,9 +38,10 @@ namespace PowerAssertTests.Hints
             var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsTrue(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsTrue(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNotNull(message);
         }
 
@@ -51,9 +54,10 @@ namespace PowerAssertTests.Hints
             var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x == y;
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsFalse(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNull(message);
         }
 
@@ -66,9 +70,10 @@ namespace PowerAssertTests.Hints
             var y = new List<int> {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsTrue(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsTrue(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNotNull(message);
         }
 
@@ -99,9 +104,10 @@ namespace PowerAssertTests.Hints
             var y = new[] {3};
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsFalse(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNull(message);
         }
 
@@ -114,9 +120,10 @@ namespace PowerAssertTests.Hints
             object y = null;
 
             Expression<Func<bool>> assertion = () => x.Equals(y);
+            var p = new ExpressionParser(assertion.Body);
 
             string message;
-            Assert.IsFalse(hint.TryGetHint(assertion.Body, out message));
+            Assert.IsFalse(hint.TryGetHint(p, assertion.Body, out message));
             Assert.IsNull(message);
         }
     }

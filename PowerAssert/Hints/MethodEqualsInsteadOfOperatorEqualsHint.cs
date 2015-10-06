@@ -1,8 +1,10 @@
-﻿namespace PowerAssert.Hints
+﻿using PowerAssert.Infrastructure;
+
+namespace PowerAssert.Hints
 {
     class MethodEqualsInsteadOfOperatorEqualsHint : OperatorEqualsHintBase
     {
-        protected override bool TryGetHint(object left, object right, out string hint)
+        protected override bool TryGetHint(ExpressionParser parser, object left, object right, out string hint)
         {
             if (Equals(left, right))
             {

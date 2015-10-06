@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -19,9 +20,10 @@ namespace PowerAssertTests.Hints
             var floatHint = new FloatEqualityHint();
 
             Expression<Func<bool>> exp = () => d == f;
+            var p = new ExpressionParser(exp.Body);
 
             string description;
-            Assert.IsTrue(floatHint.TryGetHint(exp.Body, out description));
+            Assert.IsTrue(floatHint.TryGetHint(p, exp.Body, out description));
             Assert.IsNotNull(description);
         }
 
@@ -35,9 +37,10 @@ namespace PowerAssertTests.Hints
             var floatHint = new FloatEqualityHint();
 
             Expression<Func<bool>> exp = () => d == f;
+            var p = new ExpressionParser(exp.Body);
 
             string description;
-            Assert.IsTrue(floatHint.TryGetHint(exp.Body, out description));
+            Assert.IsTrue(floatHint.TryGetHint(p, exp.Body, out description));
             Assert.IsNotNull(description);
         }
 
@@ -52,9 +55,10 @@ namespace PowerAssertTests.Hints
             var floatHint = new FloatEqualityHint();
 
             Expression<Func<bool>> exp = () => d == f;
+            var p = new ExpressionParser(exp.Body);
 
             string description;
-            Assert.IsTrue(floatHint.TryGetHint(exp.Body, out description));
+            Assert.IsTrue(floatHint.TryGetHint(p, exp.Body, out description));
             Assert.IsNotNull(description);
         }
     }

@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -19,8 +20,9 @@ namespace PowerAssertTests.Hints
 
             Expression<Func<bool>> ex = () => Equals(f, 3);
 
+            var p = new ExpressionParser(ex.Body);
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
 
@@ -33,9 +35,10 @@ namespace PowerAssertTests.Hints
             Func<int> f = () => n; // now this func requires a closure
 
             Expression<Func<bool>> ex = () => Equals(f, 3);
+            var p = new ExpressionParser(ex.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
 
@@ -48,9 +51,10 @@ namespace PowerAssertTests.Hints
             Func<int> f = () => 3;
 
             Expression<Func<bool>> ex = () => Equals(3, f);
+            var p = new ExpressionParser(ex.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
 
@@ -63,9 +67,10 @@ namespace PowerAssertTests.Hints
             Func<int> f = () => n; // now this func requires a closure
 
             Expression<Func<bool>> ex = () => Equals(3, f);
+            var p = new ExpressionParser(ex.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
 
@@ -77,9 +82,10 @@ namespace PowerAssertTests.Hints
             Func<int> f = () => 3;
 
             Expression<Func<bool>> ex = () => Equals(f, f);
+            var p = new ExpressionParser(ex.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
 
             Assert.IsTrue(ignored.Contains("suspicious"));
         }
@@ -93,9 +99,10 @@ namespace PowerAssertTests.Hints
             Func<int, int> f = _ => 3;
 
             Expression<Func<bool>> ex = () => Equals(f, n);
+            var p = new ExpressionParser(ex.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(ex.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, ex.Body, out ignored));
 
             Assert.IsTrue(ignored.Contains("suspicious"));
         }

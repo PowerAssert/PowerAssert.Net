@@ -12,7 +12,7 @@ namespace PowerAssert.Hints
             typeof (Enumerable).GetMethods().Single(x => x.Name == "SequenceEqual" &&
                                                          x.GetParameters().Count() == 2); // TODO: equality comparer support
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;
             if (methE != null)
@@ -23,8 +23,8 @@ namespace PowerAssert.Hints
                     var instantiatedMethodInfo = SequenceEqualMethodInfo.MakeGenericMethod(typeParams);
                     if (methE.Method == instantiatedMethodInfo)
                     {
-                        var left = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
-                        var right = ExpressionParser.DynamicInvoke(methE.Arguments[1]);
+                        var left = parser.DynamicInvoke(methE.Arguments[0]);
+                        var right = parser.DynamicInvoke(methE.Arguments[1]);
 
                         var enumLeft = ((IEnumerable) left).GetEnumerator();
                         var enumRight = ((IEnumerable) right).GetEnumerator();

@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
     interface IHint
     {
-        bool TryGetHint(Expression expression, out string hint);
+        bool TryGetHint(ExpressionParser parser, Expression expression, out string hint);
     }
 }

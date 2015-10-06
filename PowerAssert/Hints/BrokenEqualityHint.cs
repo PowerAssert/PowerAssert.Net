@@ -10,7 +10,7 @@ namespace PowerAssert.Hints
     {
         static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public);
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             object left = null;
             object right = null;
@@ -21,8 +21,8 @@ namespace PowerAssert.Hints
             {
                 if (methE.Method == ObjectEqualsMethodInfo)
                 {
-                    left = ExpressionParser.DynamicInvoke(methE.Object);
-                    right = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
+                    left = parser.DynamicInvoke(methE.Object);
+                    right = parser.DynamicInvoke(methE.Arguments[0]);
 
                     // methE.Method.DeclaringType doesn't work here, it will
                     // always return the base class method
@@ -33,8 +33,8 @@ namespace PowerAssert.Hints
             var binE = expression as BinaryExpression;
             if (binE != null && binE.NodeType == ExpressionType.Equal)
             {
-                left = ExpressionParser.DynamicInvoke(binE.Left);
-                right = ExpressionParser.DynamicInvoke(binE.Right);
+                left = parser.DynamicInvoke(binE.Left);
+                right = parser.DynamicInvoke(binE.Right);
 
                 if (binE.Method != null)
                 {

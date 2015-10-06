@@ -10,17 +10,42 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 using PowerAssert.Hints;
 using PowerAssert.Infrastructure.Nodes;
+using System.Diagnostics;
 
 namespace PowerAssert.Infrastructure
 {
     class ExpressionParser
     {
-        public static Node Parse(Expression e)
+        static Assembly MyAssembly = typeof(ExpressionParser).Assembly;
+
+        public Expression RootExpression { get; private set; }
+        public Type TestClass { get; private set; }
+        public bool TextOnly { get; private set; }
+        int _nextParamIndex;
+        Dictionary<string, string> _paramNameMap = new Dictionary<string, string>();
+
+        public ExpressionParser(Expression expression, bool textOnly = false, int baseParamIndex = 0, Type testClass = null)
         {
-            if (e.NodeType == ExpressionType.Lambda)
-            {
-                return Lambda(e);
-            }
+            RootExpression = expression;
+            TestClass = testClass ?? GetTestClass();
+            TextOnly = textOnly;
+            _nextParamIndex = baseParamIndex;
+        }
+
+        static Type GetTestClass()
+        {
+            var st = new StackTrace(1, false);
+            return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
+                     .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
+        }
+
+        public Node Parse()
+        {
+            return Parse(RootExpression);
+        }
+
+        public Node Parse(Expression e)
+        {
             try
             {
                 return ParseExpression((dynamic) e);
@@ -31,7 +56,7 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node ParseExpression(TypeBinaryExpression e)
+        Node ParseExpression(TypeBinaryExpression e)
         {
             switch (e.NodeType)
             {
@@ -50,12 +75,56 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node Lambda(Expression e)
+        Node ParseExpression(LambdaExpression e)
         {
-            return new ConstantNode() {Text = e.ToString()};
+            var parser = new ExpressionParser(e.Body, true, _nextParamIndex, TestClass);
+            string parameters;
+            if (e.Parameters.Count == 0)
+            {
+                parameters = "()";
+            }
+            else if (e.Parameters.Count == 1)
+            {
+                parameters = parser.GetParamName(e.Parameters[0]);
+            }
+            else
+            {
+                parameters = "(" + string.Join(", ", e.Parameters.Select(GetParamName)) + ")";
+            }
+            return new BinaryNode
+            {
+                Operator = "=>",
+                Left = new ConstantNode { Text = parameters },
+                Right = parser.Parse(),
+            };
         }
 
-        static Node ParseExpression(UnaryExpression e)
+        Node ParseExpression(ParameterExpression e)
+        {
+            return new ConstantNode
+            {
+                Text = GetParamName(e),
+                Value = GetValue(e)
+            };
+        }
+
+        string GetParamName(ParameterExpression e)
+        {
+            if (!e.Name.StartsWith("<>"))
+            {
+                return e.Name;
+            }
+            string name;
+            if (!_paramNameMap.TryGetValue(e.Name, out name))
+            {
+                name = "$" + _nextParamIndex.ToString();
+                _nextParamIndex++;
+                _paramNameMap[e.Name] = name;
+            }
+            return name;
+        }
+
+        Node ParseExpression(UnaryExpression e)
         {
             switch (e.NodeType)
             {
@@ -72,7 +141,7 @@ namespace PowerAssert.Infrastructure
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle UnaryExpression expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
         }
 
-        static Node ParseExpression(NewArrayExpression e)
+        Node ParseExpression(NewArrayExpression e)
         {
             switch (e.NodeType)
             {
@@ -94,8 +163,9 @@ namespace PowerAssert.Infrastructure
         {
             if (t.IsGenericType)
             {
-                var typeArgs = t.GetGenericArguments().Select(NameOfType);
-                return string.Format("{0}<{1}>", t.Name.Split('`')[0], string.Join(", ", typeArgs));
+                var typeArgs = t.GetGenericArguments().Select(NameOfType).ToList();
+                var name = IsAnonymousType(t) ? "$Anonymous" : t.Name.Split('`')[0];
+                return string.Format("{0}<{1}>", name, string.Join(", ", typeArgs));
             }
             else
             {
@@ -103,12 +173,17 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node ArrayIndex(BinaryExpression e)
+        static bool IsAnonymousType(Type t)
+        {
+            return t.Name.StartsWith("<>f__AnonymousType");
+        }
+
+        Node ArrayIndex(BinaryExpression e)
         {
             return new ArrayIndexNode() {Array = Parse(e.Left), Index = Parse(e.Right), Value = GetValue(e)};
         }
 
-        static Node ParseExpression(ConditionalExpression e)
+        Node ParseExpression(ConditionalExpression e)
         {
             return new ConditionalNode
             {
@@ -121,9 +196,9 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MethodCallExpression e)
+        Node ParseExpression(MethodCallExpression e)
         {
-            var parameters = e.Arguments.Select(Parse);
+            var parameters = e.Arguments.Select(Parse).ToList();
             if (e.Method.GetCustomAttributes(typeof (ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
@@ -143,7 +218,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(ConstantExpression e)
+        Node ParseExpression(ConstantExpression e)
         {
             string value = GetValue(e);
 
@@ -153,7 +228,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MemberExpression e)
+        Node ParseExpression(MemberExpression e)
         {
             if (IsDisplayClass(e.Expression) || e.Expression == null)
             {
@@ -172,17 +247,17 @@ namespace PowerAssert.Infrastructure
         }
 
 
-        static bool IsDisplayClass(Expression expression)
+        bool IsDisplayClass(Expression expression)
         {
             if (expression is ConstantExpression)
             {
                 var typeName = expression.Type.Name;
-                return typeName.StartsWith("<") || typeName.StartsWith("_Closure$__") || expression.Type == PAssert.CurrentTestClass;
+                return typeName.StartsWith("<") || typeName.StartsWith("_Closure$__") || expression.Type == TestClass;
             }
             return false;
         }
 
-        static Node ParseExpression(BinaryExpression e)
+        Node ParseExpression(BinaryExpression e)
         {
             return e.NodeType == ExpressionType.ArrayIndex
                 ? ArrayIndex(e)
@@ -195,17 +270,39 @@ namespace PowerAssert.Infrastructure
                 };
         }
 
-        static Node ParseExpression(NewExpression e)
+        Node ParseExpression(NewExpression e)
         {
-            return new NewObjectNode
+            if (IsAnonymousType(e.Type))
             {
-                Type = NameOfType(e.Type),
-                Parameters = e.Arguments.Select(Parse).ToList(),
-                Value = GetValue(e)
-            };
-        }
+                var names = e.Members.OfType<PropertyInfo>().Select(p => p.Name).ToArray();
+                var values = e.Arguments.Select(Parse).ToArray();
+                var parameters = names.Zip(values, (n, v) => new MemberAssignmentNode
+                {
+                    MemberName = n,
+                    Value = v
+                }).ToList();
+                return new NewAnonymousTypeNode
+                {
+                    Parameters = names.Zip(values, (n, v) => new MemberAssignmentNode 
+                    {
+                        MemberName = n,
+                        Value = v
+                    }).ToList(),
+                    Value = GetValue(e)
+                };
+            }
+            else
+            {
+                return new NewObjectNode
+                {
+                    Type = NameOfType(e.Type),
+                    Parameters = e.Arguments.Select(Parse).ToList(),
+                    Value = GetValue(e)
+                };
+            }
+       }
 
-        static Node ParseExpression(MemberInitExpression e)
+        Node ParseExpression(MemberInitExpression e)
         {
             return new MemberInitNode
             {
@@ -219,7 +316,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MemberBinding e)
+        Node ParseExpression(MemberBinding e)
         {
             if (e is MemberAssignment)
             {
@@ -228,9 +325,9 @@ namespace PowerAssert.Infrastructure
             return new ConstantNode() {Text = GetDisplayText(e.Member)};
         }
 
-        static Node ParseExpression(ListInitExpression e)
+        Node ParseExpression(ListInitExpression e)
         {
-            var items = e.Initializers.SelectMany(x => x.Arguments);
+            var items = e.Initializers.SelectMany(x => x.Arguments).ToList();
             return new ListInitNode
             {
                 Constructor = new NewObjectNode
@@ -243,21 +340,32 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-	    static Node ParseExpression(InvocationExpression e)
+	    Node ParseExpression(InvocationExpression e)
         {
             return new InvocationNode
             {
-                Arguments = e.Arguments.Select(Parse),
+                Arguments = e.Arguments.Select(Parse).ToList(),
                 Expression = Parse(e.Expression)
             };
         }
 
-        static string GetValue(Expression e)
+        string GetValue(Expression e)
         {
             object value;
             try
             {
-                value = DynamicInvoke(e);
+                if (e is ConstantExpression)
+                {
+                    value = ((ConstantExpression)e).Value;
+                }
+                else if (TextOnly)
+                {
+                    return null; // Return immediately (Don't apply ObjectFormatter)
+                }
+                else
+                {
+                    value = DynamicInvoke(e);
+                }
             }
             catch (TargetInvocationException exception)
             {
@@ -268,7 +376,7 @@ namespace PowerAssert.Infrastructure
         }
 
         const string VBLOCAL_PREFIX = "$VB$Local_";
-        static string GetDisplayText(MemberInfo member)
+        string GetDisplayText(MemberInfo member)
         {
             return member.Name.StartsWith(VBLOCAL_PREFIX) ? member.Name.Substring(VBLOCAL_PREFIX.Length) : member.Name;
         }
@@ -287,12 +395,12 @@ namespace PowerAssert.Infrastructure
             new EnumComparisonShowValuesHint()
             );
 
-        static string GetHints(Expression e, object value)
+        string GetHints(Expression e, object value)
         {
             if (value is bool && !(bool) value)
             {
                 string hint;
-                if (Hinter.TryGetHint(e, out hint))
+                if (Hinter.TryGetHint(this, e, out hint))
                 {
                     return hint;
                 }
@@ -301,8 +409,10 @@ namespace PowerAssert.Infrastructure
         }
 
 
-        internal static object DynamicInvoke(Expression e)
+        internal object DynamicInvoke(Expression e)
         {
+            if (TextOnly)
+                return null;
             return Expression.Lambda(e).Compile().DynamicInvoke();
         }
     }

@@ -7,7 +7,7 @@ namespace PowerAssert.Infrastructure.Nodes
     class BinaryNode : Node
     {
         public static readonly Dictionary<string, int> PriorityTable
-            = new[] { "* / %", "+ -", "<< >>", "< > <= >= is as", "== !=", "&", "^", "|", "&&", "||", "??" }
+            = new[] { "* / %", "+ -", "<< >>", "< > <= >= is as", "== !=", "&", "^", "|", "&&", "||", "??", "=>" }
                 .Select((text, index) => text.Split(' ').Select(ope => new {ope, index}))
                 .SelectMany(x => x)
                 .ToDictionary(kv => kv.ope, kv => kv.index + 1);

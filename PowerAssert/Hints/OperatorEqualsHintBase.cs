@@ -4,9 +4,9 @@ using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
-    public abstract class OperatorEqualsHintBase : IHint
+    abstract class OperatorEqualsHintBase : IHint
     {
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             if (expression is BinaryExpression && expression.NodeType == ExpressionType.Equal)
             {
@@ -15,8 +15,8 @@ namespace PowerAssert.Hints
                 object right;
                 try
                 {
-                    left = ExpressionParser.DynamicInvoke(be.Left);
-                    right = ExpressionParser.DynamicInvoke(be.Right);
+                    left = parser.DynamicInvoke(be.Left);
+                    right = parser.DynamicInvoke(be.Right);
                 }
                 catch (TargetInvocationException exception)
                 {
@@ -24,13 +24,13 @@ namespace PowerAssert.Hints
                     return true;
                 }
 
-                return TryGetHint(left, right, out hint);
+                return TryGetHint(parser, left, right, out hint);
             }
 
             hint = null;
             return false;
         }
 
-        protected abstract bool TryGetHint(object left, object right, out string hint);
+        protected abstract bool TryGetHint(ExpressionParser parser, object left, object right, out string hint);
     }
 }
