@@ -123,7 +123,7 @@ namespace PowerAssert.Infrastructure
 
         static Node ParseExpression(MethodCallExpression e)
         {
-            var parameters = e.Arguments.Select(Parse);
+            var parameters = e.Arguments.Select(Parse).ToList();
             if (e.Method.GetCustomAttributes(typeof (ExtensionAttribute), true).Any())
             {
                 return new MethodCallNode
@@ -247,7 +247,7 @@ namespace PowerAssert.Infrastructure
         {
             return new InvocationNode
             {
-                Arguments = e.Arguments.Select(Parse),
+                Arguments = e.Arguments.Select(Parse).ToList(),
                 Expression = Parse(e.Expression)
             };
         }
