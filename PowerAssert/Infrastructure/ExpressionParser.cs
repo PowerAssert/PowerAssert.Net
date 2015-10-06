@@ -20,11 +20,13 @@ namespace PowerAssert.Infrastructure
 
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
+        public bool TextOnly { get; private set; }
 
-        public ExpressionParser(Expression expression, Type testClass = null)
+        public ExpressionParser(Expression expression, bool textOnly = false, Type testClass = null)
         {
             RootExpression = expression;
             TestClass = testClass ?? GetTestClass();
+            TextOnly = textOnly;
         }
 
         static Type GetTestClass()
@@ -41,10 +43,6 @@ namespace PowerAssert.Infrastructure
 
         public Node Parse(Expression e)
         {
-            if (e.NodeType == ExpressionType.Lambda)
-            {
-                return Lambda(e);
-            }
             try
             {
                 return ParseExpression((dynamic) e);
@@ -74,9 +72,37 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        Node Lambda(Expression e)
+        Node ParseExpression(LambdaExpression e)
         {
-            return new ConstantNode() {Text = e.ToString()};
+            string parameters;
+            if (e.Parameters.Count == 0)
+            {
+                parameters = "()";
+            }
+            else if (e.Parameters.Count == 1)
+            {
+                parameters = e.Parameters[0].Name;
+            }
+            else
+            {
+                parameters = "(" + string.Join(", ", e.Parameters.Select(p => p.Name)) + ")";
+            }
+            var parser = new ExpressionParser(e.Body, true, TestClass);
+            return new BinaryNode
+            {
+                Operator = "=>",
+                Left = new ConstantNode { Text = parameters },
+                Right = parser.Parse(),
+            };
+        }
+
+        Node ParseExpression(ParameterExpression e)
+        {
+            return new ConstantNode
+            {
+                Text = e.Name,
+                Value = GetValue(e)
+            };
         }
 
         Node ParseExpression(UnaryExpression e)
@@ -281,7 +307,18 @@ namespace PowerAssert.Infrastructure
             object value;
             try
             {
-                value = DynamicInvoke(e);
+                if (e is ConstantExpression)
+                {
+                    value = ((ConstantExpression)e).Value;
+                }
+                else if (TextOnly)
+                {
+                    return null; // Return immediately (Don't apply ObjectFormatter)
+                }
+                else
+                {
+                    value = DynamicInvoke(e);
+                }
             }
             catch (TargetInvocationException exception)
             {
@@ -327,6 +364,8 @@ namespace PowerAssert.Infrastructure
 
         internal object DynamicInvoke(Expression e)
         {
+            if (TextOnly)
+                return null;
             return Expression.Lambda(e).Compile().DynamicInvoke();
         }
     }
