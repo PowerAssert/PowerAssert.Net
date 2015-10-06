@@ -10,12 +10,36 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 using PowerAssert.Hints;
 using PowerAssert.Infrastructure.Nodes;
+using System.Diagnostics;
 
 namespace PowerAssert.Infrastructure
 {
     class ExpressionParser
     {
-        public static Node Parse(Expression e)
+        static Assembly MyAssembly = typeof(ExpressionParser).Assembly;
+
+        public Expression RootExpression { get; private set; }
+        public Type TestClass { get; private set; }
+
+        public ExpressionParser(Expression expression, Type testClass = null)
+        {
+            RootExpression = expression;
+            TestClass = testClass ?? GetTestClass();
+        }
+
+        static Type GetTestClass()
+        {
+            var st = new StackTrace(1, false);
+            return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
+                     .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
+        }
+
+        public Node Parse()
+        {
+            return Parse(RootExpression);
+        }
+
+        public Node Parse(Expression e)
         {
             if (e.NodeType == ExpressionType.Lambda)
             {
@@ -31,7 +55,7 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node ParseExpression(TypeBinaryExpression e)
+        Node ParseExpression(TypeBinaryExpression e)
         {
             switch (e.NodeType)
             {
@@ -50,12 +74,12 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node Lambda(Expression e)
+        Node Lambda(Expression e)
         {
             return new ConstantNode() {Text = e.ToString()};
         }
 
-        static Node ParseExpression(UnaryExpression e)
+        Node ParseExpression(UnaryExpression e)
         {
             switch (e.NodeType)
             {
@@ -72,7 +96,7 @@ namespace PowerAssert.Infrastructure
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle UnaryExpression expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
         }
 
-        static Node ParseExpression(NewArrayExpression e)
+        Node ParseExpression(NewArrayExpression e)
         {
             switch (e.NodeType)
             {
@@ -103,12 +127,12 @@ namespace PowerAssert.Infrastructure
             }
         }
 
-        static Node ArrayIndex(BinaryExpression e)
+        Node ArrayIndex(BinaryExpression e)
         {
             return new ArrayIndexNode() {Array = Parse(e.Left), Index = Parse(e.Right), Value = GetValue(e)};
         }
 
-        static Node ParseExpression(ConditionalExpression e)
+        Node ParseExpression(ConditionalExpression e)
         {
             return new ConditionalNode
             {
@@ -121,7 +145,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MethodCallExpression e)
+        Node ParseExpression(MethodCallExpression e)
         {
             var parameters = e.Arguments.Select(Parse).ToList();
             if (e.Method.GetCustomAttributes(typeof (ExtensionAttribute), true).Any())
@@ -143,7 +167,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(ConstantExpression e)
+        Node ParseExpression(ConstantExpression e)
         {
             string value = GetValue(e);
 
@@ -153,7 +177,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MemberExpression e)
+        Node ParseExpression(MemberExpression e)
         {
             if (IsDisplayClass(e.Expression) || e.Expression == null)
             {
@@ -172,17 +196,17 @@ namespace PowerAssert.Infrastructure
         }
 
 
-        static bool IsDisplayClass(Expression expression)
+        bool IsDisplayClass(Expression expression)
         {
             if (expression is ConstantExpression)
             {
                 var typeName = expression.Type.Name;
-                return typeName.StartsWith("<") || typeName.StartsWith("_Closure$__") || expression.Type == PAssert.CurrentTestClass;
+                return typeName.StartsWith("<") || typeName.StartsWith("_Closure$__") || expression.Type == TestClass;
             }
             return false;
         }
 
-        static Node ParseExpression(BinaryExpression e)
+        Node ParseExpression(BinaryExpression e)
         {
             return e.NodeType == ExpressionType.ArrayIndex
                 ? ArrayIndex(e)
@@ -195,7 +219,7 @@ namespace PowerAssert.Infrastructure
                 };
         }
 
-        static Node ParseExpression(NewExpression e)
+        Node ParseExpression(NewExpression e)
         {
             return new NewObjectNode
             {
@@ -205,7 +229,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MemberInitExpression e)
+        Node ParseExpression(MemberInitExpression e)
         {
             return new MemberInitNode
             {
@@ -219,7 +243,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static Node ParseExpression(MemberBinding e)
+        Node ParseExpression(MemberBinding e)
         {
             if (e is MemberAssignment)
             {
@@ -228,7 +252,7 @@ namespace PowerAssert.Infrastructure
             return new ConstantNode() {Text = GetDisplayText(e.Member)};
         }
 
-        static Node ParseExpression(ListInitExpression e)
+        Node ParseExpression(ListInitExpression e)
         {
             var items = e.Initializers.SelectMany(x => x.Arguments);
             return new ListInitNode
@@ -243,7 +267,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-	    static Node ParseExpression(InvocationExpression e)
+	    Node ParseExpression(InvocationExpression e)
         {
             return new InvocationNode
             {
@@ -252,7 +276,7 @@ namespace PowerAssert.Infrastructure
             };
         }
 
-        static string GetValue(Expression e)
+        string GetValue(Expression e)
         {
             object value;
             try
@@ -268,7 +292,7 @@ namespace PowerAssert.Infrastructure
         }
 
         const string VBLOCAL_PREFIX = "$VB$Local_";
-        static string GetDisplayText(MemberInfo member)
+        string GetDisplayText(MemberInfo member)
         {
             return member.Name.StartsWith(VBLOCAL_PREFIX) ? member.Name.Substring(VBLOCAL_PREFIX.Length) : member.Name;
         }
@@ -287,12 +311,12 @@ namespace PowerAssert.Infrastructure
             new EnumComparisonShowValuesHint()
             );
 
-        static string GetHints(Expression e, object value)
+        string GetHints(Expression e, object value)
         {
             if (value is bool && !(bool) value)
             {
                 string hint;
-                if (Hinter.TryGetHint(e, out hint))
+                if (Hinter.TryGetHint(this, e, out hint))
                 {
                     return hint;
                 }
@@ -301,7 +325,7 @@ namespace PowerAssert.Infrastructure
         }
 
 
-        internal static object DynamicInvoke(Expression e)
+        internal object DynamicInvoke(Expression e)
         {
             return Expression.Lambda(e).Compile().DynamicInvoke();
         }

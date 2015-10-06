@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Linq;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
     class EnumerableOperatorEqualsHint : OperatorEqualsHintBase
     {
-        protected override bool TryGetHint(object left, object right, out string hint)
+        protected override bool TryGetHint(ExpressionParser parser, object left, object right, out string hint)
         {
             if (left is IEnumerable && right is IEnumerable)
             {

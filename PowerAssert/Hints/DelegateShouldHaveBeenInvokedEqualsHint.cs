@@ -10,24 +10,24 @@ namespace PowerAssert.Hints
     {
         static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public);
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;
             if (methE != null)
             {
                 if (methE.Method == ObjectEqualsMethodInfo)
                 {
-                    var left = ExpressionParser.DynamicInvoke(methE.Arguments[0]);
-                    var right = ExpressionParser.DynamicInvoke(methE.Arguments[1]);
+                    var left = parser.DynamicInvoke(methE.Arguments[0]);
+                    var right = parser.DynamicInvoke(methE.Arguments[1]);
 
                     if (left is Delegate || right is Delegate)
                     {
-                        if (CheckArgument(methE, true, out hint))
+                        if (CheckArgument(parser, methE, true, out hint))
                         {
                             return true;
                         }
 
-                        if (CheckArgument(methE, false, out hint))
+                        if (CheckArgument(parser, methE, false, out hint))
                         {
                             return true;
                         }
@@ -42,7 +42,7 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        static bool CheckArgument(MethodCallExpression methE, bool left, out string hint)
+        static bool CheckArgument(ExpressionParser parser, MethodCallExpression methE, bool left, out string hint)
         {
             int ix1 = left ? 0 : 1;
             int ix2 = left ? 1 : 0;
@@ -52,7 +52,7 @@ namespace PowerAssert.Hints
                 object leftR;
                 try
                 {
-                    leftR = ExpressionParser.DynamicInvoke(Expression.Invoke(methE.Arguments[ix1]));
+                    leftR = parser.DynamicInvoke(Expression.Invoke(methE.Arguments[ix1]));
                 }
                 catch (InvalidOperationException) // delegate needs arguments
                 {
@@ -60,10 +60,10 @@ namespace PowerAssert.Hints
                     return false;
                 }
 
-                if (Equals(leftR, ExpressionParser.DynamicInvoke(methE.Arguments[ix2])))
+                if (Equals(leftR, parser.DynamicInvoke(methE.Arguments[ix2])))
                 {
                     hint = string.Format(", but would have been True if you had invoked '{0}'",
-                        NodeFormatter.PrettyPrint(ExpressionParser.Parse(methE.Arguments[ix1])));
+                        NodeFormatter.PrettyPrint(parser.Parse(methE.Arguments[ix1])));
                     return true;
                 }
             }

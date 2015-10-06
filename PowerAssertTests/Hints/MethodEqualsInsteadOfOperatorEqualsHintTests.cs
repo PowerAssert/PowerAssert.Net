@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -22,9 +23,10 @@ namespace PowerAssertTests.Hints
             var hint = new MethodEqualsInsteadOfOperatorEqualsHint();
 
             Expression<Func<bool>> exp = () => new AlwaysEqual() == new AlwaysEqual();
+            var p = new ExpressionParser(exp.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(exp.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, exp.Body, out description));
             Assert.IsNotNull(description);
         }
 
@@ -42,9 +44,10 @@ namespace PowerAssertTests.Hints
             var hint = new MethodEqualsInsteadOfOperatorEqualsHint();
 
             Expression<Func<bool>> exp = () => new NeverEqual() == new NeverEqual();
+            var p = new ExpressionParser(exp.Body);
 
             string description;
-            Assert.IsFalse(hint.TryGetHint(exp.Body, out description));
+            Assert.IsFalse(hint.TryGetHint(p, exp.Body, out description));
             Assert.IsNull(description);
         }
     }

@@ -33,17 +33,17 @@ namespace PowerAssert.Hints
             }
         }
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;
             if (methE != null)
             {
                 if (StringEqualsMethodInfo.Any(x => x == methE.Method))
                 {
-                    var obj = ExpressionParser.DynamicInvoke(methE.Object);
-                    var arg = ExpressionParser.DynamicInvoke(methE.Arguments.First());
+                    var obj = parser.DynamicInvoke(methE.Object);
+                    var arg = parser.DynamicInvoke(methE.Arguments.First());
 
-                    var comparison = (StringComparison) (methE.Arguments.Select(ExpressionParser.DynamicInvoke)
+                    var comparison = (StringComparison) (methE.Arguments.Select(parser.DynamicInvoke)
                         .FirstOrDefault(x => x is StringComparison) ?? StringComparison.CurrentCulture);
 
                     hint = HintUtils.GetStringDifferHint((string) obj, (string) arg, GetComparerFromComparison(comparison));

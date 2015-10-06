@@ -14,15 +14,15 @@ namespace PowerAssert.Hints
     {
         static readonly MethodInfo ObjectInstanceEqualsMethodInfo = typeof (object).GetMethods().Single(x => x.Name == "Equals" && !x.IsStatic);
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var methE = expression as MethodCallExpression;
             if (methE != null)
             {
                 if (methE.Method == ObjectInstanceEqualsMethodInfo)
                 {
-                    var obj = ExpressionParser.DynamicInvoke(methE.Object) as IEnumerable;
-                    var arg = ExpressionParser.DynamicInvoke(methE.Arguments.First()) as IEnumerable;
+                    var obj = parser.DynamicInvoke(methE.Object) as IEnumerable;
+                    var arg = parser.DynamicInvoke(methE.Arguments.First()) as IEnumerable;
                     if (obj != null && arg != null)
                     {
                         if (obj.Cast<object>().SequenceEqual(arg.Cast<object>()))

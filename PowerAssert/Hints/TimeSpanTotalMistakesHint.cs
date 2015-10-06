@@ -20,7 +20,7 @@ namespace PowerAssert.Hints
             typeof (object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public),
         };
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var binaryExpression = expression as BinaryExpression;
             if (binaryExpression != null && binaryExpression.NodeType == ExpressionType.Equal)
@@ -28,7 +28,7 @@ namespace PowerAssert.Hints
                 var left = binaryExpression.Left as MemberExpression;
                 if (left != null)
                 {
-                    if (CheckValues(out hint, left, binaryExpression.Right))
+                    if (CheckValues(parser, out hint, left, binaryExpression.Right))
                     {
                         return true;
                     }
@@ -37,7 +37,7 @@ namespace PowerAssert.Hints
                 var right = binaryExpression.Right as MemberExpression;
                 if (right != null)
                 {
-                    if (CheckValues(out hint, right, binaryExpression.Left))
+                    if (CheckValues(parser, out hint, right, binaryExpression.Left))
                     {
                         return true;
                     }
@@ -52,7 +52,7 @@ namespace PowerAssert.Hints
                     var objectToCheck = methE.Object as MemberExpression;
                     if (objectToCheck != null)
                     {
-                        if (CheckValues(out hint, objectToCheck, methE.Arguments.Single()))
+                        if (CheckValues(parser, out hint, objectToCheck, methE.Arguments.Single()))
                         {
                             return true;
                         }
@@ -61,7 +61,7 @@ namespace PowerAssert.Hints
                     var argToCheck = methE.Arguments.Single() as MemberExpression;
                     if (argToCheck != null)
                     {
-                        if (CheckValues(out hint, argToCheck, methE.Object))
+                        if (CheckValues(parser, out hint, argToCheck, methE.Object))
                         {
                             return true;
                         }
@@ -77,7 +77,7 @@ namespace PowerAssert.Hints
                         var leftInner = leftOuter.Operand as MemberExpression;
                         if (leftInner != null)
                         {
-                            if (CheckValues(out hint, leftInner, methE.Arguments[1]))
+                            if (CheckValues(parser, out hint, leftInner, methE.Arguments[1]))
                             {
                                 return true;
                             }
@@ -90,7 +90,7 @@ namespace PowerAssert.Hints
                         var rightInner = rightOuter.Operand as MemberExpression;
                         if (rightInner != null)
                         {
-                            if (CheckValues(out hint, rightInner, methE.Arguments[0]))
+                            if (CheckValues(parser, out hint, rightInner, methE.Arguments[0]))
                             {
                                 return true;
                             }
@@ -103,12 +103,12 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        bool CheckValues(out string hint, MemberExpression left, Expression rightEx)
+        bool CheckValues(ExpressionParser parser, out string hint, MemberExpression left, Expression rightEx)
         {
-            var totalValue = TryToGetTotalValue(left);
+            var totalValue = TryToGetTotalValue(parser, left);
             if (totalValue.HasValue)
             {
-                var right = ExpressionParser.DynamicInvoke(rightEx);
+                var right = parser.DynamicInvoke(rightEx);
                 var rightValue = Convert.ToInt64(right);
 
                 if (totalValue.Value == rightValue)
@@ -122,14 +122,14 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        long? TryToGetTotalValue(MemberExpression expresssion)
+        long? TryToGetTotalValue(ExpressionParser parser, MemberExpression expresssion)
         {
             if (expresssion.Member.DeclaringType == typeof (TimeSpan))
             {
                 var totalVersion = typeof (TimeSpan).GetProperty("Total" + expresssion.Member.Name);
                 if (totalVersion != null)
                 {
-                    var owner = ExpressionParser.DynamicInvoke(expresssion.Expression);
+                    var owner = parser.DynamicInvoke(expresssion.Expression);
 
                     return Convert.ToInt64(totalVersion.GetValue(owner, null));
                 }

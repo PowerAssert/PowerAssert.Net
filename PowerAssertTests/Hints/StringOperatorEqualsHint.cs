@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -22,9 +23,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => new string('x', 1) == "X"; // prevent inlining the constant
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
         }
 
@@ -34,9 +36,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => ConstantStrings.AcuteEComposed == ConstantStrings.AcuteEDecomposed;
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
 
             Assert.IsTrue(description.Contains("decomposed"));
@@ -48,9 +51,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => new string(' ', 1) == "\t"; // prevent inlining the constant
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
 
             Assert.IsTrue(description.Contains("tab"));
@@ -63,9 +67,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => new string('\n', 1) == "\r\n"; // prevent inlining the constant
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
 
             Assert.IsTrue(description.Contains("carriage-return"));
@@ -77,9 +82,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => new string('\0', 1) + "Hello" == "Hello"; // prevent inlining the constant
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
 
             Assert.IsTrue(description.Contains("control"));
@@ -91,9 +97,10 @@ namespace PowerAssertTests.Hints
             var hint = new StringOperatorEqualsHint();
 
             Expression<Func<bool>> x = () => new string('\u202d', 1) + "Hello" == "Hello"; // prevent inlining the constant
+            var p = new ExpressionParser(x.Body);
 
             string description;
-            Assert.IsTrue(hint.TryGetHint(x.Body, out description));
+            Assert.IsTrue(hint.TryGetHint(p, x.Body, out description));
             Assert.IsNotNull(description);
 
             Assert.IsTrue(description.Contains("format"));

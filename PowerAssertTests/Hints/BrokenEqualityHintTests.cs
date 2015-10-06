@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
 using PowerAssert.Hints;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssertTests.Hints
 {
@@ -19,9 +20,10 @@ namespace PowerAssertTests.Hints
             var y = new object();
 
             Expression<Func<bool>> exp = () => x.Equals(y);
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsFalse(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsFalse(hint.TryGetHint(p, exp.Body, out ignored));
 
             Assert.IsNull(ignored);
         }
@@ -34,9 +36,10 @@ namespace PowerAssertTests.Hints
             var x = new object();
 
             Expression<Func<bool>> exp = () => x.Equals(x);
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, exp.Body, out ignored));
             Assert.IsNotNull(ignored);
         }
 
@@ -49,9 +52,10 @@ namespace PowerAssertTests.Hints
             var x = new object();
 
             Expression<Func<bool>> exp = () => x == x;
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, exp.Body, out ignored));
 
             Assert.IsNotNull(ignored);
         }
@@ -65,9 +69,10 @@ namespace PowerAssertTests.Hints
             var y = new object();
 
             Expression<Func<bool>> exp = () => x == y;
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsFalse(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsFalse(hint.TryGetHint(p, exp.Body, out ignored));
 
             Assert.IsNull(ignored);
         }
@@ -81,9 +86,10 @@ namespace PowerAssertTests.Hints
             var x = new OverridesEqualsBadly();
 
             Expression<Func<bool>> exp = () => x.Equals(x);
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, exp.Body, out ignored));
 
             Assert.IsNotNull(ignored);
             Assert.IsTrue(ignored.Contains(x.GetType().Name));
@@ -97,9 +103,10 @@ namespace PowerAssertTests.Hints
             var x = new OverridesEqualsBadly();
 
             Expression<Func<bool>> exp = () => x == x;
+            var p = new ExpressionParser(exp.Body);
 
             string ignored;
-            Assert.IsTrue(hint.TryGetHint(exp.Body, out ignored));
+            Assert.IsTrue(hint.TryGetHint(p, exp.Body, out ignored));
 
             Assert.IsNotNull(ignored);
             Assert.IsTrue(ignored.Contains(x.GetType().Name));

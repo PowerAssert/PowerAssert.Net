@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
@@ -17,11 +18,11 @@ namespace PowerAssert.Hints
             _hints = hints.ToArray();
         }
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             foreach (var hinter in _hints)
             {
-                if (hinter.TryGetHint(expression, out hint))
+                if (hinter.TryGetHint(parser, expression, out hint))
                 {
                     return true;
                 }

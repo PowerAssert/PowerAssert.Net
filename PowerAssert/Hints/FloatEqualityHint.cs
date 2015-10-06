@@ -1,12 +1,13 @@
 ﻿using System;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
-    public class FloatEqualityHint : OperatorEqualsHintBase
+    class FloatEqualityHint : OperatorEqualsHintBase
     {
         const double maxProportionDifference = 0.001;
 
-        protected override bool TryGetHint(object left, object right, out string hint)
+        protected override bool TryGetHint(ExpressionParser parser, object left, object right, out string hint)
         {
             if ((left is float || left is double) && (right is float || right is double))
             {

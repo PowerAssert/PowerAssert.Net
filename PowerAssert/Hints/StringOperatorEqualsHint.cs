@@ -1,10 +1,11 @@
 ﻿using System;
+using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
 {
     class StringOperatorEqualsHint : OperatorEqualsHintBase
     {
-        protected override bool TryGetHint(object left, object right, out string hint)
+        protected override bool TryGetHint(ExpressionParser parser, object left, object right, out string hint)
         {
             if (left is string && right is string)
             {

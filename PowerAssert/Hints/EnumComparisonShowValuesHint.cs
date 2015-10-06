@@ -22,20 +22,20 @@ namespace PowerAssert.Hints
             typeof (ulong),
         };
 
-        public bool TryGetHint(Expression expression, out string hint)
+        public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
             var binE = expression as BinaryExpression;
 
             if (binE != null && binE.NodeType == ExpressionType.Equal)
             {
-                var lr = Check(binE.Left, binE.Right);
+                var lr = Check(parser, binE.Left, binE.Right);
                 const string format = ", {0} != {1}";
                 if (lr != null)
                 {
                     hint = string.Format(format, lr.Item1, lr.Item2);
                     return true;
                 }
-                var rl = Check(binE.Right, binE.Left);
+                var rl = Check(parser, binE.Right, binE.Left);
                 if (rl != null)
                 {
                     hint = string.Format(format, rl.Item2, rl.Item1);
@@ -46,7 +46,7 @@ namespace PowerAssert.Hints
             return false;
         }
 
-        Tuple<string, string> Check(Expression x, Expression y)
+        Tuple<string, string> Check(ExpressionParser parser, Expression x, Expression y)
         {
             if (!EnumErasedTypes.Contains(x.Type))
             {
@@ -59,15 +59,15 @@ namespace PowerAssert.Hints
             {
                 if (unE.Operand.Type.IsEnum)
                 {
-                    return Tuple.Create(Parse(unE.Operand.Type, x), Parse(unE.Operand.Type, y));
+                    return Tuple.Create(Parse(parser, unE.Operand.Type, x), Parse(parser, unE.Operand.Type, y));
                 }
             }
             return null;
         }
 
-        string Parse(Type enumType, Expression expression)
+        string Parse(ExpressionParser parser, Type enumType, Expression expression)
         {
-            return enumType.Name + "." + Enum.GetName(enumType, ExpressionParser.DynamicInvoke(expression));
+            return enumType.Name + "." + Enum.GetName(enumType, parser.DynamicInvoke(expression));
         }
     }
 }
