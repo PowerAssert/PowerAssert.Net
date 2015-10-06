@@ -21,12 +21,15 @@ namespace PowerAssert.Infrastructure
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
         public bool TextOnly { get; private set; }
+        int _nextParamIndex;
+        Dictionary<string, string> _paramNameMap = new Dictionary<string, string>();
 
-        public ExpressionParser(Expression expression, bool textOnly = false, Type testClass = null)
+        public ExpressionParser(Expression expression, bool textOnly = false, int baseParamIndex = 0, Type testClass = null)
         {
             RootExpression = expression;
             TestClass = testClass ?? GetTestClass();
             TextOnly = textOnly;
+            _nextParamIndex = baseParamIndex;
         }
 
         static Type GetTestClass()
@@ -74,6 +77,7 @@ namespace PowerAssert.Infrastructure
 
         Node ParseExpression(LambdaExpression e)
         {
+            var parser = new ExpressionParser(e.Body, true, _nextParamIndex, TestClass);
             string parameters;
             if (e.Parameters.Count == 0)
             {
@@ -81,13 +85,12 @@ namespace PowerAssert.Infrastructure
             }
             else if (e.Parameters.Count == 1)
             {
-                parameters = e.Parameters[0].Name;
+                parameters = parser.GetParamName(e.Parameters[0]);
             }
             else
             {
-                parameters = "(" + string.Join(", ", e.Parameters.Select(p => p.Name)) + ")";
+                parameters = "(" + string.Join(", ", e.Parameters.Select(GetParamName)) + ")";
             }
-            var parser = new ExpressionParser(e.Body, true, TestClass);
             return new BinaryNode
             {
                 Operator = "=>",
@@ -100,9 +103,25 @@ namespace PowerAssert.Infrastructure
         {
             return new ConstantNode
             {
-                Text = e.Name,
+                Text = GetParamName(e),
                 Value = GetValue(e)
             };
+        }
+
+        string GetParamName(ParameterExpression e)
+        {
+            if (!e.Name.StartsWith("<>"))
+            {
+                return e.Name;
+            }
+            string name;
+            if (!_paramNameMap.TryGetValue(e.Name, out name))
+            {
+                name = "$" + _nextParamIndex.ToString();
+                _nextParamIndex++;
+                _paramNameMap[e.Name] = name;
+            }
+            return name;
         }
 
         Node ParseExpression(UnaryExpression e)
