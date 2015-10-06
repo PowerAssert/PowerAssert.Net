@@ -144,13 +144,19 @@ namespace PowerAssert.Infrastructure
         {
             if (t.IsGenericType)
             {
-                var typeArgs = t.GetGenericArguments().Select(NameOfType);
-                return string.Format("{0}<{1}>", t.Name.Split('`')[0], string.Join(", ", typeArgs));
+                var typeArgs = t.GetGenericArguments().Select(NameOfType).ToList();
+                var name = IsAnonymousType(t) ? "$Anonymous" : t.Name.Split('`')[0];
+                return string.Format("{0}<{1}>", name, string.Join(", ", typeArgs));
             }
             else
             {
                 return Util.Aliases.ContainsKey(t) ? Util.Aliases[t] : t.Name;
             }
+        }
+
+        static bool IsAnonymousType(Type t)
+        {
+            return t.Name.StartsWith("<>f__AnonymousType");
         }
 
         Node ArrayIndex(BinaryExpression e)
@@ -247,13 +253,35 @@ namespace PowerAssert.Infrastructure
 
         Node ParseExpression(NewExpression e)
         {
-            return new NewObjectNode
+            if (IsAnonymousType(e.Type))
             {
-                Type = NameOfType(e.Type),
-                Parameters = e.Arguments.Select(Parse).ToList(),
-                Value = GetValue(e)
-            };
-        }
+                var names = e.Members.OfType<PropertyInfo>().Select(p => p.Name).ToArray();
+                var values = e.Arguments.Select(Parse).ToArray();
+                var parameters = names.Zip(values, (n, v) => new MemberAssignmentNode
+                {
+                    MemberName = n,
+                    Value = v
+                }).ToList();
+                return new NewAnonymousTypeNode
+                {
+                    Parameters = names.Zip(values, (n, v) => new MemberAssignmentNode 
+                    {
+                        MemberName = n,
+                        Value = v
+                    }).ToList(),
+                    Value = GetValue(e)
+                };
+            }
+            else
+            {
+                return new NewObjectNode
+                {
+                    Type = NameOfType(e.Type),
+                    Parameters = e.Arguments.Select(Parse).ToList(),
+                    Value = GetValue(e)
+                };
+            }
+       }
 
         Node ParseExpression(MemberInitExpression e)
         {
@@ -280,7 +308,7 @@ namespace PowerAssert.Infrastructure
 
         Node ParseExpression(ListInitExpression e)
         {
-            var items = e.Initializers.SelectMany(x => x.Arguments);
+            var items = e.Initializers.SelectMany(x => x.Arguments).ToList();
             return new ListInitNode
             {
                 Constructor = new NewObjectNode

@@ -100,6 +100,39 @@ namespace PowerAssertTests
             AssertLines(expected, s);
         }
 
+        [Test]
+        public void FormatNewAnonymousNode()
+        {
+            var s = NodeFormatter.Format(new NewAnonymousTypeNode
+            {
+                Parameters = new[]
+                {
+                    new MemberAssignmentNode
+                    {
+                        MemberName = "Value",
+                        Value = new ConstantNode {Text = "x", Value="1" }
+                    },
+                    new MemberAssignmentNode
+                    {
+                        MemberName = "x",
+                        Value = new ConstantNode {Text = "x", Value="1" }
+                    }
+                }.ToList(),
+                Value = "{ Value = 1, x = 1 }"
+            });
+
+            var expected = new[]
+            {
+                @"new {Value = x, x}",
+                @"\_ _/        .  .",
+                @"  |          .  .",
+                @"  |          |  1",
+                @"  |          1",
+                @"  { Value = 1, x = 1 }",
+            };
+            AssertLines(expected, s);
+        }
+
         static void AssertLines(string[] expected, string[] actual)
         {
             Assert.AreEqual(string.Join(Environment.NewLine, expected), string.Join(Environment.NewLine, actual));

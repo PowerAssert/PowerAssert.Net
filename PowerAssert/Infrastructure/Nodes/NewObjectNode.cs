@@ -56,6 +56,44 @@ namespace PowerAssert.Infrastructure.Nodes
         }
     }
 
+    class NewAnonymousTypeNode : Node
+    {
+
+        [NotNull]
+        public string Value { get; set; }
+
+        [NotNull]
+        public List<MemberAssignmentNode> Parameters { get; set; }
+
+        internal override void Walk(NodeWalker walker, int depth, bool wrap)
+        {
+            walker("new {", Value, depth);
+            foreach (var node in Parameters.Take(1))
+            {
+                WalkParameter(walker, depth + 1, node);
+            }
+            foreach (var node in Parameters.Skip(1))
+            {
+                walker(", ");
+                WalkParameter(walker, depth + 1, node);
+            }
+            walker("}");
+        }
+
+        private void WalkParameter(NodeWalker walker, int depth, MemberAssignmentNode node)
+        {
+            var constant = node.Value as ConstantNode;
+            if (constant != null && constant.Text == node.MemberName)
+            {
+                constant.Walk(walker, depth, false);
+            }
+            else
+            {
+                node.Walk(walker, depth, false);
+            }
+        }
+    }
+
     class ListInitNode : Node
     {
         [NotNull]

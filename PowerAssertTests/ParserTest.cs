@@ -348,5 +348,37 @@ namespace PowerAssertTests
 
             Assert.AreEqual(expected, node);
         }
+
+        [Test]
+        public void ParseNewAnonymousType()
+        {
+            int x = 1;
+            Expression<Func<int>> f = () => new { Value = x, x }.Value;
+            var p = new ExpressionParser(f.Body);
+            var node = p.Parse();
+            var expected = new MemberAccessNode
+            {
+                Container = new NewAnonymousTypeNode
+                {
+                    Parameters = new[]
+                    {
+                        new MemberAssignmentNode
+                        {
+                            MemberName = "Value",
+                            Value = new ConstantNode {Text = "x", Value="1" }
+                        },
+                        new MemberAssignmentNode
+                        {
+                            MemberName = "x",
+                            Value = new ConstantNode {Text = "x", Value="1" }
+                        }
+                    }.ToList(),
+                    Value = "{ Value = 1, x = 1 }"
+                },
+                MemberName = "Value",
+                MemberValue = "1"
+            };
+            Assert.AreEqual(expected, node);
+        }
     }
 }
