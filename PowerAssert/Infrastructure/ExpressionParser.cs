@@ -21,12 +21,18 @@ namespace PowerAssert.Infrastructure
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
         public bool TextOnly { get; private set; }
+
+        readonly ParameterExpression[] _parameters;
+        readonly object[] _parameterValues;
         int _nextParamIndex;
         Dictionary<string, string> _paramNameMap = new Dictionary<string, string>();
 
-        public ExpressionParser(Expression expression, bool textOnly = false, int baseParamIndex = 0, Type testClass = null)
+        public ExpressionParser(Expression expression, ParameterExpression[] parameters = null, object[] parameterValues = null,
+                                bool textOnly = false, int baseParamIndex = 0, Type testClass = null)
         {
             RootExpression = expression;
+            _parameters = parameters ?? new ParameterExpression[0];
+            _parameterValues = parameterValues ?? new object[0];
             TestClass = testClass ?? GetTestClass();
             TextOnly = textOnly;
             _nextParamIndex = baseParamIndex;
@@ -77,7 +83,7 @@ namespace PowerAssert.Infrastructure
 
         Node ParseExpression(LambdaExpression e)
         {
-            var parser = new ExpressionParser(e.Body, true, _nextParamIndex, TestClass);
+            var parser = new ExpressionParser(e.Body, textOnly:true, baseParamIndex:_nextParamIndex, testClass:TestClass);
             string parameters;
             if (e.Parameters.Count == 0)
             {
@@ -413,7 +419,7 @@ namespace PowerAssert.Infrastructure
         {
             if (TextOnly)
                 return null;
-            return Expression.Lambda(e).Compile().DynamicInvoke();
+            return Expression.Lambda(e, _parameters).Compile().DynamicInvoke(_parameterValues);
         }
     }
 }

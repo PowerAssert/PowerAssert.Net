@@ -90,6 +90,26 @@ namespace PowerAssert
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void IsTrue<T>(T target, Expression<Func<T, bool>> expression)
+        {
+            Func<T, bool> func = expression.Compile();
+            bool b;
+            try
+            {
+                b = func(target);
+            }
+            catch (Exception e)
+            {
+                var output = RenderExpression(expression, target);
+                throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
+            }
+            if (!b)
+            {
+                throw CreateException(expression, "IsTrue failed", target);
+            }
+        }
+
         static Expression<Func<bool>> Substitute<TException>(Expression<Func<TException, bool>> expression, TException exception)
         {
             var parameter = expression.Parameters[0];
@@ -99,15 +119,15 @@ namespace PowerAssert
             return Expression.Lambda<Func<bool>>(newBody);
         }
 
-        static Exception CreateException(Expression<Func<bool>> expression, string message)
+        static Exception CreateException(LambdaExpression expression, string message, params object []parameterValues)
         {
-            var output = RenderExpression(expression);
+            var output = RenderExpression(expression, parameterValues);
             return new Exception(message + ", expression was:" + CRLF + CRLF + output);
         }
 
-        static string RenderExpression(Expression<Func<bool>> expression)
+        static string RenderExpression(LambdaExpression expression, params object []parameterValues)
         {
-            var parser = new ExpressionParser(expression.Body);
+            var parser = new ExpressionParser(expression.Body, expression.Parameters.ToArray(), parameterValues);
             Node constantNode = parser.Parse();
             string[] lines = NodeFormatter.Format(constantNode);
             return string.Join(CRLF, lines) + CRLF;
