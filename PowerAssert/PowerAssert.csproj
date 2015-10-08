@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations.cs" />
+    <Compile Include="Extension\PAssertExtension.cs" />
     <Compile Include="Hints\BrokenEqualityHint.cs" />
     <Compile Include="Hints\EnumComparisonShowValuesHint.cs" />
     <Compile Include="Hints\TimeSpanTotalMistakesHint.cs" />

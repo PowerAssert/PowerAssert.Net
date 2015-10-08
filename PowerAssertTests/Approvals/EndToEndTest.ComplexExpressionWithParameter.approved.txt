@@ -1,0 +1,17 @@
+﻿System.Exception: IsTrue failed, expression was:
+
+String.Join("", x.Select(y => y + x[0])) == new {x, Value = "foobarbaz"}.Value
+       .  .     . .    .                 __ .   ..                       .   .
+       \ _/     . .    .                 |  .   ..                       \_ _/
+        |       . \_ __/                 |  \_ _/.                         |
+        |       .   |                    |    |  .                         |
+        |       |   |                    |    |  |                         "foobarbaz"
+        |       |   |                    |    |  ["foo", "bar", "baz"]
+        |       |   |                    |    { x = System.String[], Value = foobarbaz }
+        |       |   |                    False, strings differ at index 3, 'f' != 'b'
+        |       |   ["foofoo", "barfoo", "bazfoo"]
+        |       ["foo", "bar", "baz"]
+        "foofoobarfoobazfoo"
+
+   at PowerAssert.PAssert.IsTrue[T](T target, Expression`1 expression) in ...\PAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException[T](T target, Expression`1 func) in ...\EndToEndTest.cs

@@ -464,6 +464,13 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => new[] { x + 1, x + 2 }[0] == 3);
         }
 
+        [Test]
+        public void ComplexExpressionWithParameter()
+        {
+            var target = new[] { "foo", "bar", "baz" };
+            ApproveException(target, x => string.Join("", x.Select(y => y + x[0])) == new { x, Value = "foobarbaz" }.Value);
+        }
+
         void ApproveException(Expression<Func<bool>> func)
         {
             try
@@ -477,6 +484,21 @@ namespace PowerAssertTests.Approvals
                 ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
             }
         }
+
+        void ApproveException<T>(T target, Expression<Func<T, bool>> func)
+        {
+            try
+            {
+                PAssert.IsTrue(target, func);
+                Assert.Fail("No PowerAssertion");
+            }
+            catch (Exception e)
+            {
+                Console.Out.WriteLine(e);
+                ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
+            }
+        }
+
 
         string Scrubber(string s)
         {
