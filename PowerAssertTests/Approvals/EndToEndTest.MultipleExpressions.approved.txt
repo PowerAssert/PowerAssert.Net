@@ -1,0 +1,20 @@
+﻿System.Exception: AreTrue failed
+
+--------------------------------------------------------------------------------
+a == "a"
+. __
+. |
+| False, but would have been True if case-insensitive
+"A"
+
+--------------------------------------------------------------------------------
+c == "c"
+. __
+. |
+| False, but would have been True if case-insensitive
+"C"
+
+--------------------------------------------------------------------------------
+
+   at PowerAssert.PAssert.AreTrue(Expression`1[] expressions) in ...\PAssert.cs
+   at ...

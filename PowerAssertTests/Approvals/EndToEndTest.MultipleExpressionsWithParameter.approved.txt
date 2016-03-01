@@ -1,0 +1,24 @@
+﻿System.Exception: AreTrue failed
+
+--------------------------------------------------------------------------------
+x[1] == "BAR"
+..   __
+..   |
+.|   |
+||   False, but would have been True if case-insensitive
+|"bar"
+["foo", "bar", "baz"]
+
+--------------------------------------------------------------------------------
+x[2] == "BAZ"
+..   __
+..   |
+.|   |
+||   False, but would have been True if case-insensitive
+|"baz"
+["foo", "bar", "baz"]
+
+--------------------------------------------------------------------------------
+
+   at PowerAssert.PAssert.AreTrue[T](T target, Expression`1[] expressions) in ...\PAssert.cs
+   at ...

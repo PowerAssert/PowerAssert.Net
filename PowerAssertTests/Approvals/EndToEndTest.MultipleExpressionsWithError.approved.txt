@@ -1,0 +1,34 @@
+﻿System.Exception: AreTrue failed
+
+--------------------------------------------------------------------------------
+a.Substring(2) == "A"
+. .       .    __
+. \___ ___/    |
+.     |        |
+|     |        (threw ArgumentOutOfRangeException)
+|     (threw ArgumentOutOfRangeException)
+"A"
+
+System.ArgumentOutOfRangeException: startIndex cannot be larger than length of string.
+Parameter name: startIndex
+   at System.String.Substring(Int32 startIndex, Int32 length)
+   at lambda_method(Closure )
+
+--------------------------------------------------------------------------------
+b.Substring(2) == "B"
+. .       .    __
+. \___ ___/    |
+.     |        |
+|     |        (threw ArgumentOutOfRangeException)
+|     (threw ArgumentOutOfRangeException)
+"B"
+
+System.ArgumentOutOfRangeException: startIndex cannot be larger than length of string.
+Parameter name: startIndex
+   at System.String.Substring(Int32 startIndex, Int32 length)
+   at lambda_method(Closure )
+
+--------------------------------------------------------------------------------
+
+   at PowerAssert.PAssert.AreTrue(Expression`1[] expressions) in ...\PAssert.cs
+   at ...

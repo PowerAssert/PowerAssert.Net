@@ -16,7 +16,6 @@ namespace PowerAssert
     {
         static readonly string CRLF = Environment.NewLine;
 
-
         public static TException Throws<TException>(Action a, Expression<Func<TException, bool>> exceptionAssertion = null) where TException : Exception
         {
             try
@@ -73,41 +72,33 @@ namespace PowerAssert
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IsTrue(Expression<Func<bool>> expression)
         {
-            Func<bool> func = expression.Compile();
-            bool b;
-            try
-            {
-                b = func();
-            }
-            catch (Exception e)
-            {
-                var output = RenderExpression(expression);
-                throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
-            }
-            if (!b)
-            {
-                throw CreateException(expression, "IsTrue failed");
-            }
+            var exception = AssertionResultToException(TestExpression(expression));
+            if (exception != null)
+                throw exception;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IsTrue<T>(T target, Expression<Func<T, bool>> expression)
         {
-            Func<T, bool> func = expression.Compile();
-            bool b;
-            try
-            {
-                b = func(target);
-            }
-            catch (Exception e)
-            {
-                var output = RenderExpression(expression, target);
-                throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
-            }
-            if (!b)
-            {
-                throw CreateException(expression, "IsTrue failed", target);
-            }
+            var exception = AssertionResultToException(TestExpression(expression, target));
+            if (exception != null)
+                throw exception;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void AreTrue(params Expression<Func<bool>> []expressions)
+        {
+            var exception = AssertionResultsToException(expressions.Select(e => TestExpression(e)));
+            if (exception != null)
+                throw exception;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void AreTrue<T>(T target, params Expression<Func<T, bool>> []expressions)
+        {
+            var exception = AssertionResultsToException(expressions.Select(e => TestExpression(e, target)));
+            if (exception != null)
+                throw exception;
         }
 
         static Expression<Func<bool>> Substitute<TException>(Expression<Func<TException, bool>> expression, TException exception)
@@ -119,10 +110,48 @@ namespace PowerAssert
             return Expression.Lambda<Func<bool>>(newBody);
         }
 
-        static Exception CreateException(LambdaExpression expression, string message, params object []parameterValues)
+        static AssertionResult TestExpression(LambdaExpression expression, params object[] args)
         {
-            var output = RenderExpression(expression, parameterValues);
-            return new Exception(message + ", expression was:" + CRLF + CRLF + output);
+            var f = expression.Compile();
+            try
+            {
+                if ((bool)f.DynamicInvoke(args))
+                    return AssertionResult.Success;
+            }
+            catch (TargetInvocationException e)
+            {
+                return AssertionResult.Failure(RenderExpression(expression, args), e.InnerException);
+            }
+            return AssertionResult.Failure(RenderExpression(expression, args), null);
+        }
+
+        private static Exception AssertionResultToException(AssertionResult ret)
+        {
+            if (ret.Succeeded)
+            {
+                return null;
+            }
+            else if (ret.Exception != null)
+            {
+                return new Exception(string.Format("IsTrue encountered {0}, expression was:{2}{1}{2}",
+                                                  ret.Exception.GetType().Name, ret.Output, CRLF + CRLF),
+                                     ret.Exception);
+            }
+            else
+            {
+                return new Exception("IsTrue failed, expression was:" + CRLF + CRLF + ret.Output);
+            }
+        }
+
+        private static Exception AssertionResultsToException(IEnumerable<AssertionResult> rets)
+        {
+            var failures = rets.Where(r => !r.Succeeded).ToArray();
+            if (failures.Length == 0)
+                return null;
+
+            var separator = CRLF + new string('-', 80) + CRLF;
+            var outputs = failures.Select(r => r.Output + (r.Exception != null ? CRLF + r.Exception.ToString() + CRLF : "") + separator);
+            return new Exception("AreTrue failed" + CRLF + separator + string.Join("", outputs));
         }
 
         static string RenderExpression(LambdaExpression expression, params object []parameterValues)

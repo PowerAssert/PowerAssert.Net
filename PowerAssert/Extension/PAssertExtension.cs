@@ -10,5 +10,10 @@ namespace PowerAssert.Extension
         {
             PowerAssert.PAssert.IsTrue(target, expression);
         }
+
+        public static void PAssertAll<T>(this T target, params Expression<Func<T, bool>>[] expressions)
+        {
+            PowerAssert.PAssert.AreTrue(target, expressions);
+        }
     }
 }
