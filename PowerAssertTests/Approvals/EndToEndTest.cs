@@ -471,11 +471,39 @@ namespace PowerAssertTests.Approvals
             ApproveException(target, x => string.Join("", x.Select(y => y + x[0])) == new { x, Value = "foobarbaz" }.Value);
         }
 
-        void ApproveException(Expression<Func<bool>> func)
+        [Test]
+        public void MultipleExpressions()
+        {
+            var a = "A";
+            var b = "B";
+            var c = "C";
+            ApproveException(() => a == "a", () => b == "B", () => c == "c");
+        }
+
+        [Test]
+        public void MultipleExpressionsWithError()
+        {
+            var a = "A";
+            var b = "B";
+            var c = "C";
+            ApproveException(() => a.Substring(2) == "A", () => b.Substring(2) == "B", () => c == "C");
+        }
+
+        [Test]
+        public void MultipleExpressionsWithParameter()
+        {
+            var target = new[] { "foo", "bar", "baz" };
+            ApproveException(target, x => x[0] == "foo", x => x[1] == "BAR", x => x[2] == "BAZ");
+        }
+
+        void ApproveException(params Expression<Func<bool>> []funcs)
         {
             try
             {
-                PAssert.IsTrue(func);
+                if (funcs.Length == 1)
+                    PAssert.IsTrue(funcs[0]);
+                else
+                    PAssert.AreTrue(funcs);
                 Assert.Fail("No PowerAssertion");
             }
             catch (Exception e)
@@ -485,11 +513,14 @@ namespace PowerAssertTests.Approvals
             }
         }
 
-        void ApproveException<T>(T target, Expression<Func<T, bool>> func)
+        void ApproveException<T>(T target, params Expression<Func<T, bool>> []funcs)
         {
             try
             {
-                PAssert.IsTrue(target, func);
+                if (funcs.Length == 1)
+                    PAssert.IsTrue(target, funcs[0]);
+                else
+                    PAssert.AreTrue(target, funcs);
                 Assert.Fail("No PowerAssertion");
             }
             catch (Exception e)
@@ -498,7 +529,6 @@ namespace PowerAssertTests.Approvals
                 ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
             }
         }
-
 
         string Scrubber(string s)
         {

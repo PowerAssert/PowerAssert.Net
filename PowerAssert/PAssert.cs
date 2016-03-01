@@ -85,6 +85,22 @@ namespace PowerAssert
                 throw exception;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void AreTrue(params Expression<Func<bool>> []expressions)
+        {
+            var exception = AssertionResultsToException(expressions.Select(e => TestExpression(e)));
+            if (exception != null)
+                throw exception;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void AreTrue<T>(T target, params Expression<Func<T, bool>> []expressions)
+        {
+            var exception = AssertionResultsToException(expressions.Select(e => TestExpression(e, target)));
+            if (exception != null)
+                throw exception;
+        }
+
         static Expression<Func<bool>> Substitute<TException>(Expression<Func<TException, bool>> expression, TException exception)
         {
             var parameter = expression.Parameters[0];
@@ -125,6 +141,17 @@ namespace PowerAssert
             {
                 return new Exception("IsTrue failed, expression was:" + CRLF + CRLF + ret.Output);
             }
+        }
+
+        private static Exception AssertionResultsToException(IEnumerable<AssertionResult> rets)
+        {
+            var failures = rets.Where(r => !r.Succeeded).ToArray();
+            if (failures.Length == 0)
+                return null;
+
+            var separator = CRLF + new string('-', 80) + CRLF;
+            var outputs = failures.Select(r => r.Output + (r.Exception != null ? CRLF + r.Exception.ToString() + CRLF : "") + separator);
+            return new Exception("AreTrue failed" + CRLF + separator + string.Join("", outputs));
         }
 
         static string RenderExpression(LambdaExpression expression, params object []parameterValues)
