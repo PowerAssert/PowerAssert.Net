@@ -73,6 +73,7 @@
     <Compile Include="Hints\SequenceEqualHint.cs" />
     <Compile Include="Hints\StringEqualsHint.cs" />
     <Compile Include="Hints\StringOperatorEqualsHint.cs" />
+    <Compile Include="Infrastructure\AssertionResult.cs" />
     <Compile Include="Infrastructure\ExpressionParser.cs" />
     <Compile Include="Infrastructure\Nodes\InvocationNode.cs" />
     <Compile Include="Infrastructure\NodeFormatter.cs" />

@@ -11,7 +11,6 @@ null
 
  ---> System.NullReferenceException: Object reference not set to an instance of an object.
    at lambda_method(Closure )
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    --- End of inner exception stack trace ---
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at ...
