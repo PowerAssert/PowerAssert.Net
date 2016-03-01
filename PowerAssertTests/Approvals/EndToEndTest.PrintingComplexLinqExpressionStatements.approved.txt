@@ -15,4 +15,4 @@ list.SelectMany(x => list, (x, y) => new {x, y}).Where($0 => $0.x > $0.y).Select
  [0, 1, 2, 3, 4, ...]
 
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
-   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
+   at ...
