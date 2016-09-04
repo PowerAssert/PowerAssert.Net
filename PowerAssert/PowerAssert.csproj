@@ -92,6 +92,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Util.tt</DependentUpon>
     </Compile>
+    <Compile Include="MultipleAssertions\LogMessageException.cs" />
+    <Compile Include="MultipleAssertions\PolyAssert.cs" />
+    <Compile Include="MultipleAssertions\PolyAssertException.cs" />
     <Compile Include="PAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ using System.Threading;
 using ApprovalTests.Utilities;
 using NUnit.Framework;
 using PowerAssert;
+using PowerAssert.MultipleAssertions;
 
 namespace PowerAssertTests.Approvals
 {
@@ -471,18 +472,65 @@ namespace PowerAssertTests.Approvals
             ApproveException(target, x => string.Join("", x.Select(y => y + x[0])) == new { x, Value = "foobarbaz" }.Value);
         }
 
-        void ApproveException(Expression<Func<bool>> func)
+        [Test]
+        public void PolyAssert()
         {
+            var x = 6;
             try
             {
-                PAssert.IsTrue(func);
-                Assert.Fail("No PowerAssertion");
+                using (var poly = PAssert.Poly())
+                {
+                    poly.Log("I will report all the errors i saw when i get disposed");
+                    poly.IsTrue(() => x == 5);
+                    poly.IsTrue(() => x == 6);
+                    poly.IsTrue(() => x == 7);
+                    poly.Try(() => Assert.Fail("Wah wah"));
+                    poly.Log("PolyAssert.Log messages are only printed if the test fails");
+                }
             }
             catch (Exception e)
             {
                 Console.Out.WriteLine(e);
                 ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
             }
+        }
+
+        [Test]
+        public void PolyAssertCanFinishEarly()
+        {
+            var x = 6;
+            try
+            {
+                using (var poly = PAssert.Poly())
+                {
+                    poly.Log("Sometimes you do want to end the test early after all");
+                    poly.StopIfErrorsHaveOccurred(); //no stop here
+                    poly.Log("So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)");
+                    poly.Try(() => Assert.Fail("Wah wah"));
+                    poly.StopIfErrorsHaveOccurred(); //no stop here
+                    poly.Log("This message should not be printed, as StopIfErrorsHaveOccurred will throw an exception this time");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Out.WriteLine(e);
+                ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
+            }
+        }
+
+        void ApproveException(Expression<Func<bool>> func)
+        {
+            try
+            {
+                PAssert.IsTrue(func);
+            }
+            catch (Exception e)
+            {
+                Console.Out.WriteLine(e);
+                ApprovalTests.Approvals.Verify(e.ToString(), Scrubber);
+                return;
+            }
+            Assert.Fail("No Power Assertion");
         }
 
         void ApproveException<T>(T target, Expression<Func<T, bool>> func)

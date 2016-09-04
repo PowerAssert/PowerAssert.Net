@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PowerAssert.Infrastructure;
 using PowerAssert.Infrastructure.Nodes;
+using PowerAssert.MultipleAssertions;
 
 namespace PowerAssert
 {
@@ -63,13 +64,6 @@ namespace PowerAssert
             return exception;
         }
 
-        static Task<T> TaskFromResult<T>(T value)
-        {
-            var taskSource = new TaskCompletionSource<T>();
-            taskSource.SetResult(value);
-            return taskSource.Task;
-        }
-
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IsTrue(Expression<Func<bool>> expression)
         {
@@ -108,6 +102,25 @@ namespace PowerAssert
             {
                 throw CreateException(expression, "IsTrue failed", target);
             }
+        }
+
+        /// <summary>
+        /// Starts a PolyAssert. PolyAssert is used to make multiple assertions without aborting the test after the first failure. Each method on PolyAssert will store any errors that occured.
+        /// When the PolyAssert is disposed (or StopIfErrorsHaveOccurred is called) then any (and ALL) errors that happened will be raised.
+        /// 
+        /// For example:
+        /// <code>
+        ///using (var poly = PAssert.Poly())
+        ///{
+        ///    poly.IsTrue(() => x == 5);
+        ///    poly.Try(() => Assert.Fail("Wah wah"));
+        ///    poly.Log("PolyAssert.Log messages are only printed if the test fails");
+        ///}
+        /// </code>
+        /// </summary>
+        public static PolyAssert Poly()
+        {
+            return new PolyAssert();
         }
 
         static Expression<Func<bool>> Substitute<TException>(Expression<Func<TException, bool>> expression, TException exception)
