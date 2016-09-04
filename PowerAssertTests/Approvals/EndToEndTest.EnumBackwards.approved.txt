@@ -1,13 +1,12 @@
 ﻿System.Exception: IsTrue failed, expression was:
 
-(int)Encrypted == (int)o
-.   .          __ .   ..
-.   .          |  .   ..
-\_ _/          |  \_ _/|
-  |            |    |  SequentialScan
-  |            |    134217728
-  |            False, FileOptions.Encrypted != FileOptions.SequentialScan
-  16384
+16384 == (int)o
+      __ .   ..
+      |  .   ..
+      |  \_ _/|
+      |    |  SequentialScan
+      |    134217728
+      False, FileOptions.Encrypted != FileOptions.SequentialScan
 
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
