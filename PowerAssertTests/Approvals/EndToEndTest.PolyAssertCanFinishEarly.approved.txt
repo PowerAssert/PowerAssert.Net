@@ -1,8 +1,8 @@
 ﻿PowerAssert.MultipleAssertions.PolyAssertException: PolyAssert encountered 1 failures:
-> ...\EndToEndTest.cs:506> Sometimes you do want to end the test early after all
-> ...\EndToEndTest.cs:508> So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)
+> Sometimes you do want to end the test early after all
+> So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)
 ============================================================
-ERROR ...\EndToEndTest.cs:509:
+ERROR in EndToEndTest.PolyAssertCanFinishEarly at ...\EndToEndTest.cs:509:
 ============================================================
 Wah wah
 ============================================================

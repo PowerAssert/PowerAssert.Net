@@ -6,14 +6,14 @@ namespace PowerAssert.MultipleAssertions
 {
     public class PolyAssertException : Exception
     {
-        public IReadOnlyList<Error> Errors { get; set; }
+        public List<Error> Errors { get; set; }
 
-        public PolyAssertException(IReadOnlyList<Error> errors) : base(BuildMessage(errors))
+        public PolyAssertException(List<Error> errors) : base(BuildMessage(errors))
         {
             Errors = errors;
         }
 
-        static string BuildMessage(IReadOnlyList<Error> errors)
+        static string BuildMessage(List<Error> errors)
         {
             int fails = errors.Count(x => x.CausesFail);
 

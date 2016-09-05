@@ -518,6 +518,16 @@ namespace PowerAssertTests.Approvals
             }
         }
 
+		[Test]
+        public void PolyAssertCanPassATest()
+        {
+            using (var poly = PAssert.Poly())
+            {
+                poly.Log("PolyAssert.Log messages are only printed if the test fails");
+                poly.Try(() => Assert.True(true));
+            }
+        }
+
         void ApproveException(Expression<Func<bool>> func)
         {
             try

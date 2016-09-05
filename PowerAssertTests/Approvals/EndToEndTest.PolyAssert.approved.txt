@@ -1,7 +1,7 @@
 ﻿PowerAssert.MultipleAssertions.PolyAssertException: PolyAssert encountered 3 failures:
-> ...\EndToEndTest.cs:483> I will report all the errors i saw when i get disposed
+> I will report all the errors i saw when i get disposed
 ============================================================
-ERROR ...\EndToEndTest.cs:484:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:484:
 ============================================================
 IsTrue failed, expression was:
 
@@ -14,7 +14,7 @@ x == 5
 ============================================================
 
 ============================================================
-ERROR ...\EndToEndTest.cs:486:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:486:
 ============================================================
 IsTrue failed, expression was:
 
@@ -27,12 +27,12 @@ x == 7
 ============================================================
 
 ============================================================
-ERROR ...\EndToEndTest.cs:487:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:487:
 ============================================================
 Wah wah
 ============================================================
 
-> ...\EndToEndTest.cs:488> PolyAssert.Log messages are only printed if the test fails
+> PolyAssert.Log messages are only printed if the test fails
 
    at PowerAssert.MultipleAssertions.PolyAssert.StopIfErrorsHaveOccurred() in ...\PolyAssert.cs
    at PowerAssert.MultipleAssertions.PolyAssert.Dispose() in ...\PolyAssert.cs

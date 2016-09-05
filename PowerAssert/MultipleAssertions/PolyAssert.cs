@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -14,33 +15,33 @@ namespace PowerAssert.MultipleAssertions
         /// <summary>
         /// Write a log message to be printed IF the PolyAssert has any errors
         /// </summary>
-        public void Log(string s, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
+        public void Log(string s)
         {
-            _errors.Add(new Error(s, path, line));
+            _errors.Add(new Error(s));
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue(Expression<Func<bool>> expression, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
+        public void IsTrue(Expression<Func<bool>> expression)
         {
-            Try(() => PAssert.IsTrue(expression), path, line);
+            Try(() => PAssert.IsTrue(expression));
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
+        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression)
         {
-            Try(() => PAssert.IsTrue(target, expression), path, line);
+            Try(() => PAssert.IsTrue(target, expression));
         }
 
         /// <summary>
         /// Runs any action and stores the exception, if one occurs
         /// </summary>
-        public void Try(Action action, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
+        public void Try(Action action)
         {
             try
             {
@@ -48,18 +49,18 @@ namespace PowerAssert.MultipleAssertions
             }
             catch (Exception e)
             {
-                _errors.Add(new Error(e, path, line));
+                _errors.Add(new Error(e));
             }
         }
 
         /// <summary>
         /// Stores a failure message, if shouldFail is true
         /// </summary>
-        public void FailIf(bool shouldFail, string message, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
+        public void FailIf(bool shouldFail, string message)
         {
             if (shouldFail)
             {
-                _errors.Add(new Error(message, path, line) { CausesFail = true});
+                _errors.Add(new Error(message) { CausesFail = true});
             }
         }
 
