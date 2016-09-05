@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PowerAssert</RootNamespace>
     <AssemblyName>PowerAssert</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -92,7 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Util.tt</DependentUpon>
     </Compile>
-    <Compile Include="MultipleAssertions\LogMessageException.cs" />
+    <Compile Include="MultipleAssertions\Error.cs" />
     <Compile Include="MultipleAssertions\PolyAssert.cs" />
     <Compile Include="MultipleAssertions\PolyAssertException.cs" />
     <Compile Include="PAssert.cs" />

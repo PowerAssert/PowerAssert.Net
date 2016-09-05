@@ -4,26 +4,22 @@ using System.Linq;
 
 namespace PowerAssert.MultipleAssertions
 {
-    public class PolyAssertException : AggregateException
+    public class PolyAssertException : Exception
     {
-        static readonly string Crlf = Environment.NewLine;
-        static readonly string Seperator = Crlf + new string('=', 60) + Crlf;
+        public IReadOnlyList<Error> Errors { get; set; }
 
-        public PolyAssertException(IEnumerable<Exception> innerExceptions) : base(innerExceptions)
+        public PolyAssertException(IReadOnlyList<Error> errors) : base(BuildMessage(errors))
         {
+            Errors = errors;
         }
 
-        public override string ToString()
+        static string BuildMessage(IReadOnlyList<Error> errors)
         {
-            int count = InnerExceptions.Count(PolyAssert.ExceptionIsNotLogMessage);
-            var strings = new [] {string.Format("PolyAssert encountered {0} failures:", count), StackTrace, Seperator}.Concat(InnerExceptions.Select(FormatInnerException));
+            int fails = errors.Count(x => x.CausesFail);
 
-            return string.Join(Crlf + Crlf, strings);
+            return string.Format("PolyAssert encountered {0} failures:{1}", fails, Error.Crlf)+string.Concat(errors);
         }
 
-        static string FormatInnerException(Exception e)
-        {
-            return e is LogMessageException ? e.ToString() : Seperator + e + Seperator;
-        }
+        
     }
 }

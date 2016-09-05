@@ -1,21 +1,13 @@
-﻿PolyAssert encountered 1 failures:
+﻿PowerAssert.MultipleAssertions.PolyAssertException: PolyAssert encountered 1 failures:
+> ...\EndToEndTest.cs:506> Sometimes you do want to end the test early after all
+> ...\EndToEndTest.cs:508> So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)
+============================================================
+ERROR ...\EndToEndTest.cs:509:
+============================================================
+Wah wah
+============================================================
+
 
    at PowerAssert.MultipleAssertions.PolyAssert.StopIfErrorsHaveOccurred() in ...\PolyAssert.cs
    at PowerAssert.MultipleAssertions.PolyAssert.Dispose() in ...\PolyAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.PolyAssertCanFinishEarly() in ...\EndToEndTest.cs
-
-
-============================================================
-
-
-> Sometimes you do want to end the test early after all
-
-> So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)
-
-
-============================================================
-NUnit.Framework.AssertionException: Wah wah
-   at NUnit.Framework.Assert.Fail(String message, Object[] args)
-   at PowerAssertTests.Approvals.EndToEndTest.<>c.<PolyAssertCanFinishEarly>b__62_0() in ...\EndToEndTest.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.Try(Action action) in ...\PolyAssert.cs
-============================================================

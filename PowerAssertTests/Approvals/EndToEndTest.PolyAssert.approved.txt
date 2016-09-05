@@ -1,18 +1,9 @@
-﻿PolyAssert encountered 3 failures:
-
-   at PowerAssert.MultipleAssertions.PolyAssert.StopIfErrorsHaveOccurred() in ...\PolyAssert.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.Dispose() in ...\PolyAssert.cs
-   at PowerAssertTests.Approvals.EndToEndTest.PolyAssert() in ...\EndToEndTest.cs
-
-
+﻿PowerAssert.MultipleAssertions.PolyAssertException: PolyAssert encountered 3 failures:
+> ...\EndToEndTest.cs:483> I will report all the errors i saw when i get disposed
 ============================================================
-
-
-> I will report all the errors i saw when i get disposed
-
-
+ERROR ...\EndToEndTest.cs:484:
 ============================================================
-System.Exception: IsTrue failed, expression was:
+IsTrue failed, expression was:
 
 x == 5
 . __
@@ -20,15 +11,12 @@ x == 5
 | False
 6
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.<>c__DisplayClass2_0.<IsTrue>b__0() in ...\PolyAssert.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.Try(Action action) in ...\PolyAssert.cs
 ============================================================
 
-
-
 ============================================================
-System.Exception: IsTrue failed, expression was:
+ERROR ...\EndToEndTest.cs:486:
+============================================================
+IsTrue failed, expression was:
 
 x == 7
 . __
@@ -36,19 +24,16 @@ x == 7
 | False
 6
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.<>c__DisplayClass2_0.<IsTrue>b__0() in ...\PolyAssert.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.Try(Action action) in ...\PolyAssert.cs
 ============================================================
 
-
-
 ============================================================
-NUnit.Framework.AssertionException: Wah wah
-   at NUnit.Framework.Assert.Fail(String message, Object[] args)
-   at PowerAssertTests.Approvals.EndToEndTest.<>c.<PolyAssert>b__61_0() in ...\EndToEndTest.cs
-   at PowerAssert.MultipleAssertions.PolyAssert.Try(Action action) in ...\PolyAssert.cs
+ERROR ...\EndToEndTest.cs:487:
+============================================================
+Wah wah
 ============================================================
 
+> ...\EndToEndTest.cs:488> PolyAssert.Log messages are only printed if the test fails
 
-> PolyAssert.Log messages are only printed if the test fails
+   at PowerAssert.MultipleAssertions.PolyAssert.StopIfErrorsHaveOccurred() in ...\PolyAssert.cs
+   at PowerAssert.MultipleAssertions.PolyAssert.Dispose() in ...\PolyAssert.cs
+   at PowerAssertTests.Approvals.EndToEndTest.PolyAssert() in ...\EndToEndTest.cs

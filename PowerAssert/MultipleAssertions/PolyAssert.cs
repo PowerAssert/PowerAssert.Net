@@ -3,43 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+// ReSharper disable ExplicitCallerInfoArgument (inner calls)
 
 namespace PowerAssert.MultipleAssertions
 {
     public class PolyAssert : IDisposable
     {
-        readonly List<Exception> _exceptions = new List<Exception>();
+        readonly List<Error> _errors = new List<Error>();
 
         /// <summary>
         /// Write a log message to be printed IF the PolyAssert has any errors
         /// </summary>
-        public void Log(string s)
+        public void Log(string s, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {
-            _exceptions.Add(new LogMessageException(s));
+            _errors.Add(new Error(s, path, line));
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue(Expression<Func<bool>> expression)
+        public void IsTrue(Expression<Func<bool>> expression, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {
-            Try(() => PAssert.IsTrue(expression));
+            Try(() => PAssert.IsTrue(expression), path, line);
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression)
+        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {
-            Try(() => PAssert.IsTrue(target, expression));
+            Try(() => PAssert.IsTrue(target, expression), path, line);
         }
 
         /// <summary>
         /// Runs any action and stores the exception, if one occurs
         /// </summary>
-        public void Try(Action action)
+        public void Try(Action action, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {
             try
             {
@@ -47,18 +48,18 @@ namespace PowerAssert.MultipleAssertions
             }
             catch (Exception e)
             {
-                _exceptions.Add(e);
+                _errors.Add(new Error(e, path, line));
             }
         }
 
         /// <summary>
         /// Stores a failure message, if shouldFail is true
         /// </summary>
-        public void FailIf(bool shouldFail, string message)
+        public void FailIf(bool shouldFail, string message, [CallerFilePath] string path = null, [CallerLineNumber] int line = 0)
         {
             if (shouldFail)
             {
-                _exceptions.Add(new Exception(message));
+                _errors.Add(new Error(message, path, line) { CausesFail = true});
             }
         }
 
@@ -72,15 +73,10 @@ namespace PowerAssert.MultipleAssertions
         /// </summary>
         public void StopIfErrorsHaveOccurred()
         {
-            if (_exceptions.Any(ExceptionIsNotLogMessage))
+            if (_errors.Any(x => x.CausesFail))
             {
-                throw new PolyAssertException(_exceptions);
+                throw new PolyAssertException(_errors);
             }
-        }
-
-        internal static bool ExceptionIsNotLogMessage(Exception x)
-        {
-            return !(x is LogMessageException);
         }
     }
 }
