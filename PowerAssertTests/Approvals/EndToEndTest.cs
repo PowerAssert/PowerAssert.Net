@@ -565,6 +565,8 @@ namespace PowerAssertTests.Approvals
             //the throwhelper seems to be present on some environments' stack traces but not others, cut it out to make tha approvals pass on most machines
             s = Regex.Replace(s, @"\n.*ThrowHelper.*\n", "\n"); 
             s = Regex.Replace(s, @"\r?\n", "\n");
+            // replace line number in polyassert headers
+            s = Regex.Replace(s, @"(?<=^ERROR in.*:)\d+(?=:$)", "<line>", RegexOptions.Multiline);
             return s;
         }
     }

@@ -1,7 +1,7 @@
 ﻿PowerAssert.MultipleAssertions.PolyAssertException: PolyAssert encountered 3 failures:
 > I will report all the errors i saw when i get disposed
 ============================================================
-ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:484:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:<line>:
 ============================================================
 IsTrue failed, expression was:
 
@@ -14,7 +14,7 @@ x == 5
 ============================================================
 
 ============================================================
-ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:486:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:<line>:
 ============================================================
 IsTrue failed, expression was:
 
@@ -27,7 +27,7 @@ x == 7
 ============================================================
 
 ============================================================
-ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:487:
+ERROR in EndToEndTest.PolyAssert at ...\EndToEndTest.cs:<line>:
 ============================================================
 Wah wah
 ============================================================

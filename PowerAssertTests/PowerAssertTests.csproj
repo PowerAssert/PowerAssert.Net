@@ -93,6 +93,8 @@
     <Content Include="Approvals\EndToEndTest.BinaryArrayElement.approved.txt" />
     <Content Include="Approvals\EndToEndTest.BrokenEqualityTestInstanceEquals.approved.txt" />
     <Content Include="Approvals\EndToEndTest.Casting.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PolyAssert.approved.txt" />
+    <Content Include="Approvals\EndToEndTest.PolyAssertCanFinishEarly.approved.txt" />
     <Content Include="Approvals\EndToEndTest.UnaryCastOfBinary.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareDelegateAndObject.approved.txt" />
     <Content Include="Approvals\EndToEndTest.CompareTwoCloseFloats.approved.txt" />
