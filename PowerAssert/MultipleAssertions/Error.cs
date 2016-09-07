@@ -1,44 +1,23 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
-        static Assembly MyAssembly = typeof(Error).Assembly;
-
         internal static readonly string Crlf = Environment.NewLine;
 
         static readonly string Seperator = new string('=', 60);
 
-
-        public Error(string message)
+        public Error(string message, CallerLocation location)
         {
             Message = message;
-            var stackFrames = from f in new StackTrace(1, true).GetFrames()
-                let m = f.GetMethod()
-                where m != null
-                let t = m.DeclaringType
-                where t.Assembly != MyAssembly
-                select f;
-            var frame = stackFrames.FirstOrDefault();
-            if (frame != null)
-            {
-                var method = frame.GetMethod();
-                var typeName = method.DeclaringType == null ? "" : method.DeclaringType.Name;
-                Location = string.Format("in {0}.{1} at {2}:{3}", typeName, method.Name, frame.GetFileName(), frame.GetFileLineNumber());
-            }
-            else
-            {
-                Location = "(Unknown location)";
-            }
-
+            Location = location.ToString();
         }
 
 
-        public Error(Exception exception):this(exception.Message)
+        public Error(Exception exception, CallerLocation location):this(exception.Message, location)
         {
             Exception = exception;
             CausesFail = true;

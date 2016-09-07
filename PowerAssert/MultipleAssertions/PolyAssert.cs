@@ -15,33 +15,33 @@ namespace PowerAssert.MultipleAssertions
         /// <summary>
         /// Write a log message to be printed IF the PolyAssert has any errors
         /// </summary>
-        public void Log(string s)
+        public void Log(string s, CallerLocation location = null)
         {
-            _errors.Add(new Error(s));
+            _errors.Add(new Error(s, CallerLocation.Ensure(location)));
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue(Expression<Func<bool>> expression)
+        public void IsTrue(Expression<Func<bool>> expression, CallerLocation location = null)
         {
-            Try(() => PAssert.IsTrue(expression));
+            Try(() => PAssert.IsTrue(expression), CallerLocation.Ensure(location));
         }
 
         /// <summary>
         /// Calls PAssert.IsTrue and stores the exception, if one occurs
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression)
+        public void IsTrue<TTarget>(TTarget target, Expression<Func<TTarget, bool>> expression, CallerLocation location = null)
         {
-            Try(() => PAssert.IsTrue(target, expression));
+            Try(() => PAssert.IsTrue(target, expression), CallerLocation.Ensure(location));
         }
 
         /// <summary>
         /// Runs any action and stores the exception, if one occurs
         /// </summary>
-        public void Try(Action action)
+        public void Try(Action action, CallerLocation location = null)
         {
             try
             {
@@ -49,18 +49,18 @@ namespace PowerAssert.MultipleAssertions
             }
             catch (Exception e)
             {
-                _errors.Add(new Error(e));
+                _errors.Add(new Error(e, CallerLocation.Ensure(location)));
             }
         }
 
         /// <summary>
         /// Stores a failure message, if shouldFail is true
         /// </summary>
-        public void FailIf(bool shouldFail, string message)
+        public void FailIf(bool shouldFail, string message, CallerLocation location = null)
         {
             if (shouldFail)
             {
-                _errors.Add(new Error(message) { CausesFail = true});
+                _errors.Add(new Error(message, CallerLocation.Ensure(location)) { CausesFail = true});
             }
         }
 
