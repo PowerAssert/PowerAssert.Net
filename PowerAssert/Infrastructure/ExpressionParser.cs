@@ -33,16 +33,9 @@ namespace PowerAssert.Infrastructure
             RootExpression = expression;
             _parameters = parameters ?? new ParameterExpression[0];
             _parameterValues = parameterValues ?? new object[0];
-            TestClass = testClass ?? GetTestClass();
+            TestClass = testClass ?? CallerLocation.FindFromStackFrames().DeclaringType;
             TextOnly = textOnly;
             _nextParamIndex = baseParamIndex;
-        }
-
-        static Type GetTestClass()
-        {
-            var st = new StackTrace(1, false);
-            return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
-                     .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
         }
 
         public Node Parse()

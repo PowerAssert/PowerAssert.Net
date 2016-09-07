@@ -29,6 +29,11 @@ namespace PowerAssert
             }
         }
 
+        public Type DeclaringType
+        {
+            get { return Method == null ? null : Method.DeclaringType; }
+        }
+
         public override string ToString()
         {
             if (Method == null)

@@ -14,5 +14,5 @@ list.SelectMany(x => list, (x, y) => new {x, y}).Where($0 => $0.x > $0.y).Select
  |       [{ x = 0, y = 0 }, { x = 0, y = 1 }, { x = 0, y = 2 }, { x = 0, y = 3 }, { x = 0, y = 4 }, ...]
  [0, 1, 2, 3, 4, ...]
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression, CallerLocation location) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
