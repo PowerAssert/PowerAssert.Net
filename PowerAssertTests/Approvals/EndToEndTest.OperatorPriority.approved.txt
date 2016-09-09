@@ -16,5 +16,5 @@
 |1
 3
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression, CallerLocation location) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs

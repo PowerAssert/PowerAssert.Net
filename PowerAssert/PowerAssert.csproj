@@ -92,6 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Util.tt</DependentUpon>
     </Compile>
+    <Compile Include="CallerLocation.cs" />
     <Compile Include="MultipleAssertions\Error.cs" />
     <Compile Include="MultipleAssertions\PolyAssert.cs" />
     <Compile Include="MultipleAssertions\PolyAssertException.cs" />

@@ -65,7 +65,7 @@ namespace PowerAssert
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void IsTrue(Expression<Func<bool>> expression)
+        public static void IsTrue(Expression<Func<bool>> expression, CallerLocation location = null)
         {
             Func<bool> func = expression.Compile();
             bool b;
@@ -75,17 +75,17 @@ namespace PowerAssert
             }
             catch (Exception e)
             {
-                var output = RenderExpression(expression);
+                var output = RenderExpression(expression, location);
                 throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
             }
             if (!b)
             {
-                throw CreateException(expression, "IsTrue failed");
+                throw CreateException(expression, "IsTrue failed", location);
             }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void IsTrue<T>(T target, Expression<Func<T, bool>> expression)
+        public static void IsTrue<T>(T target, Expression<Func<T, bool>> expression, CallerLocation location = null)
         {
             Func<T, bool> func = expression.Compile();
             bool b;
@@ -95,12 +95,12 @@ namespace PowerAssert
             }
             catch (Exception e)
             {
-                var output = RenderExpression(expression, target);
+                var output = RenderExpression(expression, location, target);
                 throw new Exception("IsTrue encountered " + e.GetType().Name + ", expression was:" + CRLF + CRLF + output + CRLF + CRLF, e);
             }
             if (!b)
             {
-                throw CreateException(expression, "IsTrue failed", target);
+                throw CreateException(expression, "IsTrue failed", location, target);
             }
         }
 
@@ -132,15 +132,16 @@ namespace PowerAssert
             return Expression.Lambda<Func<bool>>(newBody);
         }
 
-        static Exception CreateException(LambdaExpression expression, string message, params object []parameterValues)
+        static Exception CreateException(LambdaExpression expression, string message, CallerLocation location, params object []parameterValues)
         {
-            var output = RenderExpression(expression, parameterValues);
+            var output = RenderExpression(expression, location, parameterValues);
             return new Exception(message + ", expression was:" + CRLF + CRLF + output);
         }
 
-        static string RenderExpression(LambdaExpression expression, params object []parameterValues)
+        static string RenderExpression(LambdaExpression expression, CallerLocation location, params object []parameterValues)
         {
-            var parser = new ExpressionParser(expression.Body, expression.Parameters.ToArray(), parameterValues);
+            var testClass = CallerLocation.Ensure(location).DeclaringType;
+            var parser = new ExpressionParser(expression.Body, expression.Parameters.ToArray(), parameterValues, testClass: testClass);
             Node constantNode = parser.Parse();
             string[] lines = NodeFormatter.Format(constantNode);
             return string.Join(CRLF, lines) + CRLF;

@@ -9,5 +9,5 @@ d == (double)f
 | False, but the values only differ by 1.49e-006%
 0.1
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression, CallerLocation location) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
