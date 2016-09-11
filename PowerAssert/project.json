@@ -1,0 +1,24 @@
+{
+  "title": "PowerAssert",
+  "copyright": "Copyright © Rob Fonseca-Ensor",
+  "version": "1.0.8-0",
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Diagnostics.StackTrace": "4.0.1",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "Microsoft.CSharp": "4.0.1",
+        "System.Globalization.Extensions": "4.0.1"
+      }
+    },
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Core":  "",
+        "Microsoft.CSharp": "",
+        "System.Reflection": ""
+      }
+    }
+  }
+}

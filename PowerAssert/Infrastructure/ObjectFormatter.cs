@@ -36,17 +36,17 @@ namespace PowerAssert.Infrastructure
             }
 
             var type = value.GetType();
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
             {
-                var k = type.GetProperty("Key").GetValue(value, null);
-                var v = type.GetProperty("Value").GetValue(value, null);
+                var k = type.GetTypeInfo().GetProperty("Key").GetValue(value, null);
+                var v = type.GetTypeInfo().GetProperty("Value").GetValue(value, null);
                 return String.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
             }
-            if (type.GetInterfaces()
-                .Where(i => i.IsGenericType)
+            if (type.GetTypeInfo().GetInterfaces()
+                .Where(i => i.GetTypeInfo().IsGenericType)
                 .Any(i => i.GetGenericTypeDefinition() == typeof(IGrouping<,>)))
             {
-                var k = type.GetProperty("Key").GetValue(value, null);
+                var k = type.GetTypeInfo().GetProperty("Key").GetValue(value, null);
                 return String.Format("{{{0}:{1}}}", FormatObject(k), FormatEnumerable(value));
             }
             if (value is Type)
@@ -57,7 +57,7 @@ namespace PowerAssert.Infrastructure
             {
                 var del = (Delegate) value;
 
-                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", del.Method.GetParameters().Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(del.Method.ReturnType));
+                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", del.GetMethodInfo().GetParameters().Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(del.GetMethodInfo().ReturnType));
             }
             if (value is IEnumerable)
             {

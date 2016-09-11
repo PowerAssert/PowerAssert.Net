@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using PowerAssert.Infrastructure;
+using System.Reflection;
 
 namespace PowerAssert.Hints
 {
@@ -57,7 +58,7 @@ namespace PowerAssert.Hints
 
             if (unE != null && unE.NodeType == ExpressionType.Convert)
             {
-                if (unE.Operand.Type.IsEnum)
+                if (unE.Operand.Type.GetTypeInfo().IsEnum)
                 {
                     return Tuple.Create(Parse(parser, unE.Operand.Type, x), Parse(parser, unE.Operand.Type, y));
                 }

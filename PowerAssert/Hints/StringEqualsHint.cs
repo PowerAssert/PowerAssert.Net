@@ -20,10 +20,12 @@ namespace PowerAssert.Hints
                     return StringComparer.CurrentCulture;
                 case StringComparison.CurrentCultureIgnoreCase:
                     return StringComparer.CurrentCultureIgnoreCase;
+#if !NETSTANDARD1_6
                 case StringComparison.InvariantCulture:
                     return StringComparer.InvariantCulture;
                 case StringComparison.InvariantCultureIgnoreCase:
                     return StringComparer.InvariantCultureIgnoreCase;
+#endif
                 case StringComparison.Ordinal:
                     return StringComparer.Ordinal;
                 case StringComparison.OrdinalIgnoreCase:

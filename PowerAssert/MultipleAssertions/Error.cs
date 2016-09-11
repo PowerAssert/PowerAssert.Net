@@ -2,12 +2,13 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
-        static Assembly MyAssembly = typeof(Error).Assembly;
+        static Assembly MyAssembly = typeof(Error).GetTypeInfo().Assembly;
 
         internal static readonly string Crlf = Environment.NewLine;
 
@@ -17,6 +18,10 @@ namespace PowerAssert.MultipleAssertions
         public Error(string message)
         {
             Message = message;
+#if NETSTANDARD1_6
+			//https://github.com/dotnet/corefx/issues/1797
+			Location = "<can not get location in DotNetCore>";      
+#else
             var stackFrames = from f in new StackTrace(1, true).GetFrames()
                 let m = f.GetMethod()
                 where m != null
@@ -34,7 +39,7 @@ namespace PowerAssert.MultipleAssertions
             {
                 Location = "(Unknown location)";
             }
-
+#endif
         }
 
 
