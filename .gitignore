@@ -21,3 +21,6 @@ pacakges
 *.nupkg
 *.received.txt
 *.orig
+
+.vs/
+*.lock.json
