@@ -40,9 +40,14 @@ namespace PowerAssert.Infrastructure
 
         static Type GetTestClass()
         {
+#if NETSTANDARD1_6
+			//https://github.com/dotnet/corefx/issues/1797
+			return typeof(object);
+#else
             var st = new StackTrace(1, false);
             return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
                      .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
+#endif
         }
 
         public Node Parse()
