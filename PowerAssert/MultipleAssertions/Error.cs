@@ -2,12 +2,13 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
-        static Assembly MyAssembly = typeof(Error).Assembly;
+        static Assembly MyAssembly = typeof(Error).GetTypeInfo().Assembly;
 
         internal static readonly string Crlf = Environment.NewLine;
 

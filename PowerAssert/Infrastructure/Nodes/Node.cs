@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 
 namespace PowerAssert.Infrastructure.Nodes
 {
@@ -20,7 +21,7 @@ namespace PowerAssert.Infrastructure.Nodes
                 return false;
             }
 
-            var allPropertiesMatch = from info in GetType().GetProperties()
+            var allPropertiesMatch = from info in GetType().GetTypeInfo().GetProperties()
                 let mine = info.GetValue(this, null)
                 let theirs = info.GetValue(obj, null)
                 select ObjectsOrEnumerablesEqual(mine, theirs);

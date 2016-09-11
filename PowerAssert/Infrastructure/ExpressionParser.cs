@@ -16,7 +16,7 @@ namespace PowerAssert.Infrastructure
 {
     class ExpressionParser
     {
-        static Assembly MyAssembly = typeof(ExpressionParser).Assembly;
+        static Assembly MyAssembly = typeof(ExpressionParser).GetTypeInfo().Assembly;
 
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
@@ -167,7 +167,7 @@ namespace PowerAssert.Infrastructure
 
         internal static string NameOfType(Type t)
         {
-            if (t.IsGenericType)
+            if (t.GetTypeInfo().IsGenericType)
             {
                 var typeArgs = t.GetGenericArguments().Select(NameOfType).ToList();
                 var name = IsAnonymousType(t) ? "$Anonymous" : t.Name.Split('`')[0];
