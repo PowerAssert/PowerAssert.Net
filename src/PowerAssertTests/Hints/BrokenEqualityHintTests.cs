@@ -51,7 +51,9 @@ namespace PowerAssertTests.Hints
 
             var x = new object();
 
+#pragma warning disable CS1718 // Comparison made to same variable; did you mean to compare something else?
             Expression<Func<bool>> exp = () => x == x;
+#pragma warning restore CS1718 // Comparison made to same variable; did you mean to compare something else?
             var p = new ExpressionParser(exp.Body);
 
             string ignored;
@@ -102,7 +104,9 @@ namespace PowerAssertTests.Hints
 
             var x = new OverridesEqualsBadly();
 
+#pragma warning disable CS1718 // Comparison made to same variable; did you mean to compare something else?
             Expression<Func<bool>> exp = () => x == x;
+#pragma warning restore CS1718 // Comparison made to same variable; did you mean to compare something else?
             var p = new ExpressionParser(exp.Body);
 
             string ignored;

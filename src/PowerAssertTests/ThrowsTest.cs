@@ -119,7 +119,7 @@ namespace PowerAssertTests
             throw ex;
         }
 
-        static async Task AsyncMethodThatDoesThrow(Exception ex)
+        static Task AsyncMethodThatDoesThrow(Exception ex)
         {
             throw ex;
         }

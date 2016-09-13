@@ -283,7 +283,9 @@ namespace PowerAssertTests.Approvals
             ApproveException(() => l == r);
         }
 
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         class BrokenClass
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         {
             public override bool Equals(object obj)
             {
@@ -521,7 +523,6 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void PolyAssertCanFinishEarly()
         {
-            var x = 6;
             try
             {
                 using (var poly = PAssert.Poly())

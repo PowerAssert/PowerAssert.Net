@@ -9,7 +9,9 @@ namespace PowerAssertTests.Hints
     [TestFixture]
     public class MethodEqualsInsteadOfOperatorEqualsHintTests
     {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         class AlwaysEqual
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         {
             public override bool Equals(object obj)
             {
@@ -30,7 +32,9 @@ namespace PowerAssertTests.Hints
             Assert.IsNotNull(description);
         }
 
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         class NeverEqual
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
         {
             public override bool Equals(object obj)
             {
