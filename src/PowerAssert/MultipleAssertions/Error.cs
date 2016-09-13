@@ -17,6 +17,10 @@ namespace PowerAssert.MultipleAssertions
         public Error(string message)
         {
             Message = message;
+#if NETSTANDARD1_6
+			//https://github.com/dotnet/corefx/issues/1797
+			Location = "(Unknown location - dotnetcore)";      
+#else
             var stackFrames = from f in new StackTrace(1, true).GetFrames()
                 let m = f.GetMethod()
                 where m != null
@@ -35,6 +39,7 @@ namespace PowerAssert.MultipleAssertions
                 Location = "(Unknown location)";
             }
 
+#endif
         }
 
 
