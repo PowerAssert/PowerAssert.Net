@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NOAPPROVALS
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -17,20 +18,31 @@ namespace PowerAssertTests.Approvals
     [TestFixture]
     public class EndToEndTest
     {
-        static CultureInfo _en = CultureInfo.GetCultureInfo("en");
+        static CultureInfo _en = new CultureInfo("en");
         CultureInfo _originalUICulture;
 
         [SetUp]
         public void SetUp()
         {
+#if NETCOREAPP
+            _originalUICulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = _en;
+            CultureInfo.CurrentUICulture = _en;
+#else
             _originalUICulture = Thread.CurrentThread.CurrentUICulture;
             Thread.CurrentThread.CurrentUICulture = _en;
+#endif
         }
 
         [TearDown]
         public void TearDown()
         {
+#if NETCOREAPP
+            CultureInfo.CurrentCulture = _originalUICulture;
+            CultureInfo.CurrentUICulture = _originalUICulture;
+#else
             Thread.CurrentThread.CurrentUICulture = _originalUICulture;
+#endif
         }
 
         [Test]
@@ -45,7 +57,13 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void RunComplexExpression()
         {
+#if NETCOREAPP
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+#else
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; //so that approvals work anywhere
+#endif
+
             int x = 11;
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -57,7 +75,12 @@ namespace PowerAssertTests.Approvals
         [Test]
         public void RunComplexExpressionWithStaticField()
         {
+#if NETCOREAPP
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+#else
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; //so that approvals work anywhere
+#endif
             int y = 6;
             DateTime d = new DateTime(2010, 3, 1, 0, 0, 0, DateTimeKind.Utc);
             ApproveException(() => field + 5 == d.Month*y);
@@ -518,7 +541,7 @@ namespace PowerAssertTests.Approvals
             }
         }
 
-		[Test]
+        [Test]
         public void PolyAssertCanPassATest()
         {
             using (var poly = PAssert.Poly())
@@ -571,3 +594,4 @@ namespace PowerAssertTests.Approvals
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿#if !NET40
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace PowerAssertTests
@@ -124,3 +125,4 @@ namespace PowerAssertTests
         }
     }
 }
+#endif

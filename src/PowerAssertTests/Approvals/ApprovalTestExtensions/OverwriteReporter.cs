@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if !NOAPPROVALS
+using System.IO;
 using ApprovalTests.Core;
 
 namespace PowerAssertTests.Approvals.ApprovalTestExtensions
@@ -16,3 +17,4 @@ namespace PowerAssertTests.Approvals.ApprovalTestExtensions
         }
     }
 }
+#endif

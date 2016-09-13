@@ -5,9 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+#if !NOAPPROVALS
 using ApprovalTests.Reporters;
 using PowerAssertTests.Approvals;
 using PowerAssertTests.Approvals.ApprovalTestExtensions;
+#endif
 
 [assembly: AssemblyTitle("PowerAssertTests")]
 [assembly: AssemblyDescription("")]
@@ -39,5 +41,7 @@ using PowerAssertTests.Approvals.ApprovalTestExtensions;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+#if !NOAPPROVALS
 [assembly: FrontLoadedReporter(typeof (CiReporter))]
 [assembly: UseReporter(typeof (HappyDiffReporter))]
+#endif
