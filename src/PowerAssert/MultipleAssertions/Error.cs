@@ -7,7 +7,7 @@ namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
-        static Assembly MyAssembly = typeof(Error).Assembly;
+        static Assembly MyAssembly = ReflectionShim.Assembly(typeof(Error));
 
         internal static readonly string Crlf = Environment.NewLine;
 

@@ -97,6 +97,7 @@
     <Compile Include="MultipleAssertions\PolyAssertException.cs" />
     <Compile Include="PAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionShim.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Infrastructure\Util.tt">

@@ -36,17 +36,17 @@ namespace PowerAssert.Infrastructure
             }
 
             var type = value.GetType();
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+            if (ReflectionShim.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
             {
-                var k = type.GetProperty("Key").GetValue(value, null);
-                var v = type.GetProperty("Value").GetValue(value, null);
+                var k = ReflectionShim.GetProperty(type, "Key").GetValue(value, null);
+                var v = ReflectionShim.GetProperty(type, "Value").GetValue(value, null);
                 return String.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
             }
-            if (type.GetInterfaces()
-                .Where(i => i.IsGenericType)
-                .Any(i => i.GetGenericTypeDefinition() == typeof(IGrouping<,>)))
+            if (ReflectionShim.GetInterfaces(type)
+                .Where(ReflectionShim.IsGenericType)
+                .Any(i => ReflectionShim.GetGenericTypeDefinition(i) == typeof(IGrouping<,>)))
             {
-                var k = type.GetProperty("Key").GetValue(value, null);
+                var k = ReflectionShim.GetProperty(type, "Key").GetValue(value, null);
                 return String.Format("{{{0}:{1}}}", FormatObject(k), FormatEnumerable(value));
             }
             if (value is Type)
@@ -57,7 +57,7 @@ namespace PowerAssert.Infrastructure
             {
                 var del = (Delegate) value;
 
-                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", del.Method.GetParameters().Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(del.Method.ReturnType));
+                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", ReflectionShim.GetMethodParameters(del).Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(ReflectionShim.MethodReturnType(del)));
             }
             if (value is IEnumerable)
             {

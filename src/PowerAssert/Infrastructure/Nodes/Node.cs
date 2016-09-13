@@ -20,7 +20,7 @@ namespace PowerAssert.Infrastructure.Nodes
                 return false;
             }
 
-            var allPropertiesMatch = from info in GetType().GetProperties()
+            var allPropertiesMatch = from info in ReflectionShim.GetProperties(GetType())
                 let mine = info.GetValue(this, null)
                 let theirs = info.GetValue(obj, null)
                 select ObjectsOrEnumerablesEqual(mine, theirs);
@@ -43,7 +43,7 @@ namespace PowerAssert.Infrastructure.Nodes
 
         public override int GetHashCode()
         {
-            var v = from info in GetType().GetProperties()
+            var v = from info in ReflectionShim.GetProperties(GetType())
                 let value = info.GetValue(this, null)
                 select value == null ? 0 : value.GetHashCode();
 

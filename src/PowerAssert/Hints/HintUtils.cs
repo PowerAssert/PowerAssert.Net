@@ -76,12 +76,12 @@ namespace PowerAssert.Hints
                 return string.Format(", right string contains control character '{0}' at index {1}", PrintableChar(rightC), index);
             }
 
-            if (char.GetUnicodeCategory(leftC) == UnicodeCategory.Format)
+            if (CharUnicodeInfo.GetUnicodeCategory(leftC) == UnicodeCategory.Format)
             {
                 return string.Format(", left string contains format character '{0}' at index {1}", PrintableChar(leftC), index);
             }
 
-            if (char.GetUnicodeCategory(rightC) == UnicodeCategory.Format)
+            if (CharUnicodeInfo.GetUnicodeCategory(rightC) == UnicodeCategory.Format)
             {
                 return string.Format(", right string contains format character '{0}' at index {1}", PrintableChar(rightC), index);
             }

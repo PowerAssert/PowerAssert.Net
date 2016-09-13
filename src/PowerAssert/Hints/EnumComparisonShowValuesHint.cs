@@ -57,7 +57,7 @@ namespace PowerAssert.Hints
 
             if (unE != null && unE.NodeType == ExpressionType.Convert)
             {
-                if (unE.Operand.Type.IsEnum)
+                if (ReflectionShim.IsEnum(unE.Operand.Type))
                 {
                     return Tuple.Create(Parse(parser, unE.Operand.Type, x), Parse(parser, unE.Operand.Type, y));
                 }
