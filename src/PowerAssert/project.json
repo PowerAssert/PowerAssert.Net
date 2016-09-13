@@ -1,5 +1,5 @@
 ﻿{
-	"version": "1.8.0",
+	"version": "1.0.0.0",
 	"title": "PowerAssert",
 	"description": "When you make a unit test assertion with PowerAssert, your assertion messages become much more useful.",
 	"copyright": "Copyright © Rob Fonseca-Ensor",
