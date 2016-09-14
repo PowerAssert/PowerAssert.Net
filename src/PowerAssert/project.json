@@ -1,0 +1,71 @@
+﻿{
+	"version": "1.0.0.0",
+	"title": "PowerAssert",
+	"description": "When you make a unit test assertion with PowerAssert, your assertion messages become much more useful.",
+	"copyright": "Copyright © Rob Fonseca-Ensor",
+	"authors": [
+		"Rob Fonseca-Ensor"
+	],
+
+	"packOptions": {
+		"owners": [
+			"Rob Fonseca-Ensor"
+		],
+		"authors": [
+			"Rob Fonseca-Ensor",
+			"David Alpert",
+			"George Pollard",
+			"Anders Holmström",
+			"Josh Robb",
+			"Alex Henderson",
+			"Peter Goodman"
+		],
+		"tags": [ "NUnit", "xUnit.NET", "mstest", "expression-tree" ],
+		"requireLicenseAcceptance": false,
+		"projectUrl": "https://github.com/PowerAssert/PowerAssert.Net",
+		"summary": "When you make a unit test assertion with PowerAssert, your assertion messages become much more useful.",
+		"licenseUrl": "https://github.com/PowerAssert/PowerAssert.Net/blob/master/LICENSE.txt",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/PowerAssert/PowerAssert.Net"
+		}
+	},
+
+	"frameworks": {
+		"netstandard1.6": {
+			"imports": "dnxcore50",
+			"dependencies": {
+				"NETStandard.Library": "1.6.0",
+				"System.Diagnostics.StackTrace": "4.0.1",
+				"System.Reflection.TypeExtensions": "4.1.0",
+				"Microsoft.CSharp": "4.0.1",
+				"System.Globalization.Extensions": "4.0.1"
+			}
+		},
+		"net45": {
+			"frameworkAssemblies": {
+				"System.Core": "",
+				"Microsoft.CSharp": "",
+				"System.Reflection": ""
+			}
+		},
+		"net40": {
+			"frameworkAssemblies": {
+				"System.Core": "",
+				"Microsoft.CSharp": ""
+			}
+		}
+	},
+
+	"runtimes": {
+		"win": {}
+	},
+
+
+
+	"scripts": {
+		"postcompile": [
+			"dotnet pack --no-build --configuration %compile:Configuration%"
+		]
+	}
+}

@@ -1,36 +1,41 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerAssert", "PowerAssert\PowerAssert.csproj", "{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}"
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0C986D7-A302-4367-9205-FE22F2322E52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerAssertTests", "PowerAssertTests\PowerAssertTests.csproj", "{665FDD28-99EF-4038-9469-1B27F778BF1D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F5DC82BB-5F02-4AC8-AEC9-B3950C829544}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5E85792A-67FA-4CE3-AF16-75870BFED457}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		global.json = global.json
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PowerAssert", "src\PowerAssert\PowerAssert.xproj", "{6FE5D14C-9075-4DC7-B2EA-592F1956B994}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PowerAssertTests", "src\PowerAssertTests\PowerAssertTests.xproj", "{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		NuPackRelease|Any CPU = NuPackRelease|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.NuPackRelease|Any CPU.ActiveCfg = NuPackRelease|Any CPU
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.NuPackRelease|Any CPU.Build.0 = NuPackRelease|Any CPU
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.NuPackRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.NuPackRelease|Any CPU.Build.0 = Release|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{665FDD28-99EF-4038-9469-1B27F778BF1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FE5D14C-9075-4DC7-B2EA-592F1956B994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FE5D14C-9075-4DC7-B2EA-592F1956B994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FE5D14C-9075-4DC7-B2EA-592F1956B994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FE5D14C-9075-4DC7-B2EA-592F1956B994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6FE5D14C-9075-4DC7-B2EA-592F1956B994} = {A0C986D7-A302-4367-9205-FE22F2322E52}
+		{96BE21FA-29BC-4CA9-AAFC-CD4A3FEDAC7C} = {A0C986D7-A302-4367-9205-FE22F2322E52}
 	EndGlobalSection
 EndGlobal

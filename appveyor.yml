@@ -1,0 +1,26 @@
+version: 1.0.{build}
+os: Visual Studio 2015
+configuration: Release
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: 1.0.{build}
+  assembly_file_version: 1.0.{build}
+
+before_build:
+  - ps: .\scripts\show-dotnet-info.ps1
+  - ps: .\scripts\set-version.ps1
+  - ps: dotnet --info
+  - ps: dotnet restore
+
+build_script:
+  - ps: dotnet build -c Release --no-incremental src\PowerAssertTests\
+
+test_script:
+  - ps: .\scripts\test-appveyor.ps1
+
+test: on
+
+artifacts:
+  path: 'src\PowerAssert\bin\Release\*.nupkg'
