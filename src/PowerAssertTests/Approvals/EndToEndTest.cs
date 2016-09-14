@@ -585,13 +585,22 @@ namespace PowerAssertTests.Approvals
         string Scrubber(string s)
         {
             s = StackTraceScrubber.ScrubLineNumbers(s);
-            s = StackTraceScrubber.ScrubPaths(s);
+            s = ScrubPaths(s); //StackTraceScrubber.ScrubPaths(s);
             //the throwhelper seems to be present on some environments' stack traces but not others, cut it out to make tha approvals pass on most machines
             s = Regex.Replace(s, @"\n.*ThrowHelper.*\n", "\n"); 
             s = Regex.Replace(s, @"\r?\n", "\n");
             // replace line number in polyassert headers
             s = Regex.Replace(s, @"(?<=^ERROR in.*:)\d+(?=:$)", "<line>", RegexOptions.Multiline);
             return s;
+        }
+
+
+        public static string ScrubPaths(string source)
+        {
+            //this commit breaks URLs
+            //https://github.com/approvals/ApprovalTests.Net/commit/2eee5ccc3bcdc24c2df1006d7a2ee327a6639a0e
+            var regex = new Regex(@"\b\w:[\\\w.\s-]+\\");
+            return regex.Replace(source, "...\\");
         }
     }
 }
