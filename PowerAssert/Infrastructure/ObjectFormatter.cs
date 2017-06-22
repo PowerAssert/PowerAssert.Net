@@ -62,7 +62,13 @@ namespace PowerAssert.Infrastructure
             {
                 var del = (Delegate) value;
 
-                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", del.Method.GetParameters().Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(del.Method.ReturnType));
+#if NETCOREAPP1_1
+                var method = RuntimeReflectionExtensions.GetMethodInfo(del);
+#else
+                var method = del.Method;
+#endif
+
+                return String.Format("delegate {0}, type: {2} ({1})", ExpressionParser.NameOfType(del.GetType()), String.Join(", ", method.GetParameters().Select(x => ExpressionParser.NameOfType(x.ParameterType))), ExpressionParser.NameOfType(method.ReturnType));
             }
             if (value is IEnumerable)
             {
