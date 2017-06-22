@@ -19,6 +19,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release-Core|netcoreapp1.1|AnyCPU'" />
 
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Update="Infrastructure\Util.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Util.Generated.cs</LastGenOutput>
