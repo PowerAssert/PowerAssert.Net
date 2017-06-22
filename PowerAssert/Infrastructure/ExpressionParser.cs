@@ -44,11 +44,11 @@ namespace PowerAssert.Infrastructure
 
         static Type GetTestClass()
         {
+#if NETCOREAPP1_1
+            return null;
+#else
             var st = new StackTrace(1, false);
             return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
-#if NETCOREAPP1_1
-                     .FirstOrDefault(t => t != null && t.GetTypeInfo().Assembly != MyAssembly);
-#else
                      .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
 #endif
         }

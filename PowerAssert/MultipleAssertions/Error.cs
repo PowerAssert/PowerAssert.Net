@@ -21,15 +21,13 @@ namespace PowerAssert.MultipleAssertions
         public Error(string message)
         {
             Message = message;
+
+#if NET40
             var stackFrames = from f in new StackTrace(1, true).GetFrames()
                 let m = f.GetMethod()
                 where m != null
                 let t = m.DeclaringType
-#if NETCOREAPP1_1
-                              where t.GetTypeInfo().Assembly != MyAssembly
-#else
                               where t.Assembly != MyAssembly
-#endif
                               select f;
             var frame = stackFrames.FirstOrDefault();
             if (frame != null)
@@ -37,12 +35,11 @@ namespace PowerAssert.MultipleAssertions
                 var method = frame.GetMethod();
                 var typeName = method.DeclaringType == null ? "" : method.DeclaringType.Name;
                 Location = string.Format("in {0}.{1} at {2}:{3}", typeName, method.Name, frame.GetFileName(), frame.GetFileLineNumber());
+                return;
             }
-            else
-            {
-                Location = "(Unknown location)";
-            }
+#endif
 
+            Location = "(Unknown location)";
         }
 
 
