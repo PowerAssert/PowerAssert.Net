@@ -36,14 +36,19 @@ namespace PowerAssert.Infrastructure
             }
 
             var type = value.GetType();
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+#if NETCOREAPP1_1
+            var isGenericType = new Func<Type, bool>(t => t.GetTypeInfo().IsGenericType);
+#else
+            var isGenericType = new Func<Type, bool>(t => t.IsGenericType);
+#endif
+            if (isGenericType(type) && type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
             {
                 var k = type.GetProperty("Key").GetValue(value, null);
                 var v = type.GetProperty("Value").GetValue(value, null);
                 return String.Format("{{{0}:{1}}}", FormatObject(k), FormatObject(v));
             }
             if (type.GetInterfaces()
-                .Where(i => i.IsGenericType)
+                .Where(isGenericType)
                 .Any(i => i.GetGenericTypeDefinition() == typeof(IGrouping<,>)))
             {
                 var k = type.GetProperty("Key").GetValue(value, null);

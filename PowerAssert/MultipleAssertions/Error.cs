@@ -7,7 +7,11 @@ namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
+#if NETCOREAPP1_1
+        static Assembly MyAssembly = typeof(Error).GetTypeInfo().Assembly;
+#else
         static Assembly MyAssembly = typeof(Error).Assembly;
+#endif
 
         internal static readonly string Crlf = Environment.NewLine;
 
@@ -21,8 +25,12 @@ namespace PowerAssert.MultipleAssertions
                 let m = f.GetMethod()
                 where m != null
                 let t = m.DeclaringType
-                where t.Assembly != MyAssembly
-                select f;
+#if NETCOREAPP1_1
+                              where t.GetTypeInfo().Assembly != MyAssembly
+#else
+                              where t.Assembly != MyAssembly
+#endif
+                              select f;
             var frame = stackFrames.FirstOrDefault();
             if (frame != null)
             {

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+#if NETCOREAPP1_1
+using System.Reflection;
+#endif
 using PowerAssert.Infrastructure;
 
 namespace PowerAssert.Hints
@@ -57,7 +60,11 @@ namespace PowerAssert.Hints
 
             if (unE != null && unE.NodeType == ExpressionType.Convert)
             {
+#if NETCOREAPP1_1
+                if (unE.Operand.Type.GetTypeInfo().IsEnum)
+#else
                 if (unE.Operand.Type.IsEnum)
+#endif
                 {
                     return Tuple.Create(Parse(parser, unE.Operand.Type, x), Parse(parser, unE.Operand.Type, y));
                 }
