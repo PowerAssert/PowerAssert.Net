@@ -7,7 +7,11 @@ namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
+#if NETCOREAPP1_1
+        static Assembly MyAssembly = typeof(Error).GetTypeInfo().Assembly;
+#else
         static Assembly MyAssembly = typeof(Error).Assembly;
+#endif
 
         internal static readonly string Crlf = Environment.NewLine;
 
@@ -17,24 +21,25 @@ namespace PowerAssert.MultipleAssertions
         public Error(string message)
         {
             Message = message;
+
+#if NET40
             var stackFrames = from f in new StackTrace(1, true).GetFrames()
                 let m = f.GetMethod()
                 where m != null
                 let t = m.DeclaringType
-                where t.Assembly != MyAssembly
-                select f;
+                              where t.Assembly != MyAssembly
+                              select f;
             var frame = stackFrames.FirstOrDefault();
             if (frame != null)
             {
                 var method = frame.GetMethod();
                 var typeName = method.DeclaringType == null ? "" : method.DeclaringType.Name;
                 Location = string.Format("in {0}.{1} at {2}:{3}", typeName, method.Name, frame.GetFileName(), frame.GetFileLineNumber());
+                return;
             }
-            else
-            {
-                Location = "(Unknown location)";
-            }
+#endif
 
+            Location = "(Unknown location)";
         }
 
 

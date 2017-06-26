@@ -16,7 +16,11 @@ namespace PowerAssert.Infrastructure
 {
     class ExpressionParser
     {
+#if NETCOREAPP1_1
+        static Assembly MyAssembly = typeof(ExpressionParser).GetTypeInfo().Assembly;
+#else
         static Assembly MyAssembly = typeof(ExpressionParser).Assembly;
+#endif
 
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
@@ -40,9 +44,13 @@ namespace PowerAssert.Infrastructure
 
         static Type GetTestClass()
         {
+#if NETCOREAPP1_1
+            return null;
+#else
             var st = new StackTrace(1, false);
             return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
                      .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
+#endif
         }
 
         public Node Parse()
@@ -167,7 +175,11 @@ namespace PowerAssert.Infrastructure
 
         internal static string NameOfType(Type t)
         {
+#if NETCOREAPP1_1
+            if (t.GetTypeInfo().IsGenericType)
+#else
             if (t.IsGenericType)
+#endif
             {
                 var typeArgs = t.GetGenericArguments().Select(NameOfType).ToList();
                 var name = IsAnonymousType(t) ? "$Anonymous" : t.Name.Split('`')[0];

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+#if NETCOREAPP1_1
+using System.Reflection;
+#endif
 
 namespace PowerAssert.Infrastructure.Nodes
 {
@@ -20,7 +23,11 @@ namespace PowerAssert.Infrastructure.Nodes
                 return false;
             }
 
+#if NETCOREAPP1_1
+            var allPropertiesMatch = from info in GetType().GetTypeInfo().GetProperties()
+#else
             var allPropertiesMatch = from info in GetType().GetProperties()
+#endif
                 let mine = info.GetValue(this, null)
                 let theirs = info.GetValue(obj, null)
                 select ObjectsOrEnumerablesEqual(mine, theirs);
