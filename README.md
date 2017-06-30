@@ -1,6 +1,7 @@
 #PowerAssert.NET
 
-[![Build status](https://ci.appveyor.com/api/projects/status/pcj7c0cvh2xxbobg)](https://ci.appveyor.com/project/robfe/powerassert-net)
+[![Build status](https://img.shields.io/appveyor/ci/robfe/powerassert-net/master.svg)](https://ci.appveyor.com/project/robfe/powerassert-net)
+[![Nuget status](https://img.shields.io/nuget/v/PowerAssert.svg)](https://www.nuget.org/packages/PowerAssert/)
 
 *Readable, Writable Test Assertions for .NET*
 
