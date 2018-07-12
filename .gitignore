@@ -21,3 +21,4 @@ pacakges
 *.nupkg
 *.received.txt
 *.orig
+/.vs
