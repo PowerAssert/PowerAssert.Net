@@ -79,20 +79,37 @@ namespace PowerAssert.Infrastructure
 
         internal static string FormatEnumerable(object value)
         {
-            var enumerable = (IEnumerable) value;
-            var values = enumerable.Cast<object>().Select(FormatObject);
-            //in case the enumerable is really long, let's cut off the end arbitrarily?
+            var enumerable = ((IEnumerable)value).Cast<object>();
+
+            // In case the enumerable is really long, let's cut off the end arbitrarily?
             const int Limit = 5;
+            const int LargeLimit = 1001;
 
             var list = enumerable as IList;
-            var knownMax = list != null ? list.Count : default(int?);
+            var values = enumerable
+                .Take(LargeLimit)
+                .ToList();
 
-            values = values.Take(Limit);
-            if (values.Count() == Limit)
-            {
-                values = values.Concat(new[] {knownMax.HasValue && knownMax > Limit ? String.Format("... ({0} total)", knownMax) : "..."});
+            var knownMax = list != null
+                ? list.Count
+                : (values.Count == LargeLimit)
+                    ? default(int?)
+                    : values.Count;
+
+            if (values.Count > Limit) {
+                var suffixItem = knownMax.HasValue
+                    ? (knownMax.Value == LargeLimit)
+                        ? String.Format("... (at least {0})", knownMax.Value - 1)
+                        : String.Format("... ({0} total)", knownMax.Value)
+                    : "...";
+
+                values = values
+                    .Take(Limit)
+                    .Concat(new[] {suffixItem})
+                    .ToList();
             }
-            return "[" + String.Join(", ", values.ToArray()) + "]";
+
+            return "[" + String.Join(", ", values.Select(FormatObject)) + "]";
         }
     }
 }
