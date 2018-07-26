@@ -85,7 +85,7 @@ namespace PowerAssert.Infrastructure
             const int Limit = 5;
             const int LargeLimit = 1001;
 
-            var list = enumerable as IList;
+            var list = value as IList;
             var values = enumerable
                 .Take(LargeLimit)
                 .ToList();
@@ -96,20 +96,20 @@ namespace PowerAssert.Infrastructure
                     ? default(int?)
                     : values.Count;
 
+            string suffixItem = "";
             if (values.Count > Limit) {
-                var suffixItem = knownMax.HasValue
+                suffixItem = knownMax.HasValue
                     ? (knownMax.Value == LargeLimit)
-                        ? String.Format("... (at least {0})", knownMax.Value - 1)
-                        : String.Format("... ({0} total)", knownMax.Value)
-                    : "...";
+                        ? String.Format(", ... (at least {0})", knownMax.Value - 1)
+                        : String.Format(", ... ({0} total)", knownMax.Value)
+                    : ", ...";
 
                 values = values
                     .Take(Limit)
-                    .Concat(new[] {suffixItem})
                     .ToList();
             }
 
-            return "[" + String.Join(", ", values.Select(FormatObject)) + "]";
+            return "[" + String.Join(", ", values.Select(FormatObject)) + suffixItem + "]";
         }
     }
 }

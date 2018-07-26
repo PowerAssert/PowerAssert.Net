@@ -7,8 +7,8 @@ list.Where(x => x % 2 == 0).Sum() == 0
 \ _/   |                     |    |
  |     |                     |    False
  |     |                     5550
- |     [0, 2, 4, 6, 8, ...]
- [0, 1, 2, 3, 4, ...]
+ |     [0, 2, 4, 6, 8, ... (75 total)]
+ [0, 1, 2, 3, 4, ... (150 total)]
 
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
