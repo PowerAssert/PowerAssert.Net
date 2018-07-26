@@ -9,10 +9,10 @@ list.SelectMany(x => list, (x, y) => new {x, y}).Where($0 => $0.x > $0.y).Select
 \ _/     |                                         |                        |                                               |     |
  |       |                                         |                        |                                               |     False
  |       |                                         |                        |                                               10
- |       |                                         |                        ["1,0", "2,0", "2,1", "3,0", "3,1", ...]
- |       |                                         [{ x = 1, y = 0 }, { x = 2, y = 0 }, { x = 2, y = 1 }, { x = 3, y = 0 }, { x = 3, y = 1 }, ...]
- |       [{ x = 0, y = 0 }, { x = 0, y = 1 }, { x = 0, y = 2 }, { x = 0, y = 3 }, { x = 0, y = 4 }, ...]
- [0, 1, 2, 3, 4, ...]
+ |       |                                         |                        ["1,0", "2,0", "2,1", "3,0", "3,1", ... (10 total)]
+ |       |                                         [{ x = 1, y = 0 }, { x = 2, y = 0 }, { x = 2, y = 1 }, { x = 3, y = 0 }, { x = 3, y = 1 }, ... (10 total)]
+ |       [{ x = 0, y = 0 }, { x = 0, y = 1 }, { x = 0, y = 2 }, { x = 0, y = 3 }, { x = 0, y = 4 }, ... (25 total)]
+ [0, 1, 2, 3, 4]
 
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
    at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
