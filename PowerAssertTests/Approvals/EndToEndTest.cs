@@ -329,6 +329,14 @@ namespace PowerAssertTests.Approvals
         }
 
         [Test]
+        public void SafeCasting()
+        {
+            object a = new object();
+
+            ApproveException(() => a as string != null);
+        }
+
+        [Test]
         public void ArrayLength()
         {
             int[] values = new int[0];

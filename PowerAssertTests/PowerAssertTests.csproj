@@ -86,6 +86,7 @@
     <Compile Include="Hints\StringEqualsHintTests.cs" />
     <Compile Include="Hints\StringOperatorEqualsHint.cs" />
     <Compile Include="Hints\TimeSpanTotalMistakesHintTests.cs" />
+    <Compile Include="Hints\TypeTestHintTests.cs" />
     <Compile Include="NodeFormatterTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

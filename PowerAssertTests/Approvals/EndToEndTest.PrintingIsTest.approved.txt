@@ -3,7 +3,7 @@
 b is string
 . __
 . |
-| False
+| False, System.Object is not assignable to System.String
 System.Object
 
    at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
