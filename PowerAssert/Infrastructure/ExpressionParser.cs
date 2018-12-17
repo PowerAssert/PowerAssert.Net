@@ -151,6 +151,14 @@ namespace PowerAssert.Infrastructure
                     return new UnaryNode {Prefix = "-", Operand = Parse(e.Operand), PrefixValue = GetValue(e)};
                 case ExpressionType.ArrayLength:
                     return new MemberAccessNode {Container = Parse(e.Operand), MemberName = "Length", MemberValue = GetValue(e)};
+                case ExpressionType.TypeAs:
+                    return new BinaryNode
+                    {
+                        Left = Parse(e.Operand),
+                        Operator = "as",
+                        Right = new ConstantNode() { Text = NameOfType(e.Type) },
+                        Value = GetValue(e)
+                    };
             }
             throw new ArgumentOutOfRangeException("e", string.Format("Can't handle UnaryExpression expression of class {0} and type {1}", e.GetType().Name, e.NodeType));
         }
@@ -410,7 +418,8 @@ namespace PowerAssert.Infrastructure
             new FloatEqualityHint(),
             new BrokenEqualityHint(),
             new TimeSpanTotalMistakesHint(),
-            new EnumComparisonShowValuesHint()
+            new EnumComparisonShowValuesHint(),
+            new TypeTestHint()
             );
 
         string GetHints(Expression e, object value)
