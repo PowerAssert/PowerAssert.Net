@@ -3,7 +3,7 @@
   <PropertyGroup>
 	  <TargetFrameworks>net45</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -26,10 +26,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="ApprovalTests" Version="3.0.7" />
-      <PackageReference Include="ApprovalUtilities" Version="3.0.7" />
-	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-	  <PackageReference Include="nunit" Version="3.13.1" />
-	  <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="ApprovalTests" Version="3.0.7" />
+    <PackageReference Include="ApprovalUtilities" Version="3.0.7" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="nunit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
 </Project>
