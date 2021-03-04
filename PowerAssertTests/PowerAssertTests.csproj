@@ -9,9 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <Reference Include="nunit.framework">
-		  <HintPath>..\lib\nunit.framework.dll</HintPath>
-	  </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -32,6 +29,7 @@
 	  <PackageReference Include="ApprovalTests" Version="3.0.7" />
       <PackageReference Include="ApprovalUtilities" Version="3.0.7" />
 	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+	  <PackageReference Include="nunit" Version="3.13.1" />
 	  <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
 </Project>

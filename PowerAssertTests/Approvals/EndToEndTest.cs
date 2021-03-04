@@ -484,7 +484,7 @@ namespace PowerAssertTests.Approvals
                     poly.IsTrue(() => x == 5);
                     poly.IsTrue(() => x == 6);
                     poly.IsTrue(() => x == 7);
-                    poly.Try(() => Assert.Fail("Wah wah"));
+                    poly.Try(() => throw new Exception("Wah wah"));
                     poly.Log("PolyAssert.Log messages are only printed if the test fails");
                 }
             }
@@ -506,7 +506,7 @@ namespace PowerAssertTests.Approvals
                     poly.Log("Sometimes you do want to end the test early after all");
                     poly.StopIfErrorsHaveOccurred(); //no stop here
                     poly.Log("So just call StopIfErrorsHaveOccurred (behaves the same as disposing the PolyAssert)");
-                    poly.Try(() => Assert.Fail("Wah wah"));
+                    poly.Try(() => throw new Exception("Wah wah"));
                     poly.StopIfErrorsHaveOccurred(); //no stop here
                     poly.Log("This message should not be printed, as StopIfErrorsHaveOccurred will throw an exception this time");
                 }
