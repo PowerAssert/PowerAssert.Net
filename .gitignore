@@ -8,12 +8,7 @@ TestResults
 # user-specific setting files
 *.suo
 *.user
-
-# nuget packages folder
-pacakges
-
-# mercurial content
-.hg*
+.idea
 
 *.ncrunchsolution
 
