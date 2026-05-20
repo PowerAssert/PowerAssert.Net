@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net40;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <PackageId>PowerAssert</PackageId>
     <Authors>Rob Fonseca-Ensor, David Alpert, George Pollard, Anders Holmström, Josh Robb, Alex Henderson and Peter Goodman</Authors>
     <Description>When you make a unit test assertion with PowerAssert, your assertion messages become much more useful.</Description>
@@ -13,10 +13,6 @@
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug-Core|netcoreapp1.1|AnyCPU'" />
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release-Core|netcoreapp1.1|AnyCPU'" />
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
     <DebugType>full</DebugType>
